@@ -34,6 +34,11 @@ create table virtual_wallet.currencies(
     currency_code varchar(10) not null
 );
 
+create table transfer_directions(
+    direction_id int auto_increment primary key,
+    direction varchar(15)
+);
+
 create table virtual_wallet.transfers (
     transfer_id int auto_increment
                        primary key,
@@ -47,7 +52,9 @@ create table virtual_wallet.transfers (
     constraint transfers_sender_fk3
         foreign key (card) references cards (card_id),
     amount long not null,
-    direction int not null
+    direction int not null, constraint transfers_sender_fk4
+        foreign key (direction) references transfer_directions (direction_id),
+    date varchar(30)
 );
 
 create table virtual_wallet.wallets (
