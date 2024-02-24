@@ -11,10 +11,10 @@ import static java.lang.String.format;
 public abstract class AbstractCRUDRepository<T>  implements BaseCRUDRepository<T> {
 
     protected final SessionFactory sessionFactory;
-    protected final Class<T> tClass;
-    public AbstractCRUDRepository(Class<T> tClass,SessionFactory sessionFactory) {
+    protected final Class<T> clazz;
+    public AbstractCRUDRepository(Class<T> clazz, SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-        this.tClass = tClass;
+        this.clazz = clazz;
     }
 
     @Override
@@ -46,12 +46,12 @@ public abstract class AbstractCRUDRepository<T>  implements BaseCRUDRepository<T
 
     @Override
     public <V> T getByField(String name, V value) {
-        final String query = format("from %s where %s = :value", tClass.getName(), name);
-        final String notFoundErrorMessage = format("%s with %s %s not found", tClass.getSimpleName(), name, value);
+        final String query = format("from %s where %s = :value", clazz.getSimpleName(), name);
+        final String notFoundErrorMessage = format("%s with %s %s not found", clazz.getSimpleName(), name, value);
 
         try (Session session = sessionFactory.openSession()) {
             return session
-                    .createQuery(query, tClass)
+                    .createQuery(query, clazz)
                     .setParameter("value", value)
                     .uniqueResultOptional()
                     .orElseThrow(() -> new RuntimeException(notFoundErrorMessage));
@@ -67,7 +67,7 @@ public abstract class AbstractCRUDRepository<T>  implements BaseCRUDRepository<T
     @Override
     public List<T> getAll(){
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery(format("from %s",tClass.getName()),tClass).list();
+            return session.createQuery(format("from %s", clazz.getName()), clazz).list();
         }
     }
 

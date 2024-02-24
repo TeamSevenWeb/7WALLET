@@ -1,4 +1,6 @@
 package com.telerikacademy.web.virtualwallet.repositories.contracts;
 
-public interface UserRepository {
+import com.telerikacademy.web.virtualwallet.models.User;
+
+public interface UserRepository extends BaseCRUDRepository<User>{
 }
