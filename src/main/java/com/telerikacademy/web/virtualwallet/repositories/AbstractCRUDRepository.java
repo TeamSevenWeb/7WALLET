@@ -1,6 +1,5 @@
 package com.telerikacademy.web.virtualwallet.repositories;
 
-import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.BaseCRUDRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -55,7 +54,7 @@ public abstract class AbstractCRUDRepository<T>  implements BaseCRUDRepository<T
                     .createQuery(query, clazz)
                     .setParameter("value", value)
                     .uniqueResultOptional()
-                    .orElseThrow(() -> new EntityNotFoundException(notFoundErrorMessage));
+                    .orElseThrow(() -> new RuntimeException(notFoundErrorMessage));
         }
 
     }
