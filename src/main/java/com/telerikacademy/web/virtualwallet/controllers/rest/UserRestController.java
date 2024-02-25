@@ -20,4 +20,10 @@ public class UserRestController {
             return userService.getById(id);
 
     }
+
+    @PostMapping("/{id}/block")
+    public void blockUser(@PathVariable int id){
+        userService.block(id,userService.getById(1));
+
+    }
 }

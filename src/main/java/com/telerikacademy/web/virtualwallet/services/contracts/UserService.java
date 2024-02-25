@@ -2,6 +2,7 @@ package com.telerikacademy.web.virtualwallet.services.contracts;
 
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
+import com.telerikacademy.web.virtualwallet.utils.UserRole;
 
 import java.util.List;
 

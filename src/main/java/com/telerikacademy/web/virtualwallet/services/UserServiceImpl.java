@@ -3,8 +3,10 @@ package com.telerikacademy.web.virtualwallet.services;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.ProfilePhotoRepository;
+import com.telerikacademy.web.virtualwallet.repositories.contracts.RoleRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
+import com.telerikacademy.web.virtualwallet.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +17,13 @@ public class UserServiceImpl implements UserService {
 
     public static final String BLOCK_UNBLOCK_PERMISSIONS_ERR = "Only admins are allowed to block or unblock users.";
     private final UserRepository userRepository;
-
     private final ProfilePhotoRepository profilePhotoRepository;
-
+    private final RoleRepository roleRepository;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ProfilePhotoRepository profilePhotoRepository) {
+    public UserServiceImpl(UserRepository userRepository, ProfilePhotoRepository profilePhotoRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.profilePhotoRepository = profilePhotoRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -78,35 +80,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void block(int id, User user) {
+    public void block(int userId, User admin) {
+        User userToBeBlocked = userRepository.getById(userId);
+        userToBeBlocked.getUserRoles().add(roleRepository.getByField("roleType", UserRole.blocked.toString()));
+        userRepository.update(userToBeBlocked);
 
     }
 
     @Override
-    public void unblock(int id, User user) {
-
+    public void unblock(int userId, User admin) {
+        User userToBeUnBlocked = userRepository.getById(userId);
+        userToBeUnBlocked.getUserRoles().remove(roleRepository.getByField("roleType",UserRole.blocked.toString()));
+        userRepository.update(userToBeUnBlocked);
     }
-
-//    @Override
-//    public void block(int id, User user) {
-//        User userToBeBlocked = userRepository.getById(id);
-//        if (!user.isAdmin()){
-//            throw new RuntimeException(BLOCK_UNBLOCK_PERMISSIONS_ERR);
-//        }
-//        userToBeBlocked.setBlocked(true);
-//        userRepository.update(user);
-//    }
-//
-//    @Override
-//    public void unblock(int id, User user) {
-//        User userToBeUnblocked = userRepository.getById(id);
-//        if (!user.isAdmin()){
-//            throw new RuntimeException(BLOCK_UNBLOCK_PERMISSIONS_ERR);
-//        }
-//        userToBeUnblocked.setBlocked(false);
-//        userRepository.update(user);
-//
-//    }
 
     @Override
     public void uploadProfilePhoto(ProfilePhoto profilePhoto, User user) {
