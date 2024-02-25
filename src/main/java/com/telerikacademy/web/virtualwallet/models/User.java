@@ -49,26 +49,27 @@ public class User {
     cascade = CascadeType.ALL,
     fetch = FetchType.EAGER)
     private ProfilePhoto profilePhoto;
-
-    @JsonIgnore
-    @Column(name = "is_blocked")
-    private boolean isBlocked;
-
-    @JsonIgnore
-    @Column(name = "is_admin")
-    private boolean isAdmin;
-
-
+//    @JsonManagedReference
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "holder",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true,
+//            fetch = FetchType.EAGER
+//    )
+//    private Set<Transfer> transfers;
 
     @JsonManagedReference
-    @JsonIgnore
-    @OneToMany(mappedBy = "holder",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id")
     )
-    private Set<Transfer> transfers;
+    private Set<Role> userRoles;
 
+    public Set<Role> getUserRoles() {
+        return userRoles;
+    }
 
     public ProfilePhoto getProfilePhoto() {
         return profilePhoto;
@@ -76,22 +77,6 @@ public class User {
 
     public void setProfilePhoto(ProfilePhoto profilePhoto) {
         this.profilePhoto = profilePhoto;
-    }
-
-    public boolean isBlocked() {
-        return isBlocked;
-    }
-
-    public void setBlocked(boolean blocked) {
-        isBlocked = blocked;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
     }
 
     public int getId() {
