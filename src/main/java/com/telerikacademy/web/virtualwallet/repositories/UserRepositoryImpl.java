@@ -15,12 +15,4 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
         super(User.class, sessionFactory);
     }
 
-    @Override
-    public User getById(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            User user = session.get(User.class,id);
-
-            return user;
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.services.contracts;
 
+import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
 
 import java.util.List;
@@ -29,5 +30,11 @@ public interface UserService {
     void block(int id, User user);
 
     void unblock(int id, User user);
+
+    void uploadProfilePhoto(ProfilePhoto profilePhoto, User user);
+
+    void updateProfilePhoto(ProfilePhoto profilePhoto);
+
+
 
 }
