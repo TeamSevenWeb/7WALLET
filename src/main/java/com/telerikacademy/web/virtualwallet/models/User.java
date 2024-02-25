@@ -44,6 +44,21 @@ public class User {
     )
     private Set<Card> userCards;
 
+    @JsonManagedReference
+    @OneToOne(mappedBy = "user",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.EAGER)
+    private ProfilePhoto profilePhoto;
+
+    @JsonIgnore
+    @Column(name = "is_blocked")
+    private boolean isBlocked;
+
+    @JsonIgnore
+    @Column(name = "is_admin")
+    private boolean isAdmin;
+
+
 
     @JsonManagedReference
     @JsonIgnore
@@ -54,6 +69,30 @@ public class User {
     )
     private Set<Transfer> transfers;
 
+
+    public ProfilePhoto getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(ProfilePhoto profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
 
     public int getId() {
         return id;

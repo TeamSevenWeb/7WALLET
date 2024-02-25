@@ -26,6 +26,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+	implementation group: 'com.cloudinary', name: 'cloudinary', version: '1.0.14'
+	implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.37.0'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
