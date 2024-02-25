@@ -79,24 +79,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void block(int id, User user) {
-        User userToBeBlocked = userRepository.getById(id);
-        if (!user.isAdmin()){
-            throw new RuntimeException(BLOCK_UNBLOCK_PERMISSIONS_ERR);
-        }
-        userToBeBlocked.setBlocked(true);
-        userRepository.update(user);
+
     }
 
     @Override
     public void unblock(int id, User user) {
-        User userToBeUnblocked = userRepository.getById(id);
-        if (!user.isAdmin()){
-            throw new RuntimeException(BLOCK_UNBLOCK_PERMISSIONS_ERR);
-        }
-        userToBeUnblocked.setBlocked(false);
-        userRepository.update(user);
 
     }
+
+//    @Override
+//    public void block(int id, User user) {
+//        User userToBeBlocked = userRepository.getById(id);
+//        if (!user.isAdmin()){
+//            throw new RuntimeException(BLOCK_UNBLOCK_PERMISSIONS_ERR);
+//        }
+//        userToBeBlocked.setBlocked(true);
+//        userRepository.update(user);
+//    }
+//
+//    @Override
+//    public void unblock(int id, User user) {
+//        User userToBeUnblocked = userRepository.getById(id);
+//        if (!user.isAdmin()){
+//            throw new RuntimeException(BLOCK_UNBLOCK_PERMISSIONS_ERR);
+//        }
+//        userToBeUnblocked.setBlocked(false);
+//        userRepository.update(user);
+//
+//    }
 
     @Override
     public void uploadProfilePhoto(ProfilePhoto profilePhoto, User user) {
