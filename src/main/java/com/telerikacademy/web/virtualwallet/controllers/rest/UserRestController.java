@@ -104,7 +104,7 @@ public class UserRestController {
         }
     }
 
-    @GetMapping("/{id}")
+    @PostMapping()
     public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
         try {
             User user = getUser(1);

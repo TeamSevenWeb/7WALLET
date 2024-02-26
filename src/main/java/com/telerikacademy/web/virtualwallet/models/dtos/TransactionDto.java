@@ -1,9 +1,7 @@
 package com.telerikacademy.web.virtualwallet.models.dtos;
 
 import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 public class TransactionDto {
     @NotNull(message = "Receiver can not be empty")
@@ -40,6 +38,4 @@ public class TransactionDto {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-
-
 }
