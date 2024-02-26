@@ -13,6 +13,7 @@ public class TransactionDto {
     @Digits(integer = 10, fraction = 2)
     private int amount;
 
+
     public TransactionDto(){
     }
 

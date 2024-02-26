@@ -107,10 +107,11 @@ public class UserRestController {
     @PostMapping()
     public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
         try {
-            User user = getUser(1);
-            Transaction transaction = transactionMapper.fromDto(transactionDto);
-            transactionService.create(transaction, user);
-            return transaction;
+            User sender = getUser(1);
+            Transaction outgoing = transactionMapper.outgoingFromDto(sender, transactionDto);
+            Transaction ingoing = transactionMapper.ingoingFromDto(sender,transactionDto);
+            transactionService.create(outgoing,ingoing, sender);
+            return outgoing;
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {

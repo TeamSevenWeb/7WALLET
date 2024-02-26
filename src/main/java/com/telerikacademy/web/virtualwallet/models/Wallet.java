@@ -15,7 +15,7 @@ public class Wallet {
     private int id;
 
     @JsonIgnore
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "holder")
     private User holder;
 

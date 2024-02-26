@@ -9,6 +9,8 @@ import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletReposit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class TransactionMapper {
 
@@ -24,13 +26,27 @@ public class TransactionMapper {
     }
 
 
-    public Transaction fromDto(TransactionDto transactionDto) {
+    public Transaction outgoingFromDto(User sender, TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
         User receiver = userRepository.getByField("username",transactionDto.getReceiver());
         transaction.setReceiver(receiver);
+        transaction.setSender(sender);
+        transaction.setAmount(transactionDto.getAmount());
+        transaction.setWallet(sender.getWallet());
+        receiver.getTransactions().add(transaction);
+
+        return transaction;
+    }
+
+    public Transaction ingoingFromDto(User sender, TransactionDto transactionDto) {
+        Transaction transaction = new Transaction();
+        User receiver = userRepository.getByField("username",transactionDto.getReceiver());
+        transaction.setSender(sender);
+        transaction.setReceiver(receiver);
         transaction.setAmount(transactionDto.getAmount());
         transaction.setWallet(walletRepository.getById(transactionDto.getWallet()));
-        receiver.getTransactions().add(transaction);
+//        transaction.setDirection();
+        transaction.setDate(LocalDateTime.now());
 
         return transaction;
     }

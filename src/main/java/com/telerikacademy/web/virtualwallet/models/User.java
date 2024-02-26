@@ -68,6 +68,15 @@ public class User {
     )
     private Set<Role> userRoles;
 
+    @JsonManagedReference
+    @JsonIgnore
+    @OneToOne(mappedBy = "holder",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private Wallet wallet;
+
     public Set<Role> getUserRoles() {
         return userRoles;
     }
@@ -148,6 +157,21 @@ public class User {
         return new HashSet<>(transactions);
     }
 
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public void setUserRoles(Set<Role> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
 
     @Override
     public boolean equals(Object o) {
