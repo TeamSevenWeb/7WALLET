@@ -1,0 +1,11 @@
+package com.telerikacademy.web.virtualwallet.services.contracts;
+
+import com.telerikacademy.web.virtualwallet.models.Transaction;
+import com.telerikacademy.web.virtualwallet.models.User;
+
+public interface TransactionService {
+
+    Transaction getById(int id);
+
+    void create(Transaction transaction, User user);
+}

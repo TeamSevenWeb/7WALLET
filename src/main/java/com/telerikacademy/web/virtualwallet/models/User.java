@@ -49,14 +49,15 @@ public class User {
     cascade = CascadeType.ALL,
     fetch = FetchType.EAGER)
     private ProfilePhoto profilePhoto;
-//    @JsonManagedReference
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "holder",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            fetch = FetchType.EAGER
-//    )
-//    private Set<Transfer> transfers;
+
+    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "holder",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private Set<Transaction> transactions;
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER)
@@ -143,8 +144,8 @@ public class User {
         this.userCards = userCards;
     }
 
-    public Set<Card> getTransfers() {
-        return new HashSet<>(userCards);
+    public Set<Transaction> getTransactions() {
+        return new HashSet<>(transactions);
     }
 
 
