@@ -7,5 +7,5 @@ public interface TransactionService {
 
     Transaction getById(int id);
 
-    void create(Transaction transaction, User user);
+    void create(Transaction outgoing,Transaction ingoing, User user);
 }

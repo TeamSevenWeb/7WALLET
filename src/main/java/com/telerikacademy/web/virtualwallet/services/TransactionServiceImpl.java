@@ -14,7 +14,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void create(Transaction transaction, User user) {
+    public void create(Transaction outgoing,Transaction ingoing, User sender) {
+//        if(sender.getWallet().getAmount()<outgoing.getAmount()){
+//            return;
+//        }
 
     }
 }
