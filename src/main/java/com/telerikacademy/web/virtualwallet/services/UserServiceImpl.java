@@ -99,6 +99,7 @@ public class UserServiceImpl implements UserService {
         if (user.getProfilePhoto()!=null){
             profilePhotoRepository.delete(user.getProfilePhoto().getProfilePhotoId());
         }
+        profilePhoto.setUser(user);
         profilePhotoRepository.create(profilePhoto);
     }
 
