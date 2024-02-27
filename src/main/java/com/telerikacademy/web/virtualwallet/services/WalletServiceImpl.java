@@ -2,7 +2,7 @@ package com.telerikacademy.web.virtualwallet.services;
 
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.models.Currency;
-import com.telerikacademy.web.virtualwallet.models.Wallet;
+import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import org.springframework.stereotype.Service;
@@ -65,5 +65,6 @@ public class WalletServiceImpl implements WalletService {
     public void changeCurrency(int walletId, Currency currency) {
         Wallet wallet = get(walletId);
         wallet.setCurrency(currency);
+        walletRepository.update(wallet);
     }
 }
