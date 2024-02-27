@@ -74,7 +74,7 @@ create table virtual_wallet.wallets
     wallet_id int auto_increment
         primary key,
     holder    int        not null,
-    holdings  mediumtext not null,
+    holdings  double not null,
     currency  int        not null,
     constraint wallets_fk2
         foreign key (currency) references virtual_wallet.currencies (currency_id),

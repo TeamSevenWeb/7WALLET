@@ -21,10 +21,12 @@ public class Wallet {
 
 
     @Column(name = "holdings")
-    private long holdings;
+    private double holdings;
 
-    @Column(name = "currency")
-    private String currency;
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "currency")
+    private Currency currency;
 
     public int getId() {
         return id;
@@ -34,11 +36,11 @@ public class Wallet {
         return holder;
     }
 
-    public long getHoldings() {
+    public double getHoldings() {
         return holdings;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
@@ -50,11 +52,11 @@ public class Wallet {
         this.holder = holder;
     }
 
-    public void setHoldings(long holdings) {
+    public void setHoldings(double holdings) {
         this.holdings = holdings;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 
