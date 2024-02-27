@@ -82,6 +82,16 @@ create table virtual_wallet.wallets
         foreign key (holder) references virtual_wallet.users (user_id)
 );
 
+create table virtual_wallet.join_wallets_users
+(
+    wallet_id int not null,
+    user_id int not null,
+    constraint join_wallets_users_wallets_wallet_id_fk
+        foreign key (wallet_id) references virtual_wallet.wallets (wallet_id),
+    constraint join_wallets_users_users_users_user_id_fk
+        foreign key (user_id) references virtual_wallet.users (user_id)
+);
+
 create table virtual_wallet.transactions
 (
     transaction_id int auto_increment
