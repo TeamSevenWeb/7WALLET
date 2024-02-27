@@ -47,8 +47,8 @@ public class User {
 
     @JsonManagedReference
     @OneToOne(mappedBy = "user",
-    cascade = CascadeType.ALL,
-    fetch = FetchType.EAGER)
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
     private ProfilePhoto profilePhoto;
 
     @JsonManagedReference
@@ -64,8 +64,8 @@ public class User {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="role_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> userRoles;
 

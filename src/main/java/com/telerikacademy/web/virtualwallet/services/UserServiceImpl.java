@@ -1,5 +1,7 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
+import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.ProfilePhotoRepository;
@@ -19,6 +21,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ProfilePhotoRepository profilePhotoRepository;
     private final RoleRepository roleRepository;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, ProfilePhotoRepository profilePhotoRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
@@ -56,16 +59,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByPhoneNumber(String phoneNumber) {
-       return userRepository.getByField("phoneNumber", phoneNumber);
+        return userRepository.getByField("phoneNumber", phoneNumber);
     }
 
     @Override
     public List<User> getAll() {
-       return userRepository.getAll();
+        return userRepository.getAll();
     }
 
     @Override
     public void create(User user) {
+        try {
+            User existingUser = userRepository.getByField("username", user.getUsername());
+            throw new EntityDuplicateException("User", "username", existingUser.getUsername());
+        } catch (EntityNotFoundException ignored) {
+        }
+        try {
+            User existingEmail = userRepository.getByField("email", user.getEmail());
+            throw new EntityDuplicateException("User", "email", existingEmail.getEmail());
+        } catch (EntityNotFoundException ignored) {
+        }
         userRepository.create(user);
     }
 
@@ -90,13 +103,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public void unblock(int userId, User admin) {
         User userToBeUnBlocked = userRepository.getById(userId);
-        userToBeUnBlocked.getUserRoles().remove(roleRepository.getByField("roleType",UserRole.blocked.toString()));
+        userToBeUnBlocked.getUserRoles().remove(roleRepository.getByField("roleType", UserRole.blocked.toString()));
         userRepository.update(userToBeUnBlocked);
     }
 
     @Override
+    public void makeAdmin(int userId, User admin) {
+
+        User userToBeMadeAdmin = userRepository.getById(userId);
+        userToBeMadeAdmin.getUserRoles().add(roleRepository.getByField("roleType", UserRole.admin.toString()));
+        userRepository.update(userToBeMadeAdmin);
+
+    }
+
+    @Override
+    public void removeAdmin(int userId, User admin) {
+
+        User userToHaveAdminRemoved = userRepository.getById(userId);
+        userToHaveAdminRemoved.getUserRoles().remove(roleRepository.getByField("roleType", UserRole.admin.toString()));
+        userRepository.update(userToHaveAdminRemoved);
+
+    }
+
+    @Override
     public void uploadProfilePhoto(ProfilePhoto profilePhoto, User user) {
-        if (user.getProfilePhoto()!=null){
+        if (user.getProfilePhoto() != null) {
             profilePhotoRepository.delete(user.getProfilePhoto().getProfilePhotoId());
         }
         profilePhoto.setUser(user);

@@ -32,6 +32,9 @@ public interface UserService {
 
     void unblock(int id, User user);
 
+    void makeAdmin(int id, User user);
+    void removeAdmin(int id, User user);
+
     void uploadProfilePhoto(ProfilePhoto profilePhoto, User user);
 
     void updateProfilePhoto(ProfilePhoto profilePhoto);
