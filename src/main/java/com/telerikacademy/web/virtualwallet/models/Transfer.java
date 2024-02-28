@@ -1,35 +1,29 @@
 package com.telerikacademy.web.virtualwallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "transactions")
-public class Transaction {
+@Table(name = "transfers")
+public class Transfer {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "transaction_id")
+    @Column(name = "transfer_id")
     private int id;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "sender")
-    private User sender;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "receiver")
-    private User receiver;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "wallet")
     private Wallet wallet;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "card")
+    private Card card;
 
     @Column(name = "amount")
     private long amount;
@@ -48,28 +42,20 @@ public class Transaction {
         this.id = id;
     }
 
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
-    }
-
     public Wallet getWallet() {
         return wallet;
     }
 
     public void setWallet(Wallet wallet) {
         this.wallet = wallet;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 
     public long getAmount() {
@@ -101,9 +87,9 @@ public class Transaction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Transaction transaction = (Transaction) o;
+        Transfer transfer = (Transfer) o;
 
-        return id == transaction.id;
+        return id == transfer.id;
     }
 
     @Override

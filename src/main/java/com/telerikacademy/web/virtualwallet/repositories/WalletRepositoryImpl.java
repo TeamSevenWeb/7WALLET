@@ -1,40 +1,29 @@
 package com.telerikacademy.web.virtualwallet.repositories;
 
+import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class WalletRepositoryImpl implements WalletRepository {
-    @Override
-    public void delete(int id) {
+public class WalletRepositoryImpl extends AbstractCRUDRepository<Wallet> implements WalletRepository {
 
+
+    public WalletRepositoryImpl(SessionFactory sessionFactory) {
+        super(Wallet.class, sessionFactory);
     }
 
     @Override
-    public void create(Wallet entity) {
+    public void transfer(Transfer transfer){
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(transfer);
+            session.getTransaction().commit();
+        }
 
-    }
-
-    @Override
-    public void update(Wallet entity) {
-
-    }
-
-    @Override
-    public List<Wallet> getAll() {
-        return null;
-    }
-
-    @Override
-    public Wallet getById(int id) {
-        return null;
-    }
-
-    @Override
-    public <V> Wallet getByField(String name, V value) {
-        return null;
     }
 }
