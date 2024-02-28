@@ -95,7 +95,7 @@ public class UserRestController {
         userService.updateProfilePhoto(profilePhoto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/transaction/{id}")
     public Transaction getTransaction(@PathVariable int id){
         try {
             return transactionService.getById(id);
@@ -104,7 +104,7 @@ public class UserRestController {
         }
     }
 
-    @PostMapping()
+    @PostMapping("/transaction")
     public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
         try {
             User sender = getUser(1);

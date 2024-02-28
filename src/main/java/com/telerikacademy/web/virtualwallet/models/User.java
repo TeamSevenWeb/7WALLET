@@ -52,12 +52,21 @@ public class User {
 
     @JsonManagedReference
     @JsonIgnore
-    @OneToMany(mappedBy = "holder",
+    @OneToMany(mappedBy = "sender",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private Set<Transaction> transactions;
+    private Set<Transaction> sentTransactions;
+
+    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "receiver",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private Set<Transaction> receivedTransactions;
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER)
@@ -153,13 +162,22 @@ public class User {
         this.userCards = userCards;
     }
 
-    public Set<Transaction> getTransactions() {
-        return new HashSet<>(transactions);
+    public Set<Transaction> getSentTransactions() {
+        return new HashSet<>(sentTransactions);
     }
 
-    public void setTransactions(Set<Transaction> transactions) {
-        this.transactions = transactions;
+    public void setSentTransactions(Set<Transaction> transactions) {
+        this.sentTransactions = transactions;
     }
+
+    public Set<Transaction> getReceivedTransactions() {
+        return new HashSet<>(receivedTransactions);
+    }
+
+    public void setReceivedTransactions(Set<Transaction> receivedTransactions) {
+        this.receivedTransactions = receivedTransactions;
+    }
+
 
     public void setUserRoles(Set<Role> userRoles) {
         this.userRoles = userRoles;

@@ -1,18 +1,19 @@
 package com.telerikacademy.web.virtualwallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "transfers")
+@Table(name = "transactions")
 public class Transaction {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "transfer_id")
+    @Column(name = "transaction_id")
     private int id;
 
     @JsonIgnore
@@ -27,7 +28,7 @@ public class Transaction {
 
     @JsonIgnore
     @ManyToOne
-    @Column(name = "wallet")
+    @JoinColumn(name = "wallet")
     private Wallet wallet;
 
     @Column(name = "amount")
