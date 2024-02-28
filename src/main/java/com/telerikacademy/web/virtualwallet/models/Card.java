@@ -22,7 +22,7 @@ public class Card {
     private User holder;
 
     @Column(name = "number")
-    private String number;
+    private int number;
 
     @Column(name = "cvv")
     private int cvv;
@@ -46,11 +46,11 @@ public class Card {
         this.holder = holder;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 

@@ -2,6 +2,7 @@ package com.telerikacademy.web.virtualwallet.models.wallets;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.telerikacademy.web.virtualwallet.models.User;
+import com.telerikacademy.web.virtualwallet.models.Wallet;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -18,6 +19,7 @@ public class JoinWallet extends Wallet {
 
     )
     private Set<User> users;
+
 
     public Set<User> getUsers() {
         return users;

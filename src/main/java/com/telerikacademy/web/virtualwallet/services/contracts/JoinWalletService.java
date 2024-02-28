@@ -3,7 +3,6 @@ package com.telerikacademy.web.virtualwallet.services.contracts;
 import com.telerikacademy.web.virtualwallet.models.Currency;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
-import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 
 import java.util.List;
 
