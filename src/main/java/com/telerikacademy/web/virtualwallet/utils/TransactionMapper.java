@@ -33,7 +33,7 @@ public class TransactionMapper {
         transaction.setSender(sender);
         transaction.setAmount(transactionDto.getAmount());
         transaction.setWallet(sender.getWallet());
-        receiver.getTransactions().add(transaction);
+        receiver.getSentTransactions().add(transaction);
 
         return transaction;
     }

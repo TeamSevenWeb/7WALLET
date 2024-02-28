@@ -1,8 +1,6 @@
-package com.telerikacademy.web.virtualwallet.models.wallets;
+package com.telerikacademy.web.virtualwallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.telerikacademy.web.virtualwallet.models.Currency;
-import com.telerikacademy.web.virtualwallet.models.User;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -23,12 +21,10 @@ public class Wallet {
 
 
     @Column(name = "holdings")
-    private double holdings;
+    private long holdings;
 
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "currency")
-    private Currency currency;
+    @Column(name = "currency")
+    private String currency;
 
     public int getId() {
         return id;
@@ -38,11 +34,11 @@ public class Wallet {
         return holder;
     }
 
-    public double getHoldings() {
+    public long getHoldings() {
         return holdings;
     }
 
-    public Currency getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 
@@ -54,11 +50,11 @@ public class Wallet {
         this.holder = holder;
     }
 
-    public void setHoldings(double holdings) {
+    public void setHoldings(long holdings) {
         this.holdings = holdings;
     }
 
-    public void setCurrency(Currency currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
     }
 

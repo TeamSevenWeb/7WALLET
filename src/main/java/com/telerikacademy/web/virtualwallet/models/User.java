@@ -2,7 +2,6 @@ package com.telerikacademy.web.virtualwallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -47,25 +46,34 @@ public class User {
 
     @JsonManagedReference
     @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+    cascade = CascadeType.ALL,
+    fetch = FetchType.EAGER)
     private ProfilePhoto profilePhoto;
 
     @JsonManagedReference
     @JsonIgnore
-    @OneToMany(mappedBy = "holder",
+    @OneToMany(mappedBy = "sender",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private Set<Transaction> transactions;
+    private Set<Transaction> sentTransactions;
+
+    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "receiver",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private Set<Transaction> receivedTransactions;
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id")
     )
     private Set<Role> userRoles;
 
@@ -154,13 +162,22 @@ public class User {
         this.userCards = userCards;
     }
 
-    public Set<Transaction> getTransactions() {
-        return new HashSet<>(transactions);
+    public Set<Transaction> getSentTransactions() {
+        return new HashSet<>(sentTransactions);
     }
 
-    public void setTransactions(Set<Transaction> transactions) {
-        this.transactions = transactions;
+    public void setSentTransactions(Set<Transaction> transactions) {
+        this.sentTransactions = transactions;
     }
+
+    public Set<Transaction> getReceivedTransactions() {
+        return new HashSet<>(receivedTransactions);
+    }
+
+    public void setReceivedTransactions(Set<Transaction> receivedTransactions) {
+        this.receivedTransactions = receivedTransactions;
+    }
+
 
     public void setUserRoles(Set<Role> userRoles) {
         this.userRoles = userRoles;

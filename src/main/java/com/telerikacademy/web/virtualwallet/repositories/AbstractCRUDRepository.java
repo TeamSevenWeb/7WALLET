@@ -9,11 +9,10 @@ import java.util.List;
 
 import static java.lang.String.format;
 
-public abstract class AbstractCRUDRepository<T> implements BaseCRUDRepository<T> {
+public abstract class AbstractCRUDRepository<T>  implements BaseCRUDRepository<T> {
 
     protected final SessionFactory sessionFactory;
     protected final Class<T> clazz;
-
     public AbstractCRUDRepository(Class<T> clazz, SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
         this.clazz = clazz;
@@ -29,7 +28,7 @@ public abstract class AbstractCRUDRepository<T> implements BaseCRUDRepository<T>
     }
 
     @Override
-    public void update(T entity) {
+    public void update(T entity){
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.merge(entity);
@@ -38,7 +37,7 @@ public abstract class AbstractCRUDRepository<T> implements BaseCRUDRepository<T>
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id){
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.remove(getById(id));
@@ -67,7 +66,7 @@ public abstract class AbstractCRUDRepository<T> implements BaseCRUDRepository<T>
     }
 
     @Override
-    public List<T> getAll() {
+    public List<T> getAll(){
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(format("from %s", clazz.getName()), clazz).list();
         }

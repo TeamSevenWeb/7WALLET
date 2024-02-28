@@ -17,11 +17,12 @@ public class Card {
     private int id;
 
     @JsonIgnore
-    @Column(name = "holder")
-    private String holder;
+    @ManyToOne
+    @JoinColumn(name = "holder")
+    private User holder;
 
     @Column(name = "number")
-    private int number;
+    private String number;
 
     @Column(name = "cvv")
     private int cvv;
@@ -37,19 +38,19 @@ public class Card {
         this.id = id;
     }
 
-    public String getHolder() {
+    public User getHolder() {
         return holder;
     }
 
-    public void setHolder(String holder) {
+    public void setHolder(User holder) {
         this.holder = holder;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
