@@ -63,7 +63,7 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     @Override
     public void changeCurrency(int walletId, Currency currency) {
         JoinWallet wallet = get(walletId);
-        wallet.setCurrency(currency);
+        wallet.setCurrency(currency.getCurrencyCode());
         joinWalletRepository.update(wallet);
     }
 

@@ -21,7 +21,7 @@ public class Wallet {
 
 
     @Column(name = "holdings")
-    private long holdings;
+    private double holdings;
 
     @Column(name = "currency")
     private String currency;
@@ -34,7 +34,7 @@ public class Wallet {
         return holder;
     }
 
-    public long getHoldings() {
+    public double getHoldings() {
         return holdings;
     }
 
@@ -50,7 +50,7 @@ public class Wallet {
         this.holder = holder;
     }
 
-    public void setHoldings(long holdings) {
+    public void setHoldings(double holdings) {
         this.holdings = holdings;
     }
 
