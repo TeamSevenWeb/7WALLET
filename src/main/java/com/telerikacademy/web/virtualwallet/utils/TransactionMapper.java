@@ -20,7 +20,7 @@ public class TransactionMapper {
 
 
     @Autowired
-    public TransactionMapper(TransactionRepository transactionRepository, UserRepository userRepository, WalletRepository walletRepository) {
+    public TransactionMapper(UserRepository userRepository, WalletRepository walletRepository) {
         this.userRepository = userRepository;
         this.walletRepository = walletRepository;
     }

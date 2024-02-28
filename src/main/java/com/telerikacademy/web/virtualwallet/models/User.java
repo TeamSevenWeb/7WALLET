@@ -68,6 +68,7 @@ public class User {
     )
     private Set<Transaction> receivedTransactions;
 
+
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(

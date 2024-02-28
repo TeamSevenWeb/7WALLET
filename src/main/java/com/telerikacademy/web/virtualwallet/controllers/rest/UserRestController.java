@@ -3,15 +3,16 @@ package com.telerikacademy.web.virtualwallet.controllers.rest;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
-import com.telerikacademy.web.virtualwallet.models.Transaction;
-import com.telerikacademy.web.virtualwallet.models.User;
+import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.dtos.ProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
+import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.ProfilePhotoMapper;
 import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
+import com.telerikacademy.web.virtualwallet.utils.TransferMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -32,12 +33,18 @@ public class UserRestController {
 
     private final TransactionMapper transactionMapper;
 
+    private final TransferMapper transferMapper;
+
+    private final WalletService walletService;
+
     @Autowired
-    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper) {
+    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService) {
         this.userService = userService;
         this.transactionService = transactionService;
         this.profilePhotoMapper = profilePhotoMapper;
         this.transactionMapper = transactionMapper;
+        this.transferMapper = transferMapper;
+        this.walletService = walletService;
     }
 
     @GetMapping("/{id}")
@@ -112,6 +119,22 @@ public class UserRestController {
             Transaction ingoing = transactionMapper.ingoingFromDto(sender,transactionDto);
             transactionService.create(outgoing,ingoing, sender);
             return outgoing;
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @PostMapping("/wallet/fund")
+    public Transfer createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
+        try {
+            User user = getUser(1);
+            Transfer ingoing = transferMapper.ingoingFromDto(user,transferDto);
+            walletService.transfer(ingoing);
+            return ingoing;
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
