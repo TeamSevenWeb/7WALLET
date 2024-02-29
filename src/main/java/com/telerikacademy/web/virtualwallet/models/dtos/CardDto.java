@@ -10,12 +10,12 @@ public class CardDto {
     private String holder;
 
     @Size(min = 16,max = 16,message = "Please enter a valid card number.")
-    private int number;
+    private String number;
 
     @Size(min = 3,max = 3,message = "Invalid cvv number.")
-    private int cvv;
+    private String cvv;
 
-    private Date expirationDate;
+    private String expirationDate;
 
     public String getHolder() {
         return holder;
@@ -25,27 +25,27 @@ public class CardDto {
         this.holder = holder;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
-    public int getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(int cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 
-    public Date getExpirationDate() {
+    public String getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 }

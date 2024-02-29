@@ -17,18 +17,17 @@ public class Card {
     private int id;
 
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "holder")
-    private User holder;
+    @Column(name = "holder")
+    private String holder;
 
     @Column(name = "number")
-    private int number;
+    private String number;
 
     @Column(name = "cvv")
-    private int cvv;
+    private String cvv;
 
     @Column(name = "expiration_date")
-    private Date expirationDate;
+    private String expirationDate;
 
     public int getId() {
         return id;
@@ -38,35 +37,35 @@ public class Card {
         this.id = id;
     }
 
-    public User getHolder() {
+    public String getHolder() {
         return holder;
     }
 
-    public void setHolder(User holder) {
+    public void setHolder(String holder) {
         this.holder = holder;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
-    public int getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(int cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 
-    public Date getExpirationDate() {
+    public String getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 
