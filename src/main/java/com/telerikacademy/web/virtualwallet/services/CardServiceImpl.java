@@ -1,5 +1,7 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
+import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.Card;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.CardRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.CardService;
@@ -25,6 +27,15 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public void create(Card card) {
+        boolean duplicateExists = true;
+        try {
+            cardRepository.getByField("number",card.getNumber());
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+        if (duplicateExists){
+            throw new EntityDuplicateException("Card", "Number", card.getNumber());
+        }
         cardRepository.create(card);
     }
 
