@@ -1,3 +1,13 @@
+create table virtual_wallet.cards
+(
+    card_id         int auto_increment
+        primary key,
+    holder          varchar(30) not null,
+    number          varchar(16) not null,
+    cvv             varchar(3)  not null,
+    expiration_date varchar(5)  not null
+);
+
 create table virtual_wallet.currencies
 (
     currency_id   int auto_increment
@@ -35,18 +45,6 @@ create table virtual_wallet.users
         unique (email),
     constraint users_pk3
         unique (phone_number)
-);
-
-create table virtual_wallet.cards
-(
-    card_id         int auto_increment
-        primary key,
-    holder          int          not null,
-    number          mediumtext   not null,
-    cvv             int          not null,
-    expiration_date varchar(255) null,
-    constraint cards_holder_fk
-        foreign key (holder) references virtual_wallet.users (user_id)
 );
 
 create table virtual_wallet.profile_photos
@@ -107,16 +105,15 @@ create table virtual_wallet.transfers
     transfer_id int auto_increment
         primary key,
     wallet      int         not null,
-    card        int        not null,
+    card        int         not null,
     amount      mediumtext  not null,
     direction   int         not null,
     date        varchar(30) null,
-    constraint transfers_wallet_fk
-        foreign key (wallet) references virtual_wallet.wallets (wallet_id),
     constraint transfers_card_fk2
         foreign key (card) references virtual_wallet.cards (card_id),
     constraint transfers_direction_fk3
-        foreign key (direction) references virtual_wallet.transaction_directions (direction_id)
+        foreign key (direction) references virtual_wallet.transaction_directions (direction_id),
+    constraint transfers_wallet_fk
+        foreign key (wallet) references virtual_wallet.wallets (wallet_id)
 );
-
 
