@@ -1,6 +1,7 @@
-package com.telerikacademy.web.virtualwallet.models;
+package com.telerikacademy.web.virtualwallet.models.wallets;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.telerikacademy.web.virtualwallet.models.User;
 import jakarta.persistence.*;
 
 import java.util.Objects;
