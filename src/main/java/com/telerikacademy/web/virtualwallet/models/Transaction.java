@@ -1,7 +1,7 @@
 package com.telerikacademy.web.virtualwallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

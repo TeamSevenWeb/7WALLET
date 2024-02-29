@@ -6,9 +6,10 @@ import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.JoinWalletRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.JoinWalletService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class JoinWalletServiceImpl implements JoinWalletService {
 
     private final JoinWalletRepository joinWalletRepository;
