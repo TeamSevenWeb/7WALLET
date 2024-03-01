@@ -12,10 +12,11 @@ public class UserDto {
     @Pattern(regexp = "((?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&+^-])[A-Za-z\\d@$!%*?&+^-]{8,}$)")
     @Size(min = 8)
     private String password;
-
+    @Pattern(regexp = "(^[a-zA-Z]$)")
     @NotBlank(message = "First name cannot be empty.")
     private String firstName;
 
+    @Pattern(regexp = "(^[a-zA-Z]$)")
     @NotBlank(message = "Last name cannot be empty.")
     private String lastName;
 
@@ -23,6 +24,7 @@ public class UserDto {
     @Email
     private String email;
 
+    @Pattern(regexp = "(^\\+?[0-9+]$)")
     @NotEmpty(message = "Phone number cannot be empty.")
     @Size(min = 10, max = 10)
     private String phoneNumber;
