@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.models.Currency;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
+import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
+import com.telerikacademy.web.virtualwallet.services.contracts.CurrencyService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +24,13 @@ public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
 
+    private final CurrencyService currencyService;
+
     private final  String apiUrl = "https://65df74a2ff5e305f32a25197.mockapi.io/api/card/withdraw";
 
-    public WalletServiceImpl(WalletRepository walletRepository) {
+    public WalletServiceImpl(WalletRepository walletRepository, CurrencyService currencyService) {
         this.walletRepository = walletRepository;
+        this.currencyService = currencyService;
     }
 
     @Override
@@ -57,7 +62,7 @@ public class WalletServiceImpl implements WalletService {
     public void addFunds(int walletId, double funds) {
         Wallet wallet = get(walletId);
         wallet.setHoldings(wallet.getHoldings() + funds);
-        walletRepository.update(wallet);
+        update(wallet);
     }
 
     @Override
@@ -67,13 +72,14 @@ public class WalletServiceImpl implements WalletService {
             throw new FundsSupplyException();
         }
         wallet.setHoldings(wallet.getHoldings() - funds);
-        walletRepository.update(wallet);
+        update(wallet);
     }
 
     @Override
     public void changeCurrency(int walletId, Currency currency) {
         Wallet wallet = get(walletId);
-        wallet.setCurrency(currency.getCurrencyCode());
+        wallet.setCurrency(currency);
+        update(wallet);
     }
 
     @Override
@@ -114,4 +120,13 @@ public class WalletServiceImpl implements WalletService {
             return null;
         }
     }
+
+    public Wallet createDefaultWallet(User user){
+        Wallet wallet = new Wallet();
+        wallet.setHolder(user);
+        wallet.setHoldings(0.0);
+        wallet.setCurrency(currencyService.getById(1));
+        return wallet;
+    }
+
     }

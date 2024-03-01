@@ -88,6 +88,8 @@ public class User {
     )
     private Wallet wallet;
 
+
+
     public Set<Role> getUserRoles() {
         return userRoles;
     }

@@ -2,6 +2,7 @@ package com.telerikacademy.web.virtualwallet.services.contracts;
 
 import com.telerikacademy.web.virtualwallet.models.Currency;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
+import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 
 import java.util.List;
@@ -25,5 +26,7 @@ public interface WalletService {
     void changeCurrency(int walletId, Currency currency);
 
     void transfer(Transfer transfer);
+
+    Wallet createDefaultWallet(User user);
 
 }
