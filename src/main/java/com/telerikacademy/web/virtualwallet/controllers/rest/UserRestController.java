@@ -53,7 +53,7 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable int id) {
+    public User getUser(@PathVariable int id){
         try {
             return userService.getById(id);
         } catch (EntityNotFoundException e) {
@@ -62,24 +62,12 @@ public class UserRestController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(){
         try {
             return userService.getAll();
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-    }
-
-    @PostMapping("/{id}/block")
-    public void blockUser(@PathVariable int id) {
-        try {
-            userService.block(id, userService.getById(1));
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-
     }
 
     @PostMapping("/new")
@@ -92,32 +80,46 @@ public class UserRestController {
 
     }
 
-    @PostMapping("/{id}/unblock")
-    public void unBlockUser(@PathVariable int id) {
+    @PostMapping("/{id}/block")
+    public void blockUser(@PathVariable int id){
         try {
-            userService.unblock(id, userService.getById(1));
+            userService.block(id,userService.getById(1));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException e) {
+        }
+        catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+    }
+
+    @PostMapping("/{id}/unblock")
+    public void unBlockUser(@PathVariable int id){
+        try {
+            userService.unblock(id,userService.getById(1));
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+        catch (AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
     @PostMapping("/{id}/uploadPhoto")
-    public void uploadPhoto(@PathVariable int id, @Valid @RequestBody ProfilePhotoDto profilePhotoDto) {
+    public void uploadPhoto(@PathVariable int id, @Valid @RequestBody ProfilePhotoDto profilePhotoDto){
         ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(profilePhotoDto);
-        userService.uploadProfilePhoto(profilePhoto, userService.getById(id));
+        userService.uploadProfilePhoto(profilePhoto,userService.getById(id));
 
     }
 
     @PostMapping("/{id}/updatePhoto")
-    public void updatePhoto(@PathVariable int id, @Valid @RequestBody ProfilePhotoDto profilePhotoDto) {
+    public void updatePhoto(@PathVariable int id, @Valid @RequestBody ProfilePhotoDto profilePhotoDto){
         ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(id, profilePhotoDto);
         userService.updateProfilePhoto(profilePhoto);
     }
 
     @GetMapping("/transaction/{id}")
-    public Transaction getTransaction(@PathVariable int id) {
+    public Transaction getTransaction(@PathVariable int id){
         try {
             return transactionService.getById(id);
         } catch (EntityNotFoundException e) {
@@ -130,8 +132,8 @@ public class UserRestController {
         try {
             User sender = getUser(1);
             Transaction outgoing = transactionMapper.outgoingFromDto(sender, transactionDto);
-            Transaction ingoing = transactionMapper.ingoingFromDto(sender, transactionDto);
-            transactionService.create(outgoing, ingoing, sender);
+            Transaction ingoing = transactionMapper.ingoingFromDto(sender,transactionDto);
+            transactionService.create(outgoing,ingoing, sender);
             return outgoing;
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -143,10 +145,10 @@ public class UserRestController {
     }
 
     @PostMapping("/wallet/fund")
-    public Transfer createTransfer(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
+    public Transfer createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
         try {
             User user = getUser(1);
-            Transfer ingoing = transferMapper.ingoingFromDto(user, transferDto);
+            Transfer ingoing = transferMapper.ingoingFromDto(user,transferDto);
             walletService.transfer(ingoing);
             return ingoing;
         } catch (EntityNotFoundException e) {
@@ -157,6 +159,5 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-
 
 }
