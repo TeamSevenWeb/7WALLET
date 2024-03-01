@@ -2,10 +2,11 @@ package com.telerikacademy.web.virtualwallet.services;
 
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
-import com.telerikacademy.web.virtualwallet.repositories.contracts.ProfilePhotoRepository;
-import com.telerikacademy.web.virtualwallet.repositories.contracts.RoleRepository;
-import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
+import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
+import com.telerikacademy.web.virtualwallet.repositories.contracts.*;
+import com.telerikacademy.web.virtualwallet.services.contracts.CurrencyService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
+import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ProfilePhotoRepository profilePhotoRepository;
     private final RoleRepository roleRepository;
+    private final WalletService walletService;
+
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ProfilePhotoRepository profilePhotoRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, ProfilePhotoRepository profilePhotoRepository, RoleRepository roleRepository, WalletService walletService) {
         this.userRepository = userRepository;
         this.profilePhotoRepository = profilePhotoRepository;
         this.roleRepository = roleRepository;
+        this.walletService = walletService;
     }
 
     @Override
@@ -67,6 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(User user) {
         userRepository.create(user);
+        walletService.create(walletService.createDefaultWallet(user));
     }
 
     @Override

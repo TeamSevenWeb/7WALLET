@@ -1,4 +1,5 @@
-package com.telerikacademy.web.virtualwallet.controllers.rest;
+/*
+package com.telerikacademy.web.virtualwallet.controllers.REST;
 
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
@@ -58,3 +59,4 @@ public class CardRestController {
     }
 
 }
+*/

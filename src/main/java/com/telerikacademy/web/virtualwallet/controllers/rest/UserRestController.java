@@ -1,4 +1,4 @@
-package com.telerikacademy.web.virtualwallet.controllers.rest;
+package com.telerikacademy.web.virtualwallet.controllers.REST;
 
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
@@ -143,7 +143,7 @@ public class UserRestController {
     }
 
     @PostMapping("/wallet/fund")
-    public Transfer createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
+    public Transfer createTransfer(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
         try {
             User user = getUser(1);
             Transfer ingoing = transferMapper.ingoingFromDto(user, transferDto);

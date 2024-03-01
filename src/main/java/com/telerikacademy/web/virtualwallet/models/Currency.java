@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.models;
 
+import com.telerikacademy.web.virtualwallet.utils.Currencies;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -16,6 +17,9 @@ public class Currency {
     @Column(name = "currency_code")
     private String currencyCode;
 
+    @Column(name = "rating")
+    private double rating;
+
     public int getId() {
         return id;
     }
@@ -30,6 +34,14 @@ public class Currency {
 
     public void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     @Override

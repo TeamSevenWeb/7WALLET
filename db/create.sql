@@ -12,7 +12,8 @@ create table virtual_wallet.currencies
 (
     currency_id   int auto_increment
         primary key,
-    currency_code varchar(10) not null
+    currency_code varchar(10) not null,
+    rating double not null
 );
 
 create table virtual_wallet.roles
@@ -72,7 +73,7 @@ create table virtual_wallet.wallets
     wallet_id int auto_increment
         primary key,
     holder    int        not null,
-    holdings  mediumtext not null,
+    holdings  double not null,
     currency  int        not null,
     constraint wallets_fk2
         foreign key (currency) references virtual_wallet.currencies (currency_id),
