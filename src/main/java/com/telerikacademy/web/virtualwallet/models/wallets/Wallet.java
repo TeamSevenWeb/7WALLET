@@ -7,7 +7,11 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "wallets")
+@DiscriminatorColumn(name = "wallet_type",
+        discriminatorType = DiscriminatorType.INTEGER)
+@DiscriminatorValue("1")
 public class Wallet {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,6 +2,7 @@ package com.telerikacademy.web.virtualwallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import jakarta.persistence.*;
 
@@ -88,6 +89,9 @@ public class User {
     )
     private Wallet wallet;
 
+    @ManyToMany
+    @JsonIgnore
+    private Set<JoinWallet> joinWallets;
 
 
     public Set<Role> getUserRoles() {
@@ -193,6 +197,15 @@ public class User {
 
     public void setWallet(Wallet wallet) {
         this.wallet = wallet;
+    }
+
+
+    public Set<JoinWallet> getJoinWallets() {
+        return joinWallets;
+    }
+
+    public void setJoinWallets(Set<JoinWallet> joinWallets) {
+        this.joinWallets = joinWallets;
     }
 
     @Override
