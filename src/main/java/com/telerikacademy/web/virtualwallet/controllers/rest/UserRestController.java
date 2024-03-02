@@ -7,14 +7,12 @@ import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.dtos.ProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
-import com.telerikacademy.web.virtualwallet.models.dtos.UserDto;
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.ProfilePhotoMapper;
 import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
 import com.telerikacademy.web.virtualwallet.utils.TransferMapper;
-import com.telerikacademy.web.virtualwallet.utils.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -39,17 +37,14 @@ public class UserRestController {
 
     private final WalletService walletService;
 
-    private final UserMapper userMapper;
-
     @Autowired
-    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService, UserMapper userMapper) {
+    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService) {
         this.userService = userService;
         this.transactionService = transactionService;
         this.profilePhotoMapper = profilePhotoMapper;
         this.transactionMapper = transactionMapper;
         this.transferMapper = transferMapper;
         this.walletService = walletService;
-        this.userMapper = userMapper;
     }
 
     @GetMapping("/{id}")
@@ -69,17 +64,6 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-
-    @PostMapping("/new")
-    public void createUser(@Valid @RequestBody UserDto userDto) {
-        try {
-            userService.create(userMapper.fromDto(userDto));
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-
-    }
-
     @PostMapping("/{id}/block")
     public void blockUser(@PathVariable int id){
         try {
