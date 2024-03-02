@@ -15,7 +15,6 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     public static final String BLOCK_UNBLOCK_PERMISSIONS_ERR = "Only admins are allowed to block or unblock users.";
     private final UserRepository userRepository;
     private final ProfilePhotoRepository profilePhotoRepository;
@@ -61,12 +60,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByPhoneNumber(String phoneNumber) {
-       return userRepository.getByField("phoneNumber", phoneNumber);
+        return userRepository.getByField("phoneNumber", phoneNumber);
     }
 
     @Override
     public List<User> getAll() {
-       return userRepository.getAll();
+        return userRepository.getAll();
     }
 
     @Override
@@ -96,13 +95,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void unblock(int userId, User admin) {
         User userToBeUnBlocked = userRepository.getById(userId);
-        userToBeUnBlocked.getUserRoles().remove(roleRepository.getByField("roleType",UserRole.blocked.toString()));
+        userToBeUnBlocked.getUserRoles().remove(roleRepository.getByField("roleType", UserRole.blocked.toString()));
         userRepository.update(userToBeUnBlocked);
     }
 
     @Override
     public void uploadProfilePhoto(ProfilePhoto profilePhoto, User user) {
-        if (user.getProfilePhoto()!=null){
+        if (user.getProfilePhoto() != null) {
             profilePhotoRepository.delete(user.getProfilePhoto().getProfilePhotoId());
         }
         profilePhoto.setUser(user);

@@ -24,9 +24,9 @@ public class UserDto {
     @Email
     private String email;
 
-    @Pattern(regexp = "(^\\+?[0-9+]*$)")
+    @Pattern(regexp = "([0-9+]*$)")
     @NotEmpty(message = "Phone number cannot be empty.")
-    @Size(min = 10, max = 10)
+    @Size(min = 10, max = 10, message = "Please enter a valid phone number.")
     private String phoneNumber;
 
     public String getUsername() {
