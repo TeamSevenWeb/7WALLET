@@ -72,6 +72,7 @@ create table virtual_wallet.wallets
 (
     wallet_id int auto_increment
         primary key,
+    wallet_type int not null,
     holder    int        not null,
     holdings  double not null,
     currency  int        not null,

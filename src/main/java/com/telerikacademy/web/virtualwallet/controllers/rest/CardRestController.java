@@ -4,7 +4,6 @@ import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.Card;
-import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.CardDto;
 import com.telerikacademy.web.virtualwallet.services.contracts.CardService;
 import com.telerikacademy.web.virtualwallet.utils.CardMapper;

@@ -1,4 +1,4 @@
-package com.telerikacademy.web.virtualwallet.controllers.rest;
+package com.telerikacademy.web.virtualwallet.controllers.REST;
 
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
@@ -6,7 +6,6 @@ import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.dtos.ProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
-import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
@@ -119,22 +118,6 @@ public class UserRestController {
             Transaction ingoing = transactionMapper.ingoingFromDto(sender,transactionDto);
             transactionService.create(outgoing,ingoing, sender);
             return outgoing;
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityDuplicateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
-
-    @PostMapping("/wallet/fund")
-    public Transfer createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
-        try {
-            User user = getUser(1);
-            Transfer ingoing = transferMapper.ingoingFromDto(user,transferDto);
-            walletService.transfer(ingoing);
-            return ingoing;
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
