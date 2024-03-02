@@ -1,5 +1,7 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
+import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(int id) {
-        return userRepository.getByField("id", id);
+        return userRepository.getById(id);
 
     }
 
@@ -70,6 +72,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void create(User user) {
+        try {
+            getByUsername(user.getUsername());
+            throw new EntityDuplicateException("User","Username",user.getUsername());
+        } catch (EntityNotFoundException ignored) {
+
+        }
+        try {
+            getByEmail(user.getEmail());
+            throw new EntityDuplicateException("User","Email",user.getEmail());
+        } catch (EntityNotFoundException ignored) {
+        }
+
         userRepository.create(user);
         walletService.create(walletService.createDefaultWallet(user));
     }
