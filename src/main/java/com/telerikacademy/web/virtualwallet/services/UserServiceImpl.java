@@ -127,5 +127,22 @@ public class UserServiceImpl implements UserService {
         profilePhotoRepository.update(profilePhoto);
     }
 
+    @Override
+    public boolean isAdmin(User user) {
+        return user.getUserRoles().stream().anyMatch(r -> r.getRoleType().equals(UserRole.admin.toString()));
+    }
+
+    @Override
+    public boolean isBlocked(User user) {
+        return user.getUserRoles().stream().anyMatch(r -> r.getRoleType().equals(UserRole.blocked.toString()));
+
+    }
+
+    @Override
+    public boolean isRegular(User user) {
+        return user.getUserRoles().stream().anyMatch(r -> r.getRoleType().equals(UserRole.regular.toString()));
+
+    }
+
 
 }

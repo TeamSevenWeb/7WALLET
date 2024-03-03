@@ -36,6 +36,7 @@ public interface UserService {
 
     void updateProfilePhoto(ProfilePhoto profilePhoto);
 
-
-
+    boolean isAdmin(User user);
+    boolean isBlocked(User user);
+    boolean isRegular(User user);
 }
