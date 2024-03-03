@@ -1,9 +1,6 @@
 package com.telerikacademy.web.virtualwallet.controllers.rest;
 
-import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
-import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
-import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
-import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
+import com.telerikacademy.web.virtualwallet.exceptions.*;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
@@ -47,8 +44,8 @@ public class WalletRestController {
         }
     }
 
-    @PostMapping("/wallet/fund")
-    public Transfer createTransfer(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
+    @PostMapping("/fund")
+    public Transfer fundWallet(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
         try {
             User user = userService.getById(1);
             Transfer ingoing = transferMapper.ingoingFromDto(user,transferDto);
@@ -60,6 +57,27 @@ public class WalletRestController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+        catch (TransferFailedException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+    @PostMapping("/withdraw")
+    public Transfer withdrawToCard(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
+        try {
+            User user = userService.getById(1);
+            Transfer outgoing = transferMapper.outgoingFromDto(user,transferDto);
+            walletService.transfer(outgoing);
+            return outgoing;
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+        catch (TransferFailedException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 }

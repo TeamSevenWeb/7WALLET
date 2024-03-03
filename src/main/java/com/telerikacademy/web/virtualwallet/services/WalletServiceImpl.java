@@ -3,6 +3,7 @@ package com.telerikacademy.web.virtualwallet.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
+import com.telerikacademy.web.virtualwallet.exceptions.TransferFailedException;
 import com.telerikacademy.web.virtualwallet.models.Currency;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
@@ -107,13 +108,17 @@ public class WalletServiceImpl implements WalletService {
         // Convert the JSON string to a Map
         Map<String, Object> responseMap = convertJsonToMap(responseBody);
 
-       if(responseMap.get("processed").equals("true")){
-           walletRepository.transfer(transfer);
+        if(responseMap.get("processed").equals(false)){
+           throw new TransferFailedException();
        }
-       else {
-           System.out.println("Processing failed");
-           System.out.println(responseMap.get("processed"));
-       }
+
+        if(transfer.getDirection()==1){
+            addFunds(transfer.getWallet().getId(),transfer.getAmount());
+        }
+        else {
+            subtractFunds(transfer.getWallet().getId(),transfer.getAmount());
+        }
+        walletRepository.transfer(transfer);
     }
 
     private static Map<String, Object> convertJsonToMap(String json) {

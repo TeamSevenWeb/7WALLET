@@ -27,10 +27,10 @@ public class Helpers {
 
     public static Card createMockCard() {
         var mockCard = new Card();
-
+        var user = createMockUser();
         mockCard.setId(1);
         mockCard.setNumber("1234567891234567");
-        mockCard.setHolder("Test Testov");
+        mockCard.setHolder(user);
         mockCard.setExpirationDate("01/01");
         mockCard.setCvv("123");
         return mockCard;
