@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('7WALLET HOME')}"></div>
+
+<body>
+<div th:insert="~{fragments/PageFrame :: navbar}"></div>
+<section class="home-background">
+    <div class="home-container">
+
+            <div class="home-text-block bg-secondary bg-light rounded-3">
+                <h1 class="home-text-header" th:text="#{home.block.header.welcome}"></h1>
+                <p  class="home-text-content lead" >
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque aut autem fuga, laudantium maxime molestiae necessitatibus provident quia totam vel.
+                </p>
+            </div>
+
+    </div>
+</section>
+<div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+</body>
+<div th:replace="~{/fragments/PageFrame :: footer}"></div>
+</html>
