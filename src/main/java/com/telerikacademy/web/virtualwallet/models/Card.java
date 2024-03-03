@@ -17,8 +17,9 @@ public class Card {
     private int id;
 
     @JsonIgnore
-    @Column(name = "holder")
-    private String holder;
+    @ManyToOne
+    @JoinColumn(name = "holder")
+    private User holder;
 
     @Column(name = "number")
     private String number;
@@ -37,11 +38,11 @@ public class Card {
         this.id = id;
     }
 
-    public String getHolder() {
+    public User getHolder() {
         return holder;
     }
 
-    public void setHolder(String holder) {
+    public void setHolder(User user) {
         this.holder = holder;
     }
 

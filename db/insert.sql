@@ -40,9 +40,9 @@ INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (8, 3);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (9, 3);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (10, 2);
 
-INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (1, 'Alexander','6703444444444449','933','03/30');
-INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (2, 'Georgi','4360000001000005	','633','03/30');
-INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (3, 'Svetoslav','8171999927660000','733','03/30');
+INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (1, 1,'6703444444444449','933','03/30');
+INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (2, 2,'4360000001000005	','633','03/30');
+INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (3, 3,'8171999927660000','733','03/30');
 
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (1,1,1,400.50,1);
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (2,1,2,500.50,2);
@@ -55,6 +55,8 @@ INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, cu
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (9,1,9,6666.50,1);
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (10,1,10,777,1);
 
+INSERT INTO virtual_wallet.transaction_directions (direction_id, direction) VALUES (1, 'INGOING');
+INSERT INTO virtual_wallet.transaction_directions (direction_id, direction) VALUES (2, 'OUTGOING');
 
 
 

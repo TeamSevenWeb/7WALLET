@@ -5,14 +5,12 @@ import jakarta.validation.constraints.NotNull;
 
 public class TransferDto {
 
-    @NotNull(message = "Wallet address can not be empty")
-    private String walletAddress;
     @NotNull(message = "Card can not be empty")
     private CardDto card;
 
     @NotNull(message = "Amount can't be empty")
     @Digits(integer = 10, fraction = 2)
-    private int amount;
+    private long amount;
 
     public TransferDto(){
     }
@@ -25,11 +23,11 @@ public class TransferDto {
         this.card = card;
     }
 
-    public int getAmount() {
+    public long getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(long amount) {
         this.amount = amount;
     }
 }
