@@ -26,15 +26,8 @@ import java.util.List;
 public class UserRestController {
     private final UserService userService;
 
-    private final TransactionService transactionService;
-
     private final ProfilePhotoMapper profilePhotoMapper;
 
-    private final TransactionMapper transactionMapper;
-
-    private final TransferMapper transferMapper;
-
-    private final WalletService walletService;
 
     private final UserMapper userMapper;
     private final AuthenticationHelper authenticationHelper;
@@ -42,11 +35,7 @@ public class UserRestController {
     @Autowired
     public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService, UserMapper userMapper, AuthenticationHelper authenticationHelper) {
         this.userService = userService;
-        this.transactionService = transactionService;
         this.profilePhotoMapper = profilePhotoMapper;
-        this.transactionMapper = transactionMapper;
-        this.transferMapper = transferMapper;
-        this.walletService = walletService;
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
     }
@@ -170,31 +159,4 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-
-    @GetMapping("/transaction/{id}")
-    public Transaction getTransaction(@PathVariable int id) {
-        try {
-            return transactionService.getById(id);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-
-    @PostMapping("/transaction")
-    public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
-        try {
-            User sender = getUser(1);
-            Transaction outgoing = transactionMapper.outgoingFromDto(sender, transactionDto);
-            Transaction ingoing = transactionMapper.ingoingFromDto(sender, transactionDto);
-            transactionService.create(outgoing, ingoing, sender);
-            return outgoing;
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityDuplicateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
-
 }

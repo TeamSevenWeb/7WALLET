@@ -33,7 +33,9 @@ public class TransactionMapper {
         transaction.setSender(sender);
         transaction.setAmount(transactionDto.getAmount());
         transaction.setWallet(sender.getWallet());
-        receiver.getSentTransactions().add(transaction);
+        transaction.setDirection(2);
+        sender.getSentTransactions().add(transaction);
+        transaction.setDate(LocalDateTime.now());
 
         return transaction;
     }
@@ -44,9 +46,10 @@ public class TransactionMapper {
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
         transaction.setAmount(transactionDto.getAmount());
-        transaction.setWallet(walletRepository.getById(transactionDto.getWallet()));
-//        transaction.setDirection();
+        transaction.setWallet(sender.getWallet());
+        transaction.setDirection(1);
         transaction.setDate(LocalDateTime.now());
+        receiver.getReceivedTransactions().add(transaction);
 
         return transaction;
     }
