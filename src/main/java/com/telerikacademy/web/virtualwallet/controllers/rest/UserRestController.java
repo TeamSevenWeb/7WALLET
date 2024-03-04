@@ -98,6 +98,17 @@ public class UserRestController {
         }
     }
 
+
+    @PostMapping("/new")
+    public void createUser(@Valid @RequestBody UserDto userDto) {
+        try {
+            userService.create(userMapper.fromDto(userDto));
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+    }
+
     @PostMapping("/{id}/block")
     public void blockUser(@PathVariable int id, @RequestHeader HttpHeaders headers) {
         try {

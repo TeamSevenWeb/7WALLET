@@ -6,9 +6,8 @@ import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -82,14 +81,15 @@ public class User {
 
     @JsonManagedReference
     @JsonIgnore
-    @OneToOne(mappedBy = "holder",
+    @OneToMany(mappedBy = "holder",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private Wallet wallet;
+    private Set<Wallet> wallets;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "users",
+    fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<JoinWallet> joinWallets;
 
@@ -192,13 +192,23 @@ public class User {
     }
 
     public Wallet getWallet() {
-        return wallet;
+        return getWallets().stream().toList().get(0);
     }
 
     public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
+        List<Wallet> newWalletsList = new ArrayList<>(getWallets());
+        newWalletsList.set(0,wallet);
+        Set<Wallet> newWalletsSet = new HashSet<>(newWalletsList);
+        setWallets(newWalletsSet);
     }
 
+    public Set<Wallet> getWallets() {
+        return wallets;
+    }
+
+    public void setWallets(Set<Wallet> wallets) {
+        this.wallets = wallets;
+    }
 
     public Set<JoinWallet> getJoinWallets() {
         return joinWallets;

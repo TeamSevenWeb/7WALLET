@@ -32,7 +32,7 @@ public class Transaction {
     private Wallet wallet;
 
     @Column(name = "amount")
-    private long amount;
+    private double amount;
 
     @Column(name = "direction")
     private int direction;
@@ -72,11 +72,11 @@ public class Transaction {
         this.wallet = wallet;
     }
 
-    public long getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(long amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

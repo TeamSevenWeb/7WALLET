@@ -41,7 +41,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet getByUser(User user) {
-        return walletRepository.getByField("id",user.getId());
+        return walletRepository.getByUser(user);
     }
 
 
@@ -134,6 +134,7 @@ public class WalletServiceImpl implements WalletService {
 
     public Wallet createDefaultWallet(User user){
         Wallet wallet = new Wallet();
+        wallet.setName("Personal");
         wallet.setHolder(user);
         wallet.setHoldings(0.0);
         wallet.setCurrency(currencyService.getById(1));
