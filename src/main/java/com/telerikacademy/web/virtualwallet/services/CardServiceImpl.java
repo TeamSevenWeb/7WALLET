@@ -4,6 +4,7 @@ import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.Card;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.CardRepository;
+import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.CardService;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,11 @@ public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
 
+    private final UserRepository userRepository;
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository) {
+    public CardServiceImpl(CardRepository cardRepository, UserRepository userRepository) {
         this.cardRepository = cardRepository;
+        this.userRepository = userRepository;
     }
 
 

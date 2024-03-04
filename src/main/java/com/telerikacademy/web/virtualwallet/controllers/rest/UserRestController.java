@@ -88,7 +88,7 @@ public class UserRestController {
     }
 
 
-    @PostMapping("/new")
+    @PostMapping()
     public void createUser(@Valid @RequestBody UserDto userDto) {
         try {
             userService.create(userMapper.fromDto(userDto));

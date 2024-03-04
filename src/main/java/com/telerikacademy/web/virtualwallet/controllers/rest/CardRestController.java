@@ -36,7 +36,7 @@ public class CardRestController {
         }
     }
 
-    @PostMapping("/new")
+    @PostMapping()
     public void create(@Valid @RequestBody CardDto cardDto) {
         try {
             cardService.create(cardMapper.fromDto(cardDto));
