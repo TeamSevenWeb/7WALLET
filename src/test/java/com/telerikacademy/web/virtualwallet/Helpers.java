@@ -50,9 +50,10 @@ public class Helpers {
         var user = createMockUser();
         mockCard.setId(1);
         mockCard.setNumber("1234567891234567");
-        mockCard.setHolder(user);
         mockCard.setExpirationDate("01/01");
         mockCard.setCvv("123");
+        mockCard.setHolder(user);
+        user.getUserCards().add(mockCard);
         return mockCard;
     }
 
