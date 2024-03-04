@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
@@ -17,6 +18,8 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static final String MODIFY_USER_ERROR_MESSAGE = "Only admin or account holder can modify a user.";
     public static final String BLOCK_UNBLOCK_PERMISSIONS_ERR = "Only admins are allowed to block or unblock users.";
     private final UserRepository userRepository;
     private final ProfilePhotoRepository profilePhotoRepository;
@@ -89,17 +92,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(User user) {
-        userRepository.update(user);
+    public void update(User userToBeUpdated, User user) {
+        checkModifyPermissions(userToBeUpdated, user);
+        userRepository.update(userToBeUpdated);
     }
 
     @Override
-    public void delete(User user) {
-        userRepository.delete(user.getId());
+    public void delete(int id, User user) {
+        checkModifyPermissions(getById(id),user);
+        userRepository.delete(id);
     }
 
     @Override
     public void block(int userId, User admin) {
+        checkAdmin(admin,BLOCK_UNBLOCK_PERMISSIONS_ERR);
         User userToBeBlocked = userRepository.getById(userId);
         userToBeBlocked.getUserRoles().add(roleRepository.getByField("roleType", UserRole.blocked.toString()));
         userRepository.update(userToBeBlocked);
@@ -108,22 +114,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void unblock(int userId, User admin) {
+        checkAdmin(admin,BLOCK_UNBLOCK_PERMISSIONS_ERR);
         User userToBeUnBlocked = userRepository.getById(userId);
         userToBeUnBlocked.getUserRoles().remove(roleRepository.getByField("roleType", UserRole.blocked.toString()));
         userRepository.update(userToBeUnBlocked);
     }
 
     @Override
-    public void uploadProfilePhoto(ProfilePhoto profilePhoto, User user) {
-        if (user.getProfilePhoto() != null) {
-            profilePhotoRepository.delete(user.getProfilePhoto().getProfilePhotoId());
+    public void uploadProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user) {
+        checkModifyPermissions(userToBeUpdated,user);
+        if (userToBeUpdated.getProfilePhoto() != null) {
+            profilePhotoRepository.delete(userToBeUpdated.getProfilePhoto().getProfilePhotoId());
         }
-        profilePhoto.setUser(user);
+        profilePhoto.setUser(userToBeUpdated);
         profilePhotoRepository.create(profilePhoto);
     }
 
     @Override
-    public void updateProfilePhoto(ProfilePhoto profilePhoto) {
+    public void updateProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user) {
+        checkModifyPermissions(userToBeUpdated,user);
         profilePhotoRepository.update(profilePhoto);
     }
 
@@ -143,6 +152,16 @@ public class UserServiceImpl implements UserService {
         return user.getUserRoles().stream().anyMatch(r -> r.getRoleType().equals(UserRole.regular.toString()));
 
     }
+    private void checkModifyPermissions(User userToBeUpdated, User user) {
+        if (!isAdmin(user) && userToBeUpdated.getId() != user.getId()) {
+            throw new AuthorizationException(MODIFY_USER_ERROR_MESSAGE);
+        }
+    }
 
+    private void checkAdmin(User user, String errorMessage){
+        if (!isAdmin(user)){
+            throw new AuthorizationException(errorMessage);
+        }
+    }
 
 }

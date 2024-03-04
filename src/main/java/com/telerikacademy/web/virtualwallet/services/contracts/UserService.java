@@ -24,17 +24,17 @@ public interface UserService {
 
     void create(User user);
 
-    void update(User user);
+    void update(User userToBeUpdated, User user);
 
-    void delete (User user);
+    void delete (int id, User user);
 
     void block(int id, User user);
 
     void unblock(int id, User user);
 
-    void uploadProfilePhoto(ProfilePhoto profilePhoto, User user);
+    void uploadProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user);
 
-    void updateProfilePhoto(ProfilePhoto profilePhoto);
+    void updateProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user);
 
     boolean isAdmin(User user);
     boolean isBlocked(User user);
