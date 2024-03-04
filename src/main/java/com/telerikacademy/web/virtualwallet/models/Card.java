@@ -42,7 +42,7 @@ public class Card {
         return holder;
     }
 
-    public void setHolder(User user) {
+    public void setHolder(User holder) {
         this.holder = holder;
     }
 
