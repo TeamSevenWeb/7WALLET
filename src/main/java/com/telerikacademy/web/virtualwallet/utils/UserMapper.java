@@ -25,7 +25,6 @@ public class UserMapper {
         user.setReceivedTransactions(oldUser.getReceivedTransactions());
         user.setSentTransactions(oldUser.getSentTransactions());
         user.setWallets(oldUser.getWallets());
-        user.setWallet(oldUser.getWallet());
         user.setId(oldUser.getId());
         return user;
     }
