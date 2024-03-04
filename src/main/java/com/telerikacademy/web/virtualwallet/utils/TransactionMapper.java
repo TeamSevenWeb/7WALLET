@@ -28,7 +28,7 @@ public class TransactionMapper {
 
     public Transaction outgoingFromDto(User sender, TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
-        User receiver = userRepository.getByField("username",transactionDto.getReceiver());
+        User receiver = userRepository.searchByAnyMatch(transactionDto.getReceiver());
         transaction.setReceiver(receiver);
         transaction.setSender(sender);
         transaction.setAmount(transactionDto.getAmount());
@@ -42,7 +42,7 @@ public class TransactionMapper {
 
     public Transaction ingoingFromDto(User sender, TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
-        User receiver = userRepository.getByField("username",transactionDto.getReceiver());
+        User receiver = userRepository.searchByAnyMatch(transactionDto.getReceiver());
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
         transaction.setAmount(transactionDto.getAmount());
