@@ -44,16 +44,16 @@ INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)
 INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (2, 2,'4360000001000005	','633','03/30');
 INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (3, 3,'8171999927660000','733','03/30');
 
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (1,1,1,400.50,1);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (2,1,2,500.50,2);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (3,1,3,700.50,3);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (4,1,4,600.50,1);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (5,1,5,3.50,1);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (6,1,6,350.50,1);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (7,1,7,1111.50,1);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (8,1,8,2333.50,1);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (9,1,9,6666.50,1);
-INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, holder, holdings, currency) VALUES (10,1,10,777,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (1,1,'Personal',1,400.50,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (2,1,'Personal',2,500.50,2);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (3,1,'Personal',3,700.50,3);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (4,1,'Personal',4,600.50,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (5,1,'Personal',5,3.50,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (6,1,'Personal',6,350.50,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (7,1,'Personal',7,1111.50,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (8,1,'Personal',8,2333.50,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (9,1,'Personal',9,6666.50,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (10,1,'Personal',10,777,1);
 
 INSERT INTO virtual_wallet.transaction_directions (direction_id, direction) VALUES (1, 'INGOING');
 INSERT INTO virtual_wallet.transaction_directions (direction_id, direction) VALUES (2, 'OUTGOING');

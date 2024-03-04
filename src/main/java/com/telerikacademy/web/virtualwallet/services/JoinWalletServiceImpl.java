@@ -4,7 +4,9 @@ import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.models.Currency;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
+import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.JoinWalletRepository;
+import com.telerikacademy.web.virtualwallet.services.contracts.CurrencyService;
 import com.telerikacademy.web.virtualwallet.services.contracts.JoinWalletService;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,11 @@ public class JoinWalletServiceImpl implements JoinWalletService {
 
     private final JoinWalletRepository joinWalletRepository;
 
-    public JoinWalletServiceImpl(JoinWalletRepository joinWalletRepository) {
+    private final CurrencyService currencyService;
+
+    public JoinWalletServiceImpl(JoinWalletRepository joinWalletRepository, CurrencyService currencyService) {
         this.joinWalletRepository = joinWalletRepository;
+        this.currencyService = currencyService;
     }
 
 
@@ -27,6 +32,10 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     @Override
     public List<JoinWallet> getAll() {
         return joinWalletRepository.getAll();
+    }
+
+    public List<JoinWallet>getAllByUser(User user){
+        return  joinWalletRepository.getAllByUser(user);
     }
 
     @Override
@@ -86,5 +95,14 @@ public class JoinWalletServiceImpl implements JoinWalletService {
         JoinWallet joinWallet = get(walletId);
         joinWallet.getUsers().remove(user);
         joinWalletRepository.update(joinWallet);
+    }
+
+    public JoinWallet createJoinWallet(User user, String name){
+        JoinWallet wallet = new JoinWallet();
+        wallet.setName(name);
+        wallet.setHolder(user);
+        wallet.setHoldings(0.0);
+        wallet.setCurrency(currencyService.getById(1));
+        return wallet;
     }
 }

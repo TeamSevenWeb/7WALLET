@@ -19,8 +19,11 @@ public class Wallet {
     @Column(name = "wallet_id")
     private int id;
 
+    @Column(name = "name")
+    private String name;
+
     @JsonIgnore
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "holder")
     private User holder;
 
@@ -34,6 +37,10 @@ public class Wallet {
 
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public User getHolder() {
@@ -50,6 +57,10 @@ public class Wallet {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setHolder(User holder) {

@@ -12,7 +12,11 @@ public interface JoinWalletService {
 
     List<JoinWallet> getAll();
 
+    List<JoinWallet> getAllByUser(User user);
+
     void create(JoinWallet wallet);
+
+    JoinWallet createJoinWallet(User user, String name);
 
     void update(JoinWallet wallet);
 
