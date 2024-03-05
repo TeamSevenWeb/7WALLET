@@ -1,5 +1,7 @@
 package com.telerikacademy.web.virtualwallet.repositories;
 
+import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
+import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
@@ -18,6 +20,19 @@ public class JoinWalletRepositoryImpl extends AbstractCRUDRepository<JoinWallet>
     @Autowired
     public JoinWalletRepositoryImpl(SessionFactory sessionFactory) {
         super(JoinWallet.class, sessionFactory);
+    }
+
+    @Override
+    public JoinWallet getByUserAndName(User user, String walletName) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<JoinWallet> query = session.createQuery("from JoinWallet where holder = :user and name = :name", JoinWallet.class);
+            query.setParameter("user", user);
+            query.setParameter("name", walletName);
+            if (query.list().isEmpty()){
+                throw new EntityNotFoundException("Wallet","name",walletName);
+            }
+            return query.list().get(0);
+        }
     }
 
     public List<JoinWallet> getAllByUser(User user) {
