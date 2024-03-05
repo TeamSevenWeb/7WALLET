@@ -159,6 +159,12 @@ public class UserServiceImpl implements UserService {
         return user.getUserRoles().stream().anyMatch(r -> r.getRoleType().equals(UserRole.regular.toString()));
 
     }
+
+    @Override
+    public User searchByAnyMatch(String parameter) {
+            return userRepository.searchByAnyMatch(parameter);
+    }
+
     private void checkAdminOrOwner(User userToBeUpdated, User user) {
         if (!isAdmin(user) && userToBeUpdated.getId() != user.getId()) {
             throw new AuthorizationException(MODIFY_USER_ERROR_MESSAGE);

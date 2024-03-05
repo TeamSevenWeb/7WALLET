@@ -6,6 +6,7 @@ import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
+import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,21 +15,18 @@ import java.time.LocalDateTime;
 @Component
 public class TransactionMapper {
 
-    private final UserRepository userRepository;
-    private final WalletRepository walletRepository;
-
+    private final UserService userService;
 
 
     @Autowired
-    public TransactionMapper(UserRepository userRepository, WalletRepository walletRepository) {
-        this.userRepository = userRepository;
-        this.walletRepository = walletRepository;
+    public TransactionMapper(UserService userService) {
+        this.userService = userService;
     }
 
 
     public Transaction outgoingFromDto(User sender, TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
-        User receiver = userRepository.searchByAnyMatch(transactionDto.getReceiver());
+        User receiver = userService.searchByAnyMatch(transactionDto.getReceiver());
         transaction.setReceiver(receiver);
         transaction.setSender(sender);
         transaction.setAmount(transactionDto.getAmount());
@@ -42,7 +40,7 @@ public class TransactionMapper {
 
     public Transaction ingoingFromDto(User sender, TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
-        User receiver = userRepository.searchByAnyMatch(transactionDto.getReceiver());
+        User receiver = userService.searchByAnyMatch(transactionDto.getReceiver());
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
         transaction.setAmount(transactionDto.getAmount());

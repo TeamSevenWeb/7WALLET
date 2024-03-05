@@ -48,7 +48,7 @@ public abstract class AbstractCRUDRepository<T>  implements BaseCRUDRepository<T
     @Override
     public <V> T getByField(String name, V value) {
         final String query = format("from %s where %s = :value", clazz.getSimpleName(), name);
-        final String notFoundErrorMessage = format("%s with %s %s not found", clazz.getSimpleName(), name, value);
+        final String notFoundErrorMessage = format("%s with %s %s not", clazz.getSimpleName(), name, value);
 
         try (Session session = sessionFactory.openSession()) {
             return session

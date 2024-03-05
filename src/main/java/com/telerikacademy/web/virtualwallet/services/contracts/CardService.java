@@ -1,15 +1,16 @@
 package com.telerikacademy.web.virtualwallet.services.contracts;
 
 import com.telerikacademy.web.virtualwallet.models.Card;
+import com.telerikacademy.web.virtualwallet.models.User;
 
 public interface CardService {
 
 
-    Card get(int id);
+    Card get(User holder, int id);
 
-    void create(Card card);
+    void create(User holder, Card card);
 
-    void delete(int id);
+    void delete(User holder, int id);
 
 
 }

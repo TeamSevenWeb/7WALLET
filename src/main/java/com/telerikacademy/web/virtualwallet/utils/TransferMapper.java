@@ -1,5 +1,7 @@
 package com.telerikacademy.web.virtualwallet.utils;
 
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
+import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.Card;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
@@ -36,14 +38,13 @@ public class TransferMapper {
         this.cardMapper = cardMapper;
     }
 
-    public Transfer outgoingFromDto(User user, TransferDto transferDto) {
+    public Transfer outgoingFromDto(User holder, TransferDto transferDto) {
         Transfer transfer = new Transfer();
-        User holder = userRepository.getByField("username",user.getUsername());
         transfer.setWallet(holder.getWallet());
-        Card cardDto = cardMapper.fromDto(transferDto.getCard());
-        Card cardToSet = holder.getUserCards().stream().filter(card -> card.getNumber().equals(cardDto.getNumber()))
-                        .findFirst()
-                .orElseThrow();
+        Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
+
+        Card cardToSet = checkCardDetails(holder,cardDto);
+
         transfer.setCard(cardToSet);
         transfer.setAmount(transferDto.getAmount());
         transfer.setDirection(2);
@@ -52,15 +53,12 @@ public class TransferMapper {
         return transfer;
     }
 
-    public Transfer ingoingFromDto(User user, TransferDto transferDto) {
+    public Transfer ingoingFromDto(User holder, TransferDto transferDto) {
         Transfer transfer = new Transfer();
-        User holder = userRepository.getByField("username",user.getUsername());
         transfer.setWallet(holder.getWallet());
-        Card cardDto = cardMapper.fromDto(transferDto.getCard());
+        Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
 
-        Card cardToSet = holder.getUserCards().stream().filter(card -> card.getNumber().equals(cardDto.getNumber()))
-                .findFirst()
-                .orElseThrow();
+        Card cardToSet = checkCardDetails(holder,cardDto);
 
         transfer.setCard(cardToSet);
         transfer.setAmount(transferDto.getAmount());
@@ -68,6 +66,13 @@ public class TransferMapper {
         transfer.setDate(LocalDateTime.now());
 
         return transfer;
+    }
+
+    private Card checkCardDetails(User holder, Card card){
+        return holder.getUserCards().stream().filter(card1 -> card1.getNumber().equals(card.getNumber())
+                        && card1.getCvv().equals(card.getCvv()) && card1.getExpirationDate().equals(card.getExpirationDate()))
+                .findFirst()
+                .orElseThrow(() -> new AuthorizationException("Check card details."));
     }
 
 }

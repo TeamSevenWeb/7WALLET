@@ -39,4 +39,6 @@ public interface UserService {
     boolean isAdmin(User user);
     boolean isBlocked(User user);
     boolean isRegular(User user);
+
+    User searchByAnyMatch(String parameter);
 }

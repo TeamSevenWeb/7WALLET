@@ -4,14 +4,19 @@ import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.Card;
+import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.CardDto;
 import com.telerikacademy.web.virtualwallet.services.contracts.CardService;
+import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
 import com.telerikacademy.web.virtualwallet.utils.CardMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -21,25 +26,32 @@ public class CardRestController {
 
     private final CardMapper cardMapper;
 
+    private final AuthenticationHelper authenticationHelper;
+
+
     @Autowired
-    public CardRestController(CardService cardService, CardMapper cardMapper) {
+    public CardRestController(CardService cardService, CardMapper cardMapper, AuthenticationHelper authenticationHelper) {
         this.cardService = cardService;
         this.cardMapper = cardMapper;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @GetMapping("/{id}")
-    public Card getById(@PathVariable int id){
+    public Card getById(@RequestHeader HttpHeaders headers, @PathVariable int id){
         try {
-            return cardService.get(id);
+            User holder =  authenticationHelper.tryGetUser(headers);
+            return cardService.get(holder,id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
     @PostMapping()
-    public void create(@Valid @RequestBody CardDto cardDto) {
+    public void create(@RequestHeader HttpHeaders headers,@Valid @RequestBody CardDto cardDto) {
         try {
-            cardService.create(cardMapper.fromDto(cardDto));
+            User holder =  authenticationHelper.tryGetUser(headers);
+            Card card = cardMapper.fromDto(holder,cardDto);
+            cardService.create(holder,card);
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException e) {
@@ -48,9 +60,10 @@ public class CardRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id){
+    public void delete(@RequestHeader HttpHeaders headers,@PathVariable int id){
         try {
-            cardService.delete(id);
+            User holder =  authenticationHelper.tryGetUser(headers);
+            cardService.delete(holder,id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
