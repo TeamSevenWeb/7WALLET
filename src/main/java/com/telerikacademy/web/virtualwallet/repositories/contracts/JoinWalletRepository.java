@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface JoinWalletRepository extends BaseCRUDRepository<JoinWallet>{
 
+    JoinWallet getByUserAndName(User user, String name);
+
     List<JoinWallet> getAllByUser(User user);
 }

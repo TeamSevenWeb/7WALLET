@@ -1,10 +1,13 @@
 package com.telerikacademy.web.virtualwallet.controllers.rest;
 
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
+import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.JoinWalletDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.UserToWalletDto;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.services.contracts.JoinWalletService;
 import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
@@ -31,7 +34,7 @@ public class JoinWalletController {
     }
 
     @GetMapping
-    public List<JoinWallet> getJoinWallets(@RequestHeader HttpHeaders headers){
+    public List<JoinWallet> getAllJoinWallets(@RequestHeader HttpHeaders headers){
         try {
             User user = authenticationHelper.tryGetUser(headers);
             List<JoinWallet> allJoinWallets = new ArrayList<>(joinWalletService.getAllByUser(user));
@@ -42,16 +45,56 @@ public class JoinWalletController {
         }
     }
 
+    @GetMapping("/{id}")
+    public JoinWallet getJoinWallet(@RequestHeader HttpHeaders headers, @PathVariable int id){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return joinWalletService.get(id,user);
+        } catch (AuthenticationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     @PostMapping
     public void createJoinWallet(@RequestHeader HttpHeaders headers,@Valid @RequestBody JoinWalletDto walletDto){
         try {
             User user = authenticationHelper.tryGetUser(headers);
             JoinWallet wallet = joinWalletService.createJoinWallet(user,walletDto.getName());
-            joinWalletService.create(wallet);
+            joinWalletService.create(wallet,user);
         }  catch (AuthenticationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e) {
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/add-user")
+    public void addUserToWallet(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserToWalletDto userToAdd
+            ,@PathVariable int id){
+        try {
+            User owner = authenticationHelper.tryGetUser(headers);
+            joinWalletService.addUser(id,userToAdd.getUser(),owner);
+        }  catch (AuthenticationException | AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+
+    }
+
+    @PostMapping("/{id}/remove-user")
+    public void removeUserFromWallet(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserToWalletDto userToAdd
+            ,@PathVariable int id){
+        try {
+            User owner = authenticationHelper.tryGetUser(headers);
+            joinWalletService.removeUser(id,userToAdd.getUser(),owner);
+        }  catch (AuthenticationException | AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
     }
 }

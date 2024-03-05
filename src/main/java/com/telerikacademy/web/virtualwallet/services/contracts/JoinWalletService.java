@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface JoinWalletService {
 
-    JoinWallet get(int id);
+    JoinWallet get(int id,User user);
 
     List<JoinWallet> getAll();
 
     List<JoinWallet> getAllByUser(User user);
 
-    void create(JoinWallet wallet);
+    void create(JoinWallet wallet, User user);
 
     JoinWallet createJoinWallet(User user, String name);
 
@@ -30,7 +30,7 @@ public interface JoinWalletService {
 
     List<User> getAllUsers(int walletId);
 
-    void addUser(int walletId, User user);
+    void addUser(int walletId, String user, User owner);
 
-    void removeUser(int walletId, User user);
+    void removeUser(int walletId, String user, User owner);
 }
