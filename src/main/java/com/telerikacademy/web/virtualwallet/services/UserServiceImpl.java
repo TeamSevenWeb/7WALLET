@@ -1,20 +1,22 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
-import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.*;
-import com.telerikacademy.web.virtualwallet.services.contracts.CurrencyService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,14 +27,16 @@ public class UserServiceImpl implements UserService {
     private final ProfilePhotoRepository profilePhotoRepository;
     private final RoleRepository roleRepository;
     private final WalletService walletService;
+    private final Cloudinary cloudinary;
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ProfilePhotoRepository profilePhotoRepository, RoleRepository roleRepository, WalletService walletService) {
+    public UserServiceImpl(UserRepository userRepository, ProfilePhotoRepository profilePhotoRepository, RoleRepository roleRepository, WalletService walletService, Cloudinary cloudinary) {
         this.userRepository = userRepository;
         this.profilePhotoRepository = profilePhotoRepository;
         this.roleRepository = roleRepository;
         this.walletService = walletService;
+        this.cloudinary = cloudinary;
     }
 
     @Override
@@ -85,20 +89,24 @@ public class UserServiceImpl implements UserService {
             throw new EntityDuplicateException("User","Email",user.getEmail());
         } catch (EntityNotFoundException ignored) {
         }
-
+        try {
+            setDefaultProfilePhoto(user);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         userRepository.create(user);
         walletService.create(walletService.createDefaultWallet(user));
     }
 
     @Override
     public void update(User userToBeUpdated, User user) {
-        checkModifyPermissions(userToBeUpdated, user);
+        checkAdminOrOwner(userToBeUpdated, user);
         userRepository.update(userToBeUpdated);
     }
 
     @Override
     public void delete(int id, User user) {
-        checkModifyPermissions(getById(id),user);
+        checkAdminOrOwner(getById(id),user);
         userRepository.delete(id);
     }
 
@@ -121,7 +129,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void uploadProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user) {
-        checkModifyPermissions(userToBeUpdated,user);
+        checkAdminOrOwner(userToBeUpdated, userToBeUpdated);
         if (userToBeUpdated.getProfilePhoto() != null) {
             profilePhotoRepository.delete(userToBeUpdated.getProfilePhoto().getProfilePhotoId());
         }
@@ -131,7 +139,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user) {
-        checkModifyPermissions(userToBeUpdated,user);
+        checkAdminOrOwner(userToBeUpdated,user);
         profilePhotoRepository.update(profilePhoto);
     }
 
@@ -151,7 +159,7 @@ public class UserServiceImpl implements UserService {
         return user.getUserRoles().stream().anyMatch(r -> r.getRoleType().equals(UserRole.regular.toString()));
 
     }
-    private void checkModifyPermissions(User userToBeUpdated, User user) {
+    private void checkAdminOrOwner(User userToBeUpdated, User user) {
         if (!isAdmin(user) && userToBeUpdated.getId() != user.getId()) {
             throw new AuthorizationException(MODIFY_USER_ERROR_MESSAGE);
         }
@@ -161,6 +169,18 @@ public class UserServiceImpl implements UserService {
         if (!isAdmin(user)){
             throw new AuthorizationException(errorMessage);
         }
+    }
+
+    private void setDefaultProfilePhoto(User user) throws IOException {
+        ProfilePhoto userProfilePhoto = new ProfilePhoto();
+        Map upload = cloudinary.uploader()
+                .upload("./src/main/resources/static/images/default_profile.jpg"
+                        , ObjectUtils.asMap("resource_type", "auto"));
+        String url = (String) upload.get("url");
+        userProfilePhoto.setProfilePhoto(url);
+        userProfilePhoto.setUser(user);
+        user.setProfilePhoto(userProfilePhoto);
+        uploadProfilePhoto(userProfilePhoto, user, user);
     }
 
 }
