@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Login')}"></div>
+<body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+
+<section class="page-section ">
+    <div class="h1 center font-aquire"  th:text="#{login.page.label}">Login</div>
+    <br/>
+    <div class="center ">
+
+        <form class="outline login-container" action="#" th:action="@{/auth/login}" th:object="${login}" method="post">
+            <label  class="font-aquire" th:text="#{user.label.username}">Username</label>
+            <br/>
+            <input type="text" th:field="*{username}"/><br/>
+            <div class="error error-login" th:errors="*{username}">Username error placeholder</div>
+
+            <label class="font-aquire" th:text="#{user.label.password}">Password</label>
+            <br/>
+            <input type="password" th:field="*{password}"/>
+            <div class="error error-login" th:errors="*{password}">Password error placeholder</div>
+            <br/>
+            <div class="login-button">
+                <input class="py-3 rounded" type="submit" value="Login"/>
+            </div>
+        </form>
+    </div>
+</section>
+<div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+</body>
+
+</html>

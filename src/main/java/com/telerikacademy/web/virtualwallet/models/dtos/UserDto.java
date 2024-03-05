@@ -10,7 +10,7 @@ public class UserDto {
 
     @NotEmpty(message = "Password cannot be empty.")
     @Pattern(regexp = "((?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&+^-])[A-Za-z\\d@$!%*?&+^-]{8,}$)")
-    @Size(min = 8)
+    @Size(min = 8, message = "Password must be at least 8 characters.")
     private String password;
     @Pattern(regexp = "(^[a-zA-Z]*$)")
     @NotBlank(message = "First name cannot be empty.")
