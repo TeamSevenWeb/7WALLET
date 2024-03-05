@@ -1,8 +1,10 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.Card;
+import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.CardRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.CardService;
@@ -15,21 +17,22 @@ public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
 
-    private final UserRepository userRepository;
+    private static final String MODIFY_CARD_ERROR_MESSAGE = "You are not the holder of this card!";
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository, UserRepository userRepository) {
+    public CardServiceImpl(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
-        this.userRepository = userRepository;
     }
 
 
     @Override
-    public Card get(int id) {
-        return cardRepository.getById(id);
+    public Card get(User holder, int id) {
+        Card card = cardRepository.getById(id);
+        checkModifyPermissions(holder,card);
+        return card;
     }
 
     @Override
-    public void create(Card card) {
+    public void create(User holder, Card card) {
         boolean duplicateExists = true;
         try {
             cardRepository.getByField("number",card.getNumber());
@@ -37,13 +40,21 @@ public class CardServiceImpl implements CardService {
             duplicateExists = false;
         }
         if (duplicateExists){
-            throw new EntityDuplicateException("Card", "Number", card.getNumber());
+            throw new EntityDuplicateException("Please enter a different card.");
         }
         cardRepository.create(card);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(User holder, int id) {
+        Card card = cardRepository.getById(id);
+        checkModifyPermissions(holder,card);
         cardRepository.delete(id);
+    }
+
+    private void checkModifyPermissions(User holder, Card card) {
+        if (!card.getHolder().equals(holder)) {
+            throw new AuthenticationException(MODIFY_CARD_ERROR_MESSAGE);
+        }
     }
 }

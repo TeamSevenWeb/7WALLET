@@ -24,6 +24,7 @@ public class Card {
     @Column(name = "number")
     private String number;
 
+
     @Column(name = "cvv")
     private String cvv;
 

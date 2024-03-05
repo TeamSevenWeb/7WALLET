@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.utils;
 
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.models.Card;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.CardDto;
@@ -16,14 +17,17 @@ public class CardMapper {
         this.userService = userService;
     }
 
-    public Card fromDto(CardDto cardDto) {
+    public Card fromDto(User holder, CardDto cardDto) {
         Card card = new Card();
         card.setNumber(cardDto.getNumber());
-        User holder = userService.getByFirstName(cardDto.getHolder());
-        holder.getUserCards().add(card);
+        if(!holder.getFirstName().equals(cardDto.getHolder())){
+            throw new AuthorizationException("Check card details.");
+        };
         card.setHolder(holder);
+        holder.getUserCards().add(card);
         card.setCvv(cardDto.getCvv());
         card.setExpirationDate(cardDto.getExpirationDate());
         return card;
     }
+
 }

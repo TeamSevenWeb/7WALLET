@@ -1,6 +1,7 @@
 package com.telerikacademy.web.virtualwallet.controllers.rest;
 
 import com.telerikacademy.web.virtualwallet.exceptions.*;
+import com.telerikacademy.web.virtualwallet.models.Card;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
@@ -59,7 +60,7 @@ public class WalletRestController {
     @PostMapping("/fund")
     public Transfer fundWallet(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
         try {
-            User user = userService.getById(1);
+            User user = authenticationHelper.tryGetUser(headers);
             Transfer ingoing = transferMapper.ingoingFromDto(user,transferDto);
             walletService.transfer(ingoing);
             return ingoing;
@@ -77,7 +78,7 @@ public class WalletRestController {
     @PostMapping("/withdraw")
     public Transfer withdrawToCard(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
         try {
-            User user = userService.getById(1);
+            User user = authenticationHelper.tryGetUser(headers);
             Transfer outgoing = transferMapper.outgoingFromDto(user,transferDto);
             walletService.transfer(outgoing);
             return outgoing;
@@ -105,7 +106,7 @@ public class WalletRestController {
     @PostMapping("/send")
     public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
         try {
-            User sender = userService.getById(1);
+            User sender = authenticationHelper.tryGetUser(headers);
             Transaction outgoing = transactionMapper.outgoingFromDto(sender, transactionDto);
             Transaction ingoing = transactionMapper.ingoingFromDto(sender, transactionDto);
             transactionService.create(outgoing, ingoing, sender);
