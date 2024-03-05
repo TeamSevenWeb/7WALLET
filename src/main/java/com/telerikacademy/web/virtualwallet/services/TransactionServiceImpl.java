@@ -38,9 +38,6 @@ public class TransactionServiceImpl implements TransactionService {
         if(senderWallet.getHoldings()<outgoing.getAmount()){
             throw new FundsSupplyException();
         }
-        if(senderWallet==receiverWallet){
-            return;
-        }
         repository.create(outgoing);
         repository.create(ingoing);
         walletService.subtractFunds(senderWallet.getId(),outgoing.getAmount());
