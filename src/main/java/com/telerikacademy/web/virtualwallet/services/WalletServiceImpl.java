@@ -2,9 +2,11 @@ package com.telerikacademy.web.virtualwallet.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.exceptions.TransferFailedException;
 import com.telerikacademy.web.virtualwallet.models.Currency;
+import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
@@ -24,6 +26,8 @@ import java.util.Map;
 @Service
 public class WalletServiceImpl implements WalletService {
 
+    private static final String WALLET_PERMISSION_ERROR = "You are not authorized for this wallet.";
+
     private final WalletRepository walletRepository;
 
     private final CurrencyService currencyService;
@@ -39,8 +43,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet get(int id) {
-        return walletRepository.getById(id);
+    public Wallet get(int id, User user) {
+        Wallet wallet = walletRepository.getById(id);
+        checkModifyPermissions(wallet,user);
+        return wallet;
     }
 
     @Override
@@ -71,14 +77,14 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void addFunds(int walletId, double funds) {
-        Wallet wallet = get(walletId);
+        Wallet wallet = walletRepository.getById(walletId);
         wallet.setHoldings(wallet.getHoldings() + funds);
         update(wallet);
     }
 
     @Override
     public void subtractFunds(int walletId, double funds) {
-        Wallet wallet = get(walletId);
+        Wallet wallet = walletRepository.getById(walletId);
         if (wallet.getHoldings() < funds){
             throw new FundsSupplyException();
         }
@@ -88,7 +94,8 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void changeCurrency(int walletId, Currency currency) {
-        Wallet wallet = get(walletId);
+//        Wallet wallet = get(walletId);  we might need the checkModifyPermissions here
+        Wallet wallet = walletRepository.getById(walletId);
         wallet.setCurrency(currency);
         update(wallet);
     }
@@ -167,6 +174,12 @@ public class WalletServiceImpl implements WalletService {
         wallet.setHoldings(0.0);
         wallet.setCurrency(currencyService.getById(1));
         return wallet;
+    }
+
+    private void checkModifyPermissions(Wallet wallet, User user) {
+        if (!wallet.getHolder().equals(user)) {
+            throw new AuthenticationException(WALLET_PERMISSION_ERROR);
+        }
     }
 
     }

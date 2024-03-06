@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface WalletService {
 
-    Wallet get(int id);
+    Wallet get(int id, User user);
 
     Wallet getByUser(User user);
 

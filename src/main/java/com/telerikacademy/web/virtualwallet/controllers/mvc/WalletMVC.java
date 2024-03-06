@@ -1,6 +1,7 @@
 package com.telerikacademy.web.virtualwallet.controllers.mvc;
 
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
@@ -37,10 +38,10 @@ public class WalletMVC {
     }
 
     @GetMapping("/{id}")
-    public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
+    public String showSingleWallet(@PathVariable int id, Model model, HttpSession session) {
         try {
-            Wallet wallet = walletService.get(id);
             User user = authenticationHelper.tryGetCurrentUser(session);
+            Wallet wallet = walletService.get(id, user);
             model.addAttribute("wallet", wallet);
             return "PostView";
         } catch (AuthenticationException e){
@@ -48,6 +49,10 @@ public class WalletMVC {
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }catch (AuthorizationException e){
+            model.addAttribute("statusCode",HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error",e.getMessage());
             return "ErrorView";
         }
     }
