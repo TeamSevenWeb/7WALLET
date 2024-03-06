@@ -8,6 +8,7 @@ import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
+import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
@@ -52,10 +53,39 @@ public class TransferMapper {
 
         return transfer;
     }
+    public Transfer outgoingFromDto(User holder,JoinWallet wallet, TransferDto transferDto) {
+        Transfer transfer = new Transfer();
+        transfer.setWallet(wallet);
+        Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
+
+        Card cardToSet = checkCardDetails(holder,cardDto);
+
+        transfer.setCard(cardToSet);
+        transfer.setAmount(transferDto.getAmount());
+        transfer.setDirection(2);
+        transfer.setDate(LocalDateTime.now());
+
+        return transfer;
+    }
 
     public Transfer ingoingFromDto(User holder, TransferDto transferDto) {
         Transfer transfer = new Transfer();
         transfer.setWallet(holder.getWallet());
+        Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
+
+        Card cardToSet = checkCardDetails(holder,cardDto);
+
+        transfer.setCard(cardToSet);
+        transfer.setAmount(transferDto.getAmount());
+        transfer.setDirection(1);
+        transfer.setDate(LocalDateTime.now());
+
+        return transfer;
+    }
+
+    public Transfer ingoingFromDto(User holder, JoinWallet wallet, TransferDto transferDto) {
+        Transfer transfer = new Transfer();
+        transfer.setWallet(wallet);
         Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
 
         Card cardToSet = checkCardDetails(holder,cardDto);

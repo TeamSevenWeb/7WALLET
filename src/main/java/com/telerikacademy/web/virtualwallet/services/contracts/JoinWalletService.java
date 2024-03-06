@@ -1,6 +1,7 @@
 package com.telerikacademy.web.virtualwallet.services.contracts;
 
 import com.telerikacademy.web.virtualwallet.models.Currency;
+import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 
@@ -32,5 +33,8 @@ public interface JoinWalletService {
 
     void addUser(int walletId, String user, User owner);
 
-    void removeUser(int walletId, String user, User owner);
+    void removeOtherUser(int walletId, String user, User owner);
+
+    void  removeWallet(int walletId, User user);
+
 }

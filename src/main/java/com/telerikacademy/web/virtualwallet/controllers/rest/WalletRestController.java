@@ -84,13 +84,12 @@ public class WalletRestController {
             return outgoing;
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityDuplicateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-        catch (TransferFailedException e){
+        } catch (TransferFailedException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }  catch (FundsSupplyException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
