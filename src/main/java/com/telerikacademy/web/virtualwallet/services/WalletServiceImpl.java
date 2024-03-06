@@ -3,6 +3,7 @@ package com.telerikacademy.web.virtualwallet.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.exceptions.TransferFailedException;
 import com.telerikacademy.web.virtualwallet.models.Currency;
@@ -44,9 +45,8 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet get(int id, User user) {
-        Wallet wallet = walletRepository.getById(id);
-        checkModifyPermissions(wallet,user);
-        return wallet;
+        checkModifyPermissions(id,user);
+        return walletRepository.getById(id);
     }
 
     @Override
@@ -176,10 +176,10 @@ public class WalletServiceImpl implements WalletService {
         return wallet;
     }
 
-    private void checkModifyPermissions(Wallet wallet, User user) {
-        if (!wallet.getHolder().equals(user)) {
-            throw new AuthenticationException(WALLET_PERMISSION_ERROR);
-        }
+    private void checkModifyPermissions(int id, User user) {
+        user.getWallets().stream().filter(wallet -> wallet.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new AuthorizationException(WALLET_PERMISSION_ERROR));
     }
 
     }
