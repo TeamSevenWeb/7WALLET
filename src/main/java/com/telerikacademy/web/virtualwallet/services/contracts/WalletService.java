@@ -17,6 +17,8 @@ public interface WalletService {
 
     void create(Wallet wallet);
 
+    Wallet createDefaultWallet(User user);
+
     void update(Wallet wallet);
 
     void delete(int id);
@@ -28,7 +30,5 @@ public interface WalletService {
     void changeCurrency(int walletId, Currency currency);
 
     void transfer(Transfer transfer);
-
-    Wallet createDefaultWallet(User user);
 
 }

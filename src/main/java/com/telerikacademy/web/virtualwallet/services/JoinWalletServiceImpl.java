@@ -1,20 +1,27 @@
 package com.telerikacademy.web.virtualwallet.services;
 
-import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
-import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
-import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.telerikacademy.web.virtualwallet.exceptions.*;
 import com.telerikacademy.web.virtualwallet.models.Currency;
+import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.JoinWalletRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
+import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.CurrencyService;
 import com.telerikacademy.web.virtualwallet.services.contracts.JoinWalletService;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class JoinWalletServiceImpl implements JoinWalletService {
 
@@ -22,12 +29,17 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     public static final String UNAUTHORIZED = "Unauthorized";
     private final JoinWalletRepository joinWalletRepository;
 
+    private final WalletRepository walletRepository;
+
     private final UserRepository userRepository;
 
     private final CurrencyService currencyService;
 
-    public JoinWalletServiceImpl(JoinWalletRepository joinWalletRepository, UserRepository userRepository, CurrencyService currencyService) {
+    private final  String apiUrl = "https://65df74a2ff5e305f32a25197.mockapi.io/api/card/withdraw";
+
+    public JoinWalletServiceImpl(JoinWalletRepository joinWalletRepository, WalletRepository walletRepository, UserRepository userRepository, CurrencyService currencyService) {
         this.joinWalletRepository = joinWalletRepository;
+        this.walletRepository = walletRepository;
         this.userRepository = userRepository;
         this.currencyService = currencyService;
     }
@@ -48,7 +60,9 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     }
 
     public List<JoinWallet>getAllByUser(User user){
-        return  joinWalletRepository.getAllByUser(user);
+        List<JoinWallet> allJoinWallets = new ArrayList<>(joinWalletRepository.getAllByUser(user));
+        allJoinWallets.addAll(user.getJoinWallets());
+        return allJoinWallets;
     }
 
     @Override
@@ -112,7 +126,7 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     }
 
     @Override
-    public void removeUser(int walletId, String user, User owner) {
+    public void removeOtherUser(int walletId, String user, User owner) {
         JoinWallet joinWallet = joinWalletRepository.getById(walletId);
         if (joinWallet.getHolder().getId() != owner.getId()){
             throw new AuthorizationException(NOT_OWNER_ERR);
@@ -122,6 +136,14 @@ public class JoinWalletServiceImpl implements JoinWalletService {
         joinWalletRepository.update(joinWallet);
     }
 
+    @Override
+    public void removeWallet(int walletId, User user) {
+        JoinWallet joinWallet = get(walletId,user);
+        joinWallet.getUsers().remove(user);
+        joinWalletRepository.update(joinWallet);
+    }
+
+
     public JoinWallet createJoinWallet(User user, String name){
         JoinWallet wallet = new JoinWallet();
         wallet.setName(name);
@@ -130,4 +152,5 @@ public class JoinWalletServiceImpl implements JoinWalletService {
         wallet.setCurrency(currencyService.getById(1));
         return wallet;
     }
+
 }

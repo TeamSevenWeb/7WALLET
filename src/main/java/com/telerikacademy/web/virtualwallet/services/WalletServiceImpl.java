@@ -27,7 +27,7 @@ public class WalletServiceImpl implements WalletService {
 
     private final CurrencyService currencyService;
 
-    private final  String apiUrl = "https://65df74a2ff5e305f32a25197.mockapi.io/api/card/withdraw";
+    private final  String apiUrl = "https://65df74a2ff5e305f32a25197.mockapi.io/api/card/withdraw/2";
 
     public WalletServiceImpl(WalletRepository walletRepository, CurrencyService currencyService) {
         this.walletRepository = walletRepository;
@@ -97,7 +97,7 @@ public class WalletServiceImpl implements WalletService {
 
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 apiUrl,
-                HttpMethod.POST,
+                HttpMethod.GET,
                 null,  // or requestEntity if you have headers and payload
                 String.class
         );
