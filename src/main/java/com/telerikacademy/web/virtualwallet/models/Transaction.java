@@ -1,6 +1,7 @@
 package com.telerikacademy.web.virtualwallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import jakarta.persistence.*;
 
@@ -26,11 +27,6 @@ public class Transaction {
     @JoinColumn(name = "receiver")
     private User receiver;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "wallet")
-    private Wallet wallet;
-
     @Column(name = "amount")
     private double amount;
 
@@ -39,6 +35,18 @@ public class Transaction {
 
     @Column(name = "date")
     private LocalDateTime date;
+
+    //Used for creating a copy of a transaction
+    public Transaction(Transaction originalTransaction) {
+        this.id = originalTransaction.id;
+        this.sender = originalTransaction.sender;
+        this.receiver = originalTransaction.receiver;
+        this.amount = originalTransaction.amount;
+        this.direction = originalTransaction.direction;
+        this.date = originalTransaction.date;
+    }
+
+    public Transaction(){}
 
     public int getId() {
         return id;
@@ -62,14 +70,6 @@ public class Transaction {
 
     public void setReceiver(User receiver) {
         this.receiver = receiver;
-    }
-
-    public Wallet getWallet() {
-        return wallet;
-    }
-
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
     }
 
     public double getAmount() {
