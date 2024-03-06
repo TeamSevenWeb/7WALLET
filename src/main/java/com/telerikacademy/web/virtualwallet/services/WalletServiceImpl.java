@@ -14,14 +14,10 @@ import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.function.ServerRequest;
 
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
 import java.util.List;
 import java.util.Map;
 
@@ -99,24 +95,14 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void transfer(Transfer transfer) {
-
-        CookieManager cookieManager = new CookieManager();
-        CookieHandler.setDefault(cookieManager);
-
-        // Create a RestTemplate instance
-
-        ResponseEntity<String> responseEntity = null;
-
+        String responseBody = "";
 
         try {
-            responseEntity = cardTransferRequest();
+            responseBody = cardTransferRequest();
         }catch (RuntimeException e){
             resetTransferLimit();
-            responseEntity = cardTransferRequest();
+            responseBody = cardTransferRequest();
         }
-
-        // Access the response body
-        String responseBody = responseEntity.getBody();
 
         // Convert the JSON string to a Map
         Map<String, Object> responseMap = convertJsonToMap(responseBody);
@@ -158,12 +144,12 @@ public class WalletServiceImpl implements WalletService {
         restTemplate.exchange(
                 resetUrl,
                 HttpMethod.POST,
-                requestEntity,  // or requestEntity if you have headers and payload
+                requestEntity,
                 String.class
         );
     }
 
-    private ResponseEntity<String> cardTransferRequest(){
+    private String cardTransferRequest(){
         RestTemplate restTemplate = new RestTemplate();
 
         return restTemplate.exchange(
@@ -171,7 +157,7 @@ public class WalletServiceImpl implements WalletService {
                 HttpMethod.POST,
                 null,  // or requestEntity if you have headers and payload
                 String.class
-        );
+        ).getBody();
     }
 
     public Wallet createDefaultWallet(User user){
