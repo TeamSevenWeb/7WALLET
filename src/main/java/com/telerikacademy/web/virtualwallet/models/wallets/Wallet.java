@@ -1,6 +1,7 @@
 package com.telerikacademy.web.virtualwallet.models.wallets;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.telerikacademy.web.virtualwallet.models.Currency;
 import com.telerikacademy.web.virtualwallet.models.User;
 import jakarta.persistence.*;
 
@@ -51,7 +52,7 @@ public class Wallet {
         return holdings;
     }
 
-    public com.telerikacademy.web.virtualwallet.models.Currency getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
