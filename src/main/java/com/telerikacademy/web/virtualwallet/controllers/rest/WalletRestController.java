@@ -95,7 +95,7 @@ public class WalletRestController {
     public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
         try {
             User sender = authenticationHelper.tryGetUser(headers);
-            Transaction outgoing = transactionMapper.outgoingFromDto(sender, transactionDto);
+            Transaction outgoing = transactionMapper.fromDto(sender, transactionDto);
             Transaction ingoing = new Transaction(outgoing);
             ingoing.setDirection(1);
             transactionService.create(outgoing,ingoing, sender);

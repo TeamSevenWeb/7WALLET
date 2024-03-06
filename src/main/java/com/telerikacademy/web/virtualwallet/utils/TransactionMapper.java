@@ -24,7 +24,7 @@ public class TransactionMapper {
     }
 
 
-    public Transaction outgoingFromDto(User sender, TransactionDto transactionDto) {
+    public Transaction fromDto(User sender, TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
         User receiver = userService.searchByAnyMatch(transactionDto.getReceiver());
         transaction.setReceiver(receiver);

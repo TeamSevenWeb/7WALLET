@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-
 @Controller
 @RequestMapping("/api/wallet")
 public class WalletMVC {
@@ -30,6 +28,10 @@ public class WalletMVC {
     public WalletMVC(WalletService walletService, AuthenticationHelper authenticationHelper) {
         this.walletService = walletService;
         this.authenticationHelper = authenticationHelper;
+    }
+    @ModelAttribute("isAuthenticated")
+    public boolean populateIsAuthenticated(HttpSession session) {
+        return session.getAttribute("currentUser") != null;
     }
 
     @ModelAttribute("requestURI")
