@@ -11,12 +11,17 @@ import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.CurrencyService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.function.ServerRequest;
 
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +32,10 @@ public class WalletServiceImpl implements WalletService {
 
     private final CurrencyService currencyService;
 
-    private final  String apiUrl = "https://65df74a2ff5e305f32a25197.mockapi.io/api/card/withdraw/2";
+    private static final  String apiUrl = "https://65df74a2ff5e305f32a25197.mockapi.io/api/card/transfer";
+
+    private static final String resetUrl = "https://mockapi.io/api/mocks/65df74a2ff5e305f32a25198/resources/reset_all";
+
 
     public WalletServiceImpl(WalletRepository walletRepository, CurrencyService currencyService) {
         this.walletRepository = walletRepository;
@@ -92,15 +100,20 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void transfer(Transfer transfer) {
 
-        // Create a RestTemplate instance
-        RestTemplate restTemplate = new RestTemplate();
+        CookieManager cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
 
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                apiUrl,
-                HttpMethod.GET,
-                null,  // or requestEntity if you have headers and payload
-                String.class
-        );
+        // Create a RestTemplate instance
+
+        ResponseEntity<String> responseEntity = null;
+
+
+        try {
+            responseEntity = cardTransferRequest();
+        }catch (RuntimeException e){
+            resetTransferLimit();
+            responseEntity = cardTransferRequest();
+        }
 
         // Access the response body
         String responseBody = responseEntity.getBody();
@@ -130,6 +143,35 @@ public class WalletServiceImpl implements WalletService {
             e.getMessage();
             return null;
         }
+    }
+
+    private void resetTransferLimit(){
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.set("Token",
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2NWRmNzQ4NmZmNWUzMDVmMzJhMjUxNzEiLCJpYXQiOjE3MDkxNDMxNzQ5NzYsImV4cCI6MTc3MjIxNTE3NDk3Nn0.1bcAm-1RHCShgLnd8AfA_Og3H8Ufh04SvwYDBira0HQ");
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        restTemplate.exchange(
+                resetUrl,
+                HttpMethod.POST,
+                requestEntity,  // or requestEntity if you have headers and payload
+                String.class
+        );
+    }
+
+    private ResponseEntity<String> cardTransferRequest(){
+        RestTemplate restTemplate = new RestTemplate();
+
+        return restTemplate.exchange(
+                apiUrl,
+                HttpMethod.POST,
+                null,  // or requestEntity if you have headers and payload
+                String.class
+        );
     }
 
     public Wallet createDefaultWallet(User user){
