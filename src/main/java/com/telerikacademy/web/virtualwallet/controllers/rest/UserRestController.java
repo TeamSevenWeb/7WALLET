@@ -28,14 +28,16 @@ public class UserRestController {
 
     private final ProfilePhotoMapper profilePhotoMapper;
 
+    private final TransactionService transactionService;
 
     private final UserMapper userMapper;
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService, UserMapper userMapper, AuthenticationHelper authenticationHelper) {
+    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService, TransactionService transactionService1, UserMapper userMapper, AuthenticationHelper authenticationHelper) {
         this.userService = userService;
         this.profilePhotoMapper = profilePhotoMapper;
+        this.transactionService = transactionService1;
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
     }
@@ -157,6 +159,18 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @GetMapping("/transactions/{id}")
+    public Transaction getTransaction(@RequestHeader HttpHeaders headers,@PathVariable int id) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return transactionService.getById(id,user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 }

@@ -5,7 +5,7 @@ import com.telerikacademy.web.virtualwallet.models.User;
 
 public interface TransactionService {
 
-    Transaction getById(int id);
+    Transaction getById(int id, User user);
 
     void create(Transaction outgoing,Transaction ingoing, User user);
 }
