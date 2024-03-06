@@ -36,17 +36,4 @@ public class TransactionMapper {
 
         return transaction;
     }
-
-    public Transaction ingoingFromDto(User sender, TransactionDto transactionDto) {
-        Transaction transaction = new Transaction();
-        User receiver = userService.searchByAnyMatch(transactionDto.getReceiver());
-        transaction.setReceiver(receiver);
-        transaction.setSender(sender);
-        transaction.setAmount(transactionDto.getAmount());
-        transaction.setDirection(1);
-        sender.getSentTransactions().add(transaction);
-        transaction.setDate(LocalDateTime.now());
-
-        return transaction;
-    }
 }

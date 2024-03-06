@@ -107,7 +107,8 @@ public class WalletRestController {
         try {
             User sender = authenticationHelper.tryGetUser(headers);
             Transaction outgoing = transactionMapper.outgoingFromDto(sender, transactionDto);
-            Transaction ingoing = transactionMapper.ingoingFromDto(sender,transactionDto);
+            Transaction ingoing = new Transaction(outgoing);
+            ingoing.setDirection(1);
             transactionService.create(outgoing,ingoing, sender);
             return outgoing;
         } catch (EntityNotFoundException e) {
