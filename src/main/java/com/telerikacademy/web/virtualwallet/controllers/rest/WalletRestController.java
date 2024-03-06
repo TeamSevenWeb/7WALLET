@@ -26,8 +26,6 @@ public class WalletRestController {
 
     private final WalletService walletService;
 
-    private final UserService userService;
-
     private final TransferMapper transferMapper;
 
     private final AuthenticationHelper authenticationHelper;
@@ -38,9 +36,8 @@ public class WalletRestController {
 
 
 
-    public WalletRestController(WalletService walletService, UserService userService, TransferMapper transferMapper, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransactionService transactionService) {
+    public WalletRestController(WalletService walletService, TransferMapper transferMapper, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransactionService transactionService) {
         this.walletService = walletService;
-        this.userService = userService;
         this.transferMapper = transferMapper;
         this.authenticationHelper = authenticationHelper;
         this.transactionMapper = transactionMapper;
@@ -93,14 +90,6 @@ public class WalletRestController {
         }
     }
 
-    @GetMapping("/transaction/{id}")
-    public Transaction getTransaction(@PathVariable int id) {
-        try {
-            return transactionService.getById(id);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
 
     @PostMapping("/send")
     public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
