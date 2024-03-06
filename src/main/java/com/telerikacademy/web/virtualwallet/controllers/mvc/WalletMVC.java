@@ -37,10 +37,10 @@ public class WalletMVC {
     }
 
     @GetMapping("/{id}")
-    public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
+    public String showSingleWallet(@PathVariable int id, Model model, HttpSession session) {
         try {
-            Wallet wallet = walletService.get(id);
             User user = authenticationHelper.tryGetCurrentUser(session);
+            Wallet wallet = walletService.get(id, user);
             model.addAttribute("wallet", wallet);
             return "PostView";
         } catch (AuthenticationException e){
