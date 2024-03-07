@@ -27,6 +27,11 @@ public class Transaction {
     @JoinColumn(name = "receiver")
     private User receiver;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "wallet")
+    private Wallet wallet;
+
     @Column(name = "amount")
     private double amount;
 
@@ -70,6 +75,14 @@ public class Transaction {
 
     public void setReceiver(User receiver) {
         this.receiver = receiver;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 
     public double getAmount() {

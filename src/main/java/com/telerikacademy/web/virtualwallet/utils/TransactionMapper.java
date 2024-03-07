@@ -3,6 +3,8 @@ package com.telerikacademy.web.virtualwallet.utils;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.TransactionToJoinDto;
+import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
@@ -29,7 +31,21 @@ public class TransactionMapper {
         User receiver = userService.searchByAnyMatch(transactionDto.getReceiver());
         transaction.setReceiver(receiver);
         transaction.setSender(sender);
+        transaction.setWallet(receiver.getWallet());
         transaction.setAmount(transactionDto.getAmount());
+        transaction.setDirection(1);
+        sender.getSentTransactions().add(transaction);
+        transaction.setDate(LocalDateTime.now());
+
+        return transaction;
+    }
+
+    public Transaction fromDtoToJoin(User sender, TransactionToJoinDto transactionDto) {
+        Transaction transaction = new Transaction();
+        transaction.setSender(sender);
+        transaction.setReceiver(sender);
+        transaction.setAmount(transactionDto.getAmount());
+        transaction.setWallet(sender.getWallet());
         transaction.setDirection(2);
         sender.getSentTransactions().add(transaction);
         transaction.setDate(LocalDateTime.now());

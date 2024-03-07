@@ -1,10 +1,8 @@
 package com.telerikacademy.web.virtualwallet.repositories;
 
-import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
-import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.JoinWalletRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

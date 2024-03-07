@@ -1,21 +1,27 @@
 package com.telerikacademy.web.virtualwallet.controllers.rest;
 
 import com.telerikacademy.web.virtualwallet.exceptions.*;
+import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.JoinWalletDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.TransactionToJoinDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserToWalletDto;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
+import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.services.contracts.JoinWalletService;
+import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
+import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
 import com.telerikacademy.web.virtualwallet.utils.TransferMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 
@@ -25,16 +31,22 @@ public class JoinWalletRestController {
 
     private final JoinWalletService joinWalletService;
 
+    private final TransactionService transactionService;
+
     private final WalletService walletService;
 
     private final TransferMapper transferMapper;
 
+    private final TransactionMapper transactionMapper;
+
     private final AuthenticationHelper authenticationHelper;
 
-    public JoinWalletRestController(JoinWalletService joinWalletService, WalletService walletService, TransferMapper transferMapper, AuthenticationHelper authenticationHelper) {
+    public JoinWalletRestController(JoinWalletService joinWalletService, TransactionService transactionService, WalletService walletService, TransferMapper transferMapper, TransactionMapper transactionMapper, AuthenticationHelper authenticationHelper) {
         this.joinWalletService = joinWalletService;
+        this.transactionService = transactionService;
         this.walletService = walletService;
         this.transferMapper = transferMapper;
+        this.transactionMapper = transactionMapper;
         this.authenticationHelper = authenticationHelper;
     }
 
@@ -107,6 +119,39 @@ public class JoinWalletRestController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (FundsSupplyException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @PostMapping("/{idFrom}/send/{idTo}")
+    public Transaction sendToJoinWallet(@RequestHeader HttpHeaders headers, @PathVariable int idFrom
+            ,@PathVariable int idTo,@Valid @RequestBody TransactionToJoinDto transactionDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            JoinWallet joinWalletOutgoing = joinWalletService.get(idFrom,user);
+            JoinWallet joinWalletIngoing = joinWalletService.get(idTo,user);
+            return transactionService.getTransaction(transactionDto, user, joinWalletOutgoing, joinWalletIngoing);
+        }  catch (AuthenticationException | AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (FundsSupplyException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,e.getMessage());
+        }
+    }
+    @PostMapping("/{idFrom}/send")
+    public Transaction sendToDefaultWallet(@RequestHeader HttpHeaders headers, @PathVariable int idFrom
+            ,@Valid @RequestBody TransactionToJoinDto transactionDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            JoinWallet joinWalletOutgoing = joinWalletService.get(idFrom,user);
+            Wallet walletIngoing = walletService.getByUser(user);
+            return transactionService.getTransaction(transactionDto, user, joinWalletOutgoing, walletIngoing);
+        }  catch (AuthenticationException | AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (FundsSupplyException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,e.getMessage());
         }
     }
 
