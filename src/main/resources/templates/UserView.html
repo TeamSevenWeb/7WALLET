@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('User')}"></div>
+<body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<div class="user-block">
+    <div class="user-leftside">
+        <br/>
+        <div th:unless="${viewedUser.getProfilePhoto()==null}">
+            <img class="user-photo" th:src="${viewedUser.getProfilePhoto().profilePhoto}" alt="Picture"/>
+        </div>
+        <div th:if="${viewedUser.getProfilePhoto()==null}">
+            <img class="user-photo"
+                 src="https://w0.peakpx.com/wallpaper/979/89
+      /HD-wallpaper-purple-smile-design-eye-smily-profile-pic-face-thumbnail.jpg" alt="Picture"/>
+        </div>
+        <br/>
+        <a id="update-button" th:if="${session.isAdmin || session.currentUser == viewedUser.getUsername()}" href="#" th:href="@{/users/__${viewedUser.getUsername()}__/update}">
+            <div class="user-button" >Update profile</div></a>
+        <br/>
+        <div class="user-info">
+            <a href="#" th:href="@{/users/__${viewedUser.getId()}__}">
+                <h2 class="center" th:text="${viewedUser.username}"></h2></a>
+            <hr>
+            <h3 class="center" th:text="${viewedUser.firstName}"></h3>
+            <hr>
+            <h3 class="center" th:text="${viewedUser.lastName}"></h3>
+            <hr>
+            <h3 class="center" th:text="${viewedUser.email}"></h3>
+            <br/>
+        </div>
+    </div>
+    <div class="user-rightside">
+
+        <div class="methods-body">
+
+        </div>
+
+
+        <div class="user-wall">
+
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="~{fragments/PageFrame :: scripts}"></div>
+
+</body>
+
+</html>
