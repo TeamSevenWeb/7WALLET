@@ -4,6 +4,7 @@ import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
+import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
 import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.dtos.ProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
@@ -163,14 +164,33 @@ public class UserRestController {
     }
 
     @GetMapping("/transactions/{id}")
-    public Transaction getTransaction(@RequestHeader HttpHeaders headers,@PathVariable int id) {
+    public Transaction getTransaction(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            return transactionService.getById(id,user);
+            return transactionService.getById(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @GetMapping("/transactions")
+    public List<Transaction> get(@RequestHeader HttpHeaders headers,
+                                 @RequestParam(required = false) String startDate,
+                                 @RequestParam(required = false) String endDate,
+                                 @RequestParam(required = false) String receiver,
+                                 @RequestParam(required = false) String direction,
+                                 @RequestParam(required = false) String sortBy,
+                                 @RequestParam(required = false) String sortOrder) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(startDate,endDate, receiver, direction, sortBy, sortOrder);
+            return transactionService.getAll(user, transactionFilterOptions);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 }

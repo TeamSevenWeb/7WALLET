@@ -186,7 +186,6 @@ public class User {
         this.receivedTransactions = receivedTransactions;
     }
 
-
     public void setUserRoles(Set<Role> userRoles) {
         this.userRoles = userRoles;
     }
