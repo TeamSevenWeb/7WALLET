@@ -3,6 +3,7 @@ package com.telerikacademy.web.virtualwallet.services;
 
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
+import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionToJoinDto;
@@ -14,6 +15,8 @@ import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -59,7 +62,10 @@ public class TransactionServiceImpl implements TransactionService {
         create(outgoing,ingoing);
         return outgoing;
     }
-
+    @Override
+    public List<Transaction> getAll(User user, TransactionFilterOptions transactionFilterOptions) {
+        return repository.filterAndSort(user ,transactionFilterOptions);
+    }
     private void checkModifyPermissions(Transaction transaction, User user) {
         if (!transaction.getSender().equals(user) & !transaction.getReceiver().equals(user)) {
             throw new AuthenticationException(VIEW_TRANSACTION_PERMISSION_ERROR);
