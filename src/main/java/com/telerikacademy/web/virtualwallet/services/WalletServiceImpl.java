@@ -12,6 +12,7 @@ import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.CurrencyService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,7 +36,7 @@ public class WalletServiceImpl implements WalletService {
 
     private static final String resetUrl = "https://mockapi.io/api/mocks/65df74a2ff5e305f32a25198/resources/reset_all";
 
-
+    @Autowired
     public WalletServiceImpl(WalletRepository walletRepository, CurrencyService currencyService) {
         this.walletRepository = walletRepository;
         this.currencyService = currencyService;
@@ -91,10 +92,9 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void changeCurrency(int walletId, Currency currency) {
-//        Wallet wallet = get(walletId);  we might need the checkModifyPermissions here
+    public void changeCurrency(int walletId, int currencyId) {
         Wallet wallet = walletRepository.getById(walletId);
-        wallet.setCurrency(currency);
+        wallet.setCurrency(currencyService.getById(currencyId));
         update(wallet);
     }
 

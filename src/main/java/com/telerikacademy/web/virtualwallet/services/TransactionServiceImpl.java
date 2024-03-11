@@ -53,7 +53,8 @@ public class TransactionServiceImpl implements TransactionService {
         walletService.addFunds(ingoing.getWallet().getId(),outgoing.getAmount());
     }
 
-    public Transaction getTransaction(TransactionToJoinDto transactionDto, User user, JoinWallet joinWalletOutgoing, Wallet walletIngoing) {
+    public Transaction getTransaction(TransactionToJoinDto transactionDto, User user
+            ,JoinWallet joinWalletOutgoing, Wallet walletIngoing) {
         Transaction outgoing = transactionMapper.fromDtoToJoin(user,transactionDto);
         outgoing.setWallet(joinWalletOutgoing);
         Transaction ingoing = new Transaction(outgoing);

@@ -16,6 +16,7 @@ import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
 import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
 import com.telerikacademy.web.virtualwallet.utils.TransferMapper;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class WalletRestController {
     private final TransactionService transactionService;
 
 
-
+    @Autowired
     public WalletRestController(WalletService walletService, JoinWalletService joinWalletService, TransferMapper transferMapper, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransactionService transactionService) {
         this.walletService = walletService;
         this.joinWalletService = joinWalletService;
@@ -125,6 +126,19 @@ public class WalletRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (FundsSupplyException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT,e.getMessage());
+        }
+    }
+
+    @PutMapping("/currency/{id}")
+    public void changeCurrency(@RequestHeader HttpHeaders headers,@PathVariable int id){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            Wallet wallet = walletService.getByUser(user);
+            walletService.changeCurrency(wallet.getId(),id);
+        }  catch (AuthenticationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 }

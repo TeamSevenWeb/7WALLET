@@ -27,7 +27,7 @@ public interface WalletService {
 
     void subtractFunds(int walletId, double funds);
 
-    void changeCurrency(int walletId, Currency currency);
+    void changeCurrency(int walletId,int currencyId);
 
     void transfer(Transfer transfer);
 

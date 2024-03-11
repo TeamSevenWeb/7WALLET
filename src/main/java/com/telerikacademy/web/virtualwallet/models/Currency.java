@@ -1,6 +1,5 @@
 package com.telerikacademy.web.virtualwallet.models;
 
-import com.telerikacademy.web.virtualwallet.utils.Currencies;
 import jakarta.persistence.*;
 
 import java.util.Objects;

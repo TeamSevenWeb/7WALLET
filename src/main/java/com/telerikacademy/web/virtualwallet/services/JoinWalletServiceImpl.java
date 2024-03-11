@@ -9,6 +9,7 @@ import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepositor
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.CurrencyService;
 import com.telerikacademy.web.virtualwallet.services.contracts.JoinWalletService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     private final CurrencyService currencyService;
 
     private final  String apiUrl = "https://65df74a2ff5e305f32a25197.mockapi.io/api/card/withdraw";
-
+    @Autowired
     public JoinWalletServiceImpl(JoinWalletRepository joinWalletRepository, WalletRepository walletRepository, UserRepository userRepository, CurrencyService currencyService) {
         this.joinWalletRepository = joinWalletRepository;
         this.walletRepository = walletRepository;
@@ -40,9 +41,7 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     @Override
     public JoinWallet get(int id,User user) {
         JoinWallet joinWallet = joinWalletRepository.getById(id);
-        if (joinWallet.getHolder().getId() != user.getId() && !joinWallet.getUsers().contains(user)){
-            throw new AuthorizationException(UNAUTHORIZED);
-        }
+        checkAllUsersPermission(user, joinWallet);
         return joinWalletRepository.getById(id);
     }
 
@@ -59,15 +58,14 @@ public class JoinWalletServiceImpl implements JoinWalletService {
 
     @Override
     public void create(JoinWallet wallet, User user) {
-        try {
-            joinWalletRepository.getByUserAndName(user,wallet.getName());
-            throw new EntityDuplicateException("Wallet","name",wallet.getName());
-        } catch (EntityNotFoundException ignored){}
+        checkIsDuplicated(wallet, user);
         joinWalletRepository.create(wallet);
     }
 
     @Override
-    public void update(JoinWallet wallet) {
+    public void update(JoinWallet wallet,User user, int id) {
+        checkAllUsersPermission(user,wallet);
+        checkIsDuplicated(wallet,user,id);
         joinWalletRepository.update(wallet);
     }
 
@@ -77,41 +75,18 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     }
 
     @Override
-    public void addFunds(int walletId, double funds) {
-        JoinWallet wallet = joinWalletRepository.getById(walletId);
-        wallet.setHoldings(wallet.getHoldings() + funds);
-        joinWalletRepository.update(wallet);
-    }
-
-    @Override
-    public void subtractFunds(int walletId, double funds) {
-        JoinWallet wallet = joinWalletRepository.getById(walletId);
-        if (wallet.getHoldings() < funds){
-            throw new FundsSupplyException();
-        }
-        wallet.setHoldings(wallet.getHoldings() - funds);
-        joinWalletRepository.update(wallet);
-    }
-
-    @Override
-    public void changeCurrency(int walletId, Currency currency) {
-        JoinWallet wallet = joinWalletRepository.getById(walletId);
-        wallet.setCurrency(currency);
-        joinWalletRepository.update(wallet);
-    }
-
-    @Override
     public List<User> getAllUsers(int walletId) {
         JoinWallet joinWallet = joinWalletRepository.getById(walletId);
-        return joinWallet.getUsers().stream().toList();
+        List<User> walletUsers = new ArrayList<>();
+        walletUsers.add(joinWallet.getHolder());
+        walletUsers.addAll(joinWallet.getUsers());
+        return walletUsers;
     }
 
     @Override
     public void addUser(int walletId,String user, User owner) {
         JoinWallet joinWallet = joinWalletRepository.getById(walletId);
-        if (joinWallet.getHolder().getId() != owner.getId()){
-            throw new AuthorizationException(NOT_OWNER_ERR);
-        }
+        checkIsOwner(owner, joinWallet);
         User userToAdd = userRepository.searchByAnyMatch(user);
         joinWallet.getUsers().add(userToAdd);
         joinWalletRepository.update(joinWallet);
@@ -120,9 +95,7 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     @Override
     public void removeOtherUser(int walletId, String user, User owner) {
         JoinWallet joinWallet = joinWalletRepository.getById(walletId);
-        if (joinWallet.getHolder().getId() != owner.getId()){
-            throw new AuthorizationException(NOT_OWNER_ERR);
-        }
+        checkIsOwner(owner, joinWallet);
         User userToRemove = userRepository.searchByAnyMatch(user);
         joinWallet.getUsers().remove(userToRemove);
         joinWalletRepository.update(joinWallet);
@@ -131,18 +104,36 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     @Override
     public void removeWallet(int walletId, User user) {
         JoinWallet joinWallet = get(walletId,user);
+        checkAllUsersPermission(user,joinWallet);
         joinWallet.getUsers().remove(user);
         joinWalletRepository.update(joinWallet);
     }
 
-
-    public JoinWallet createJoinWallet(User user, String name){
-        JoinWallet wallet = new JoinWallet();
-        wallet.setName(name);
-        wallet.setHolder(user);
-        wallet.setHoldings(0.0);
-        wallet.setCurrency(currencyService.getById(1));
-        return wallet;
+    private static void checkIsOwner(User owner, JoinWallet joinWallet) {
+        if (joinWallet.getHolder().getId() != owner.getId()){
+            throw new AuthorizationException(NOT_OWNER_ERR);
+        }
     }
 
+    private static void checkAllUsersPermission(User user, JoinWallet joinWallet) {
+        if (joinWallet.getHolder().getId() != user.getId() && !joinWallet.getUsers().contains(user)){
+            throw new AuthorizationException(UNAUTHORIZED);
+        }
+    }
+
+    private void checkIsDuplicated(JoinWallet wallet, User user) {
+        try {
+            joinWalletRepository.getByUserAndName(user, wallet.getName());
+            throw new EntityDuplicateException("Wallet","name", wallet.getName());
+        } catch (EntityNotFoundException ignored){}
+    }
+
+    private void checkIsDuplicated(JoinWallet wallet, User user,int id) {
+        try {
+            JoinWallet duplicateWallet = joinWalletRepository.getByUserAndName(user, wallet.getName());
+            if (duplicateWallet.getId() != id) {
+                throw new EntityDuplicateException("Wallet", "name", wallet.getName());
+            }
+        } catch (EntityNotFoundException ignored){}
+    }
 }

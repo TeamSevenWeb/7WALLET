@@ -1,18 +1,19 @@
 package com.telerikacademy.web.virtualwallet.services.contracts;
 
 import com.telerikacademy.web.virtualwallet.models.Currency;
+import com.telerikacademy.web.virtualwallet.models.User;
 
 import java.util.List;
 
 public interface CurrencyService {
-//TODO finish this
+
     Currency getById(int id);
 
     List<Currency> getAll();
 
-    void create(Currency currency);
+    void create(Currency currency, User user);
 
-    void update(Currency currency);
+    void update(Currency currency,User user);
 
-    void delete(int id);
+    void delete(int id,User user);
 }

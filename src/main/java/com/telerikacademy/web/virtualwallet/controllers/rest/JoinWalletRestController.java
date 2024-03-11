@@ -14,9 +14,11 @@ import com.telerikacademy.web.virtualwallet.services.contracts.JoinWalletService
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
+import com.telerikacademy.web.virtualwallet.utils.JoinWalletMapper;
 import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
 import com.telerikacademy.web.virtualwallet.utils.TransferMapper;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,16 +39,17 @@ public class JoinWalletRestController {
 
     private final TransferMapper transferMapper;
 
-    private final TransactionMapper transactionMapper;
+    private final JoinWalletMapper joinWalletMapper;
 
     private final AuthenticationHelper authenticationHelper;
 
-    public JoinWalletRestController(JoinWalletService joinWalletService, TransactionService transactionService, WalletService walletService, TransferMapper transferMapper, TransactionMapper transactionMapper, AuthenticationHelper authenticationHelper) {
+    @Autowired
+    public JoinWalletRestController(JoinWalletService joinWalletService, TransactionService transactionService, WalletService walletService, TransferMapper transferMapper, TransactionMapper transactionMapper, JoinWalletMapper joinWalletMapper, AuthenticationHelper authenticationHelper) {
         this.joinWalletService = joinWalletService;
         this.transactionService = transactionService;
         this.walletService = walletService;
         this.transferMapper = transferMapper;
-        this.transactionMapper = transactionMapper;
+        this.joinWalletMapper = joinWalletMapper;
         this.authenticationHelper = authenticationHelper;
     }
 
@@ -76,10 +79,26 @@ public class JoinWalletRestController {
     public void createJoinWallet(@RequestHeader HttpHeaders headers,@Valid @RequestBody JoinWalletDto walletDto){
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            JoinWallet wallet = joinWalletService.createJoinWallet(user,walletDto.getName());
+            JoinWallet wallet = joinWalletMapper.fromDto(user,walletDto.getName());
             joinWalletService.create(wallet,user);
         }  catch (AuthenticationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public void updateJoinWallet(@RequestHeader HttpHeaders headers,@Valid @RequestBody JoinWalletDto walletDto
+            ,@PathVariable int id){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            JoinWallet wallet = joinWalletMapper.fromDto(user,walletDto.getName(),id);
+            joinWalletService.update(wallet,user,id);
+        }  catch (AuthenticationException | AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
@@ -194,5 +213,19 @@ public class JoinWalletRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
+    }
+
+    @PutMapping("/{walletId}/currency/{currencyId}")
+    public void changeCurrency(@RequestHeader HttpHeaders headers,@PathVariable int walletId
+            ,@PathVariable int currencyId){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            JoinWallet wallet = joinWalletService.get(walletId,user);
+            walletService.changeCurrency(wallet.getId(),currencyId);
+        }  catch (AuthenticationException | AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }

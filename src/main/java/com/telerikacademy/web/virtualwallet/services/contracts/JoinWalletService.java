@@ -17,17 +17,9 @@ public interface JoinWalletService {
 
     void create(JoinWallet wallet, User user);
 
-    JoinWallet createJoinWallet(User user, String name);
-
-    void update(JoinWallet wallet);
+    void update(JoinWallet wallet,User user, int id);
 
     void delete(int id);
-
-    void addFunds(int walletId, double funds);
-
-    void subtractFunds(int walletId, double funds);
-
-    void changeCurrency(int walletId, Currency currency);
 
     List<User> getAllUsers(int walletId);
 
