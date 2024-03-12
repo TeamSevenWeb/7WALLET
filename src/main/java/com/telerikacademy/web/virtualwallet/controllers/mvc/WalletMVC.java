@@ -1,14 +1,21 @@
 package com.telerikacademy.web.virtualwallet.controllers.mvc;
 
 import com.telerikacademy.web.virtualwallet.exceptions.*;
+import com.telerikacademy.web.virtualwallet.models.Card;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
+import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
+import com.telerikacademy.web.virtualwallet.models.dtos.CardDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
+import com.telerikacademy.web.virtualwallet.services.contracts.CardService;
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
+import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
 import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
+import com.telerikacademy.web.virtualwallet.utils.TransferMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -17,6 +24,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/wallet")
@@ -24,19 +35,28 @@ public class WalletMVC {
 
     private final WalletService walletService;
 
+    private final UserService userService;
+
     private final AuthenticationHelper authenticationHelper;
 
     private final TransactionMapper transactionMapper;
+
+    private final TransferMapper transferMapper;
+
+    private final CardService cardService;
 
     private final TransactionService transactionService;
 
     private static User user;
 
 
-    public WalletMVC(WalletService walletService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransactionService transactionService) {
+    public WalletMVC(WalletService walletService, UserService userService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransferMapper transferMapper, CardService cardService, TransactionService transactionService) {
         this.walletService = walletService;
+        this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.transactionMapper = transactionMapper;
+        this.transferMapper = transferMapper;
+        this.cardService = cardService;
         this.transactionService = transactionService;
     }
     @ModelAttribute("isAuthenticated")
@@ -49,7 +69,13 @@ public class WalletMVC {
         return request.getRequestURI();
     }
 
-
+    @ModelAttribute("userCards")
+    public List<Card> userCards(Model model) {
+        User user2 = userService.getById(1);
+        List<Card> cards = cardService.getUsersCards(user2);
+        model.addAttribute("userCards", cards);
+        return cards;
+    }
     @GetMapping("/{id}")
     public String showSingleWallet(@PathVariable int id, Model model, HttpSession session) {
         try {
@@ -71,33 +97,86 @@ public class WalletMVC {
     }
 
     @GetMapping("/transactions/new")
-    public String showNewPostPage(Model model,HttpSession session){
+    public String showNewPostPage(Model model, HttpSession session){
         model.addAttribute("transaction",new TransactionDto());
-        return "NewTransactionView";
+        try {
+//            user =  authenticationHelper.tryGetCurrentUser(session);
+            user = userService.getById(1);
+            return "NewTransactionView";
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
     }
 
     @PostMapping("/transactions/new")
-    public String createTransaction(@Valid @ModelAttribute("transaction") TransactionDto transactionDto, BindingResult errors, HttpSession session, Model model){
-        if(errors.hasErrors()){
+    public String createTransaction(@Valid @ModelAttribute("transaction") TransactionDto transactionDto, BindingResult errors, HttpSession session, Model model) {
+        if (errors.hasErrors()) {
             return "NewTransactionView";
         }
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
-            Transaction ingoing = transactionMapper.fromDto(user,transactionDto);
+            Transaction ingoing = transactionMapper.fromDto(user, transactionDto);
             Transaction outgoing = new Transaction(ingoing);
 
-            transactionService.create(ingoing,outgoing);
-            return "redirect:/wallet/transactions/"+outgoing.getId();
-        }catch (AuthenticationException e){
+            transactionService.create(ingoing, outgoing);
+            return "redirect:/wallet/transactions/" + outgoing.getId();
+        } catch (AuthenticationException e) {
             return "redirect:/auth/login";
-        }catch (FundsSupplyException e){
-            errors.rejectValue("amount","insufficient.funds",e.getMessage());
+        } catch (FundsSupplyException e) {
+            errors.rejectValue("amount", "insufficient.funds", e.getMessage());
             return "NewTransactionView";
-        }
-        catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         }
     }
-}
+
+        @GetMapping("/transfers/fund")
+        public String showWalletFundPage(Model model){
+            model.addAttribute("transfer",new TransferDto());
+            return "FundWalletView";
+        }
+
+        @PostMapping("transfers/fund")
+        public String fundWallet(@Valid @ModelAttribute("transfer") TransferDto transferDto
+                ,BindingResult errors, HttpSession sessionl) {
+            if (errors.hasErrors()) {
+                return "FundWalletView";
+            }
+        try {
+            User user2 = userService.getById(1);
+            Transfer ingoing = transferMapper.ingoingFromDto(user2,transferDto);
+                walletService.transfer(ingoing);
+                return "redirect:/";
+            }  catch (AuthenticationException | AuthorizationException e){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+            } catch (TransferFailedException e){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            }
+        }
+
+    @GetMapping("/transfers/withdraw")
+    public String showWalletWithdrawPage(Model model){
+        model.addAttribute("transfer",new TransactionDto());
+        return "WithdrawFromWalletView";
+    }
+
+    @PostMapping("transfers/withdraw")
+    public String withdrawFromWallet(@Valid @ModelAttribute("transfer") TransferDto transferDto,BindingResult errors, HttpSession session, Model model) {
+        if (errors.hasErrors()) {
+            return "WithdrawFromWalletView";
+        }
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            Transfer outgoing = transferMapper.outgoingFromDto(user,transferDto);
+            walletService.transfer(outgoing);
+            return "redirect:/wallet/transfers";
+        }  catch (AuthenticationException | AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (TransferFailedException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    }

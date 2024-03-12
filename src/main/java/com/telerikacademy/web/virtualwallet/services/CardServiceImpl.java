@@ -13,6 +13,9 @@ import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class CardServiceImpl implements CardService {
 
@@ -30,6 +33,11 @@ public class CardServiceImpl implements CardService {
         Card card = cardRepository.getById(id);
         checkModifyPermissions(holder,card);
         return card;
+    }
+
+    @Override
+    public List<Card> getUsersCards(User holder) {
+        return cardRepository.getAllByUser(holder);
     }
 
     @Override
