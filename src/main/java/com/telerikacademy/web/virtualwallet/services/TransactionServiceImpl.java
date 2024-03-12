@@ -2,6 +2,7 @@ package com.telerikacademy.web.virtualwallet.services;
 
 
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
@@ -69,7 +70,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
     private void checkModifyPermissions(Transaction transaction, User user) {
         if (!transaction.getSender().equals(user) & !transaction.getReceiver().equals(user)) {
-            throw new AuthenticationException(VIEW_TRANSACTION_PERMISSION_ERROR);
+            throw new AuthorizationException(VIEW_TRANSACTION_PERMISSION_ERROR);
         }
     }
 }

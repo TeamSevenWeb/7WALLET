@@ -2130,6 +2130,17 @@ header{
     resize: vertical; /* Allows vertical resizing */
 }
 
+.number-input-style{
+    width: 5%;
+    padding: 4px;
+    margin: 4px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border-style: double;
+    border-width: 6px;
+    border-color: deepskyblue;
+}
+
 .error {
     color: #721c24; /* Text color for error messages (red or a color of your choice) */
     background-color: #f8d7da; /* Background color for error messages (light red or a color of your choice) */
@@ -2274,4 +2285,14 @@ header{
 
 .home-text-header {
     text-align: center;
+}
+
+.w-10{
+    width: 15%;
+}
+.w-8{
+    width: 8%;
+}
+.w-5{
+    width: 5%;
 }
