@@ -15,8 +15,20 @@
       /HD-wallpaper-purple-smile-design-eye-smily-profile-pic-face-thumbnail.jpg" alt="Picture"/>
         </div>
         <br/>
-        <a id="update-button" th:if="${session.isAdmin || session.currentUser == viewedUser.getUsername()}" href="#" th:href="@{/users/__${viewedUser.getUsername()}__/update}">
-            <div class="user-button" >Update profile</div></a>
+        <a th:if="${session.currentUser == viewedUser.getUsername()}" href="#" th:href="@{/users/__${viewedUser.getUsername()}__/update}">
+            <div class="user-button" >Update Profile</div></a>
+        <br/>
+        <a  th:if="${session.currentUser == viewedUser.getUsername()}" href="#" th:href="@{/users/__${viewedUser.getUsername()}__/changeProfilePhoto}">
+            <div class="user-button" >Change Profile Photo</div></a>
+        <br/>
+        <a  th:if="${session.currentUser == viewedUser.getUsername()}" href="#" th:href="@{/users/__${viewedUser.getUsername()}__/changePassword}">
+            <div class="user-button" >Change Password</div></a>
+        <br/>
+        <a  th:if="${session.isAdmin && !isBlocked}" href="#" th:href="@{/users/__${viewedUser.getUsername()}__/block}">
+            <div class="user-button" >Block User</div></a>
+        <br/>
+        <a  th:if="${session.isAdmin && isBlocked}" href="#" th:href="@{/users/__${viewedUser.getUsername()}__/unblock}">
+            <div class="user-button" >Unblock User</div></a>
         <br/>
         <div class="user-info">
             <a href="#" th:href="@{/users/__${viewedUser.getId()}__}">
