@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<div th:insert="~{fragments/PageFrame :: head('Transaction')}"></div>
+<body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<section class="page-section text-center font-aquire">
+<h2 class="font-aquire pd-b-1" th:text="#{transaction.page.title}">Transaction</h2>
+<form action="#" th:action="@{__${requestURI}__}" th:object="${transaction}" method="post">
+    <label th:text="#{transaction.receiver.label}">Content</label>
+    <br/>
+    <input class="textarea-style w-10" type="text" th:field="*{receiver}" placeholder="Username, phone number or email">
+    <br/>
+    <label class="error" th:errors="*{receiver}">Receiver error placeholder</label>
+    <br/><br/>
+    <label th:text="#{transaction.amount.label}">Content</label>
+    <br/>
+    <input class="number-input-style" type="number" th:field="*{amount}">
+    <br/>
+    <label class="error" th:errors="*{amount}">Amount error placeholder</label>
+    <br/><br/>
+    <input class="py-3-create w-8 rounded font-aquire" type="submit" value="Send"/>
+</form>
+<br>
+</section>
+<div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+</body>
+</html>
