@@ -10,6 +10,7 @@ import com.telerikacademy.web.virtualwallet.models.dtos.RegisterDto;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
 import com.telerikacademy.web.virtualwallet.utils.UserMapper;
+import com.telerikacademy.web.virtualwallet.utils.UserRegisterMapper;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +29,18 @@ public class AuthenticationMvcController {
 
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
-    private final UserMapper userMapper;
     private final Cloudinary cloudinary;
+
+    private final UserRegisterMapper userRegisterMapper;
 
     @Autowired
     public AuthenticationMvcController(UserService userService,
                                        AuthenticationHelper authenticationHelper,
-                                       UserMapper userMapper, Cloudinary cloudinary) {
+                                        Cloudinary cloudinary, UserRegisterMapper userRegisterMapper) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
-        this.userMapper = userMapper;
         this.cloudinary = cloudinary;
+        this.userRegisterMapper = userRegisterMapper;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -116,7 +118,7 @@ public class AuthenticationMvcController {
         }
 
         try {
-            User user = userMapper.fromDto(register);
+            User user = userRegisterMapper.fromDto(register);
             userService.create(user);
             session.setAttribute("currentUser", user.getUsername());
             session.setAttribute("isAdmin", false);

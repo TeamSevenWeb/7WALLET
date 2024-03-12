@@ -1,10 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Update User')}"></div>
 <body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<section class="page-section text-center">
+    <h2 th:text="#{user.update}">Title</h2>
 
+    <br/>
+<!--    <label th:text="#{user.label.photo}">Profile photo</label>-->
+<!--    <div class="update-photo-container">-->
+<!--        <form class="textarea-style" style="width: 40%" action="#" th:action="@{__${requestURI}__/updateImage}" method="post" enctype="multipart/form-data">-->
+<!--            <input type="file" name="avatar"/>-->
+<!--            <button class="py-3-create rounded" type="submit">Upload</button>-->
+<!--        </form>-->
+<!--    </div>-->
+    <br/>
+    <form action="#" th:action="@{__${requestURI}__}" th:object="${userUpdateDto}" method="post">
+        <label th:text="#{user.label.first-name}">First name</label>
+        <br/>
+        <textarea class="textarea-title textarea-style" type="text" th:field="*{firstName}"></textarea>
+        <br/>
+        <label class="error" th:errors="*{firstName}">First name error placeholder</label>
+        <br/>
+        <label th:text="#{user.label.last-name}">Last name</label>
+        <br/>
+        <textarea class="textarea-title textarea-style" type="text" th:field="*{lastName}"></textarea>
+        <br/>
+        <label class="error" th:errors="*{lastName}">Last name error placeholder</label>
+        <br/>
+        <label th:text="#{user.label.email}">Last name</label>
+        <br/>
+        <textarea class="textarea-title textarea-style" type="text" th:field="*{email}"></textarea>
+        <br/>
+        <label class="error" th:errors="*{email}">Email error placeholder</label>
+        <br/>
+        <label th:text="#{user.label.phone}">Phone Number</label>
+        <br/>
+        <textarea class="textarea-title textarea-style" type="text" th:field="*{phoneNumber}"></textarea>
+        <br/>
+        <label class="error" th:errors="*{email}">Email error placeholder</label>
+        <br/>
+
+<!--        <label th:text="#{user.label.password}">Password</label>-->
+<!--        <br/>-->
+<!--        <textarea class="textarea-title textarea-style" type="password" th:field="*{password}"></textarea>-->
+<!--        <br/>-->
+<!--        <label class="error" th:errors="*{password}">Password error placeholder</label>z-->
+<!--        <br/>-->
+<!--        <div th:if="${session.isAdmin}" class="table user-update-buttons-container">-->
+<!--            <div class="make-admin-button" th:unless="${user.isAdmin()}">-->
+<!--                <a href="#" style="color: forestgreen" th:href="@{__${requestURI}__/admin}">Make user admin</a>-->
+<!--            </div>-->
+<!--            <div class="make-no-admin-button" th:if="${user.isAdmin()}">-->
+<!--                <a href="#" th:href="@{__${requestURI}__/admin}">Make user regular</a>-->
+<!--            </div>-->
+<!--            <br/>-->
+<!--            <div class="make-admin-button" th:if="${user.isBlocked()}">-->
+<!--                <a href="#" style="color: forestgreen" th:href="@{__${requestURI}__/block}">Unblock user</a>-->
+<!--            </div>-->
+<!--            <div class="make-no-admin-button" th:unless="${user.isBlocked()}">-->
+<!--                <a href="#" th:href="@{__${requestURI}__/block}">Block user</a>-->
+<!--            </div>-->
+
+<!--        </div>-->
+
+        <br/>
+        <input class="py-3-create rounded" type="submit" value="Save"/>
+
+    </form>
+</section>
+
+<div th:replace="~{fragments/PageFrame :: scripts}"></div>
 </body>
 </html>

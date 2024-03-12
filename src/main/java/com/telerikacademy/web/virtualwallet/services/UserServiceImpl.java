@@ -89,13 +89,14 @@ public class UserServiceImpl implements UserService {
             throw new EntityDuplicateException("User","Email",user.getEmail());
         } catch (EntityNotFoundException ignored) {
         }
+        userRepository.create(user);
+        walletService.create(walletService.createDefaultWallet(user));
         try {
             setDefaultProfilePhoto(user);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        userRepository.create(user);
-        walletService.create(walletService.createDefaultWallet(user));
+
     }
 
     @Override
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void uploadProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user) {
-        checkAdminOrOwner(userToBeUpdated, userToBeUpdated);
+//        checkAdminOrOwner(userToBeUpdated, userToBeUpdated);
         if (userToBeUpdated.getProfilePhoto() != null) {
             profilePhotoRepository.delete(userToBeUpdated.getProfilePhoto().getProfilePhotoId());
         }
@@ -185,8 +186,8 @@ public class UserServiceImpl implements UserService {
         String url = (String) upload.get("url");
         userProfilePhoto.setProfilePhoto(url);
         userProfilePhoto.setUser(user);
-        user.setProfilePhoto(userProfilePhoto);
         uploadProfilePhoto(userProfilePhoto, user, user);
+        user.setProfilePhoto(userProfilePhoto);
     }
 
 }
