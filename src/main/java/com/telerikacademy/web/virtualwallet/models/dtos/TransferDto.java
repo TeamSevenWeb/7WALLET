@@ -1,12 +1,13 @@
 package com.telerikacademy.web.virtualwallet.models.dtos;
 
+import com.telerikacademy.web.virtualwallet.models.Card;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
 public class TransferDto {
 
     @NotNull(message = "Card can not be empty")
-    private CardDto card;
+    private Card card;
 
     @NotNull(message = "Amount can't be empty")
     @Digits(integer = 10, fraction = 2)
@@ -15,11 +16,11 @@ public class TransferDto {
     public TransferDto(){
     }
 
-    public CardDto getCard() {
+    public Card getCard() {
         return card;
     }
 
-    public void setCard(CardDto card) {
+    public void setCard(Card card) {
         this.card = card;
     }
 

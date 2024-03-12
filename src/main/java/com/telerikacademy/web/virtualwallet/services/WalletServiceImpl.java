@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.exceptions.TransferFailedException;
-import com.telerikacademy.web.virtualwallet.models.Currency;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;

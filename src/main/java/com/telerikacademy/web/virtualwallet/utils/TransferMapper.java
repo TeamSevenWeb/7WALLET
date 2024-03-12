@@ -14,6 +14,7 @@ import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRe
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.WalletRepository;
 import com.telerikacademy.web.virtualwallet.services.contracts.CardService;
+import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,29 +23,11 @@ import java.time.LocalDateTime;
 
 @Component
 public class TransferMapper {
-    private final WalletRepository walletRepository;
-
-    private final WalletService walletService;
-    private final UserRepository userRepository;
-    private final CardService cardService;
-
-    private final CardMapper cardMapper;
-
-    @Autowired
-    public TransferMapper(WalletRepository walletRepository, WalletService walletService, UserRepository userRepository, CardService cardService, CardMapper cardMapper) {
-        this.walletRepository = walletRepository;
-        this.walletService = walletService;
-        this.userRepository = userRepository;
-        this.cardService = cardService;
-        this.cardMapper = cardMapper;
-    }
 
     public Transfer outgoingFromDto(User holder, TransferDto transferDto) {
         Transfer transfer = new Transfer();
         transfer.setWallet(holder.getWallet());
-        Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
-
-        Card cardToSet = checkCardDetails(holder,cardDto);
+        Card cardToSet = checkCardDetails(holder,transferDto.getCard());
 
         transfer.setCard(cardToSet);
         transfer.setAmount(transferDto.getAmount());
@@ -56,9 +39,8 @@ public class TransferMapper {
     public Transfer outgoingFromDto(User holder,JoinWallet wallet, TransferDto transferDto) {
         Transfer transfer = new Transfer();
         transfer.setWallet(wallet);
-        Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
 
-        Card cardToSet = checkCardDetails(holder,cardDto);
+        Card cardToSet = checkCardDetails(holder,transferDto.getCard());
 
         transfer.setCard(cardToSet);
         transfer.setAmount(transferDto.getAmount());
@@ -71,9 +53,8 @@ public class TransferMapper {
     public Transfer ingoingFromDto(User holder, TransferDto transferDto) {
         Transfer transfer = new Transfer();
         transfer.setWallet(holder.getWallet());
-        Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
 
-        Card cardToSet = checkCardDetails(holder,cardDto);
+        Card cardToSet = checkCardDetails(holder,transferDto.getCard());
 
         transfer.setCard(cardToSet);
         transfer.setAmount(transferDto.getAmount());
@@ -83,12 +64,12 @@ public class TransferMapper {
         return transfer;
     }
 
+
     public Transfer ingoingFromDto(User holder, JoinWallet wallet, TransferDto transferDto) {
         Transfer transfer = new Transfer();
         transfer.setWallet(wallet);
-        Card cardDto = cardMapper.fromDto(holder,transferDto.getCard());
 
-        Card cardToSet = checkCardDetails(holder,cardDto);
+        Card cardToSet = checkCardDetails(holder,transferDto.getCard());
 
         transfer.setCard(cardToSet);
         transfer.setAmount(transferDto.getAmount());
