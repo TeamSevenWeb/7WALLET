@@ -34,7 +34,7 @@ public class TransactionServiceImplTests {
         Mockito.when(transactionRepository.getById(Mockito.anyInt()))
                 .thenReturn(mockTransaction);
         //Act
-        Transaction result = mockTransactionService.getById(mockTransaction.getId());
+        Transaction result = mockTransactionService.getById(mockTransaction.getId(),mockTransaction.getSender());
 
         //Assert
         Assertions.assertEquals(mockTransaction, result);
@@ -48,7 +48,7 @@ public class TransactionServiceImplTests {
 
         //Assert
         Assertions.assertThrows(FundsSupplyException.class, ()->mockTransactionService.create(mockTransaction1,
-                mockTransaction2, mockTransaction1.getSender()));
+                mockTransaction2));
 
     }
 
@@ -62,7 +62,7 @@ public class TransactionServiceImplTests {
 
         //Act
         senderWallet.setHoldings(2000);
-        mockTransactionService.create(mockTransaction1,mockTransaction2,mockTransaction1.getSender());
+        mockTransactionService.create(mockTransaction1,mockTransaction2);
 
         //Assert
         Mockito.verify(mockWalletService,Mockito.times(1))
@@ -81,13 +81,10 @@ public class TransactionServiceImplTests {
 
         //Act
         senderWallet.setHoldings(2000);
-        mockTransactionService.create(mockTransaction1,mockTransaction2,mockTransaction1.getSender());
+        mockTransactionService.create(mockTransaction1,mockTransaction2);
 
         //Assert
         Mockito.verify(transactionRepository,Mockito.times(1))
-                .create(mockTransaction1);
-
-        Mockito.verify(transactionRepository,Mockito.times(1))
-                .create(mockTransaction2);
+                .createMultiple(mockTransaction1, mockTransaction2);
     }
 }

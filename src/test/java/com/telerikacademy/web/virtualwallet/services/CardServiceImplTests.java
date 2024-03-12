@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
@@ -38,7 +39,7 @@ public class CardServiceImplTests {
         Mockito.when(cardRepository.getById(Mockito.anyInt()))
                 .thenReturn(mockCard);
         //Act
-        Card result = mockCardService.get(mockCard.getId());
+        Card result = mockCardService.get(mockCard.getHolder(),mockCard.getId());
 
         //Assert
         Assertions.assertEquals(mockCard, result);
@@ -52,7 +53,7 @@ public class CardServiceImplTests {
         Mockito.when(cardRepository.getByField("number",mockCard.getNumber())).thenThrow(EntityDuplicateException.class);
 
         //Assert
-        Assertions.assertThrows(EntityDuplicateException.class, ()->mockCardService.create(mockCard));
+        Assertions.assertThrows(EntityDuplicateException.class, ()->mockCardService.create(mockCard.getHolder(),mockCard));
     }
 
     @Test
@@ -62,7 +63,7 @@ public class CardServiceImplTests {
 
         //Act
         Mockito.when(cardRepository.getByField("number",mockCard.getNumber())).thenThrow(EntityNotFoundException.class);
-        mockCardService.create(mockCard);
+        mockCardService.create(mockCard.getHolder(),mockCard);
 
         //Assert
         Mockito.verify(cardRepository,Mockito.times(1))
@@ -75,10 +76,25 @@ public class CardServiceImplTests {
         Card mockCard = createMockCard();
 
         //Act
-        mockCardService.delete(mockCard.getId());
+        Mockito.when(cardRepository.getById(Mockito.anyInt())).thenReturn(mockCard);
+        mockCardService.delete(mockCard.getHolder(),mockCard.getId());
 
         //Assert
         Mockito.verify(cardRepository,Mockito.times(1))
                 .delete(Mockito.anyInt());
+    }
+
+    @Test
+    void delete_Should_throw_When_UserIsNotHolder(){
+        //Arrange
+        Card mockCard = createMockCard();
+        User user = createMockUser2();
+
+        //Act
+        Mockito.when(cardRepository.getById(Mockito.anyInt())).thenReturn(mockCard);
+
+        //Assert
+        Assertions.assertThrows(AuthorizationException.class, ()->mockCardService.delete(user,mockCard.getId()));
+
     }
 }

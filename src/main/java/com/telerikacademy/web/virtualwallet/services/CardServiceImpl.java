@@ -1,6 +1,7 @@
 package com.telerikacademy.web.virtualwallet.services;
 
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.Card;
@@ -54,7 +55,7 @@ public class CardServiceImpl implements CardService {
 
     private void checkModifyPermissions(User holder, Card card) {
         if (!card.getHolder().equals(holder)) {
-            throw new AuthenticationException(MODIFY_CARD_ERROR_MESSAGE);
+            throw new AuthorizationException(MODIFY_CARD_ERROR_MESSAGE);
         }
     }
 }
