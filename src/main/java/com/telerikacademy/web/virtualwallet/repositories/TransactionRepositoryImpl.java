@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -33,6 +35,8 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
             Map<String, Object> params = new HashMap<>();
+            StringBuilder queryString = new StringBuilder("from Transaction ");
+
 
             filters.add("(sender = :user OR receiver = :user)");
             params.put("user", user);
@@ -64,18 +68,23 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
             });
 
 
-            if(filterOptions.getStartDate().isPresent()&&filterOptions.getEndDate().isPresent()){
-                filters.add("date BETWEEN :startDate AND :endDate");
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                LocalDateTime startDate = LocalDateTime.parse(filterOptions.getStartDate().get() +" 00:00:00",formatter);
-                LocalDateTime endDate = LocalDateTime.parse(filterOptions.getEndDate().get() + " 23:59:59",formatter);
+            filterOptions.getDate().ifPresent(value -> {
+                if(value.isEmpty()){
+                    return;
+                }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate date = LocalDate.parse(value, formatter);
+                LocalDateTime localDateTime = LocalDateTime.of(date, LocalTime.MIDNIGHT);
 
-                params.put("startDate", startDate);
-                params.put("endDate", endDate);
-            };
+                filters.add("date = :date");
+                params.put("date", localDateTime);
+            });
 
 
             filterOptions.getDirection().ifPresent(value -> {
+                if(value.isEmpty()){
+                    return;
+                }
                 if(value.equals("INGOING")){
                     filters.add("receiver = :receiver");
                     params.put("receiver", user);
@@ -86,10 +95,11 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
                 }
             });
 
-            StringBuilder queryString = new StringBuilder("from Transaction ");
-
-            queryString.append(" where ")
+            queryString
+                    .append(" where ")
                     .append(String.join(" and ", filters));
+
+
             queryString.append(generateOrderBy(filterOptions));
 
             Query<Transaction> query = session.createQuery(queryString.toString(), Transaction.class);

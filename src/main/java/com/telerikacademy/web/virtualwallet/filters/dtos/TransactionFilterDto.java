@@ -2,8 +2,7 @@ package com.telerikacademy.web.virtualwallet.filters.dtos;
 
 
 public class TransactionFilterDto {
-    private String startDate;
-    private String endDate;
+    private String date;
     private String receiver;
     private String sender;
     private String direction;
@@ -13,11 +12,8 @@ public class TransactionFilterDto {
     public TransactionFilterDto(){
     }
 
-    public String getStartDate() {
-        return startDate;
-    }
-    public String getEndDate() {
-        return endDate;
+    public String getDate() {
+        return date;
     }
 
     public String getSender() {
@@ -37,5 +33,29 @@ public class TransactionFilterDto {
 
     public String getSortOrder() {
         return sortOrder;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+    public void setSortBy(String sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }
