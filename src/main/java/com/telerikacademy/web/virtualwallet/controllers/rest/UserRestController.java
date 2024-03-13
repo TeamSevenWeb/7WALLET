@@ -178,13 +178,14 @@ public class UserRestController {
     public List<Transaction> get(@RequestHeader HttpHeaders headers,
                                  @RequestParam(required = false) String startDate,
                                  @RequestParam(required = false) String endDate,
+                                 @RequestParam(required = false) String sender,
                                  @RequestParam(required = false) String receiver,
                                  @RequestParam(required = false) String direction,
                                  @RequestParam(required = false) String sortBy,
                                  @RequestParam(required = false) String sortOrder) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(startDate,endDate, receiver, direction, sortBy, sortOrder);
+            TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(startDate,endDate,sender, receiver, direction, sortBy, sortOrder);
             return transactionService.getAll(user, transactionFilterOptions);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

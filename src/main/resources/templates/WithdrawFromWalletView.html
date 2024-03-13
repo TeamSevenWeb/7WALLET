@@ -25,7 +25,7 @@
         <br/><br/>
         <label th:text="#{transaction.amount.label}">Content</label>
         <br/>
-        <input class="number-input-style" type="number" th:field="*{amount}">
+        <input class="number-input-style" type="number" th:field="*{amount}" th:text="BGN">
         <br/>
         <label class="error" th:errors="*{amount}">Amount error placeholder</label>
         <br/><br/>
