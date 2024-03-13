@@ -115,11 +115,9 @@ public class WalletMVC {
         }
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
-            Transaction ingoing = transactionMapper.fromDto(user, transactionDto);
-            Transaction outgoing = new Transaction(ingoing);
-
-            transactionService.create(ingoing, outgoing);
-            return "redirect:/wallet/transactions/" + outgoing.getId();
+            Transaction transaction = transactionMapper.fromDto(user, transactionDto);
+            transactionService.create(transaction,user.getWallet(),transaction.getReceiver().getWallet());
+            return "redirect:/wallet/transactions";
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
         } catch (FundsSupplyException e) {
@@ -169,7 +167,6 @@ public class WalletMVC {
         }
         try {
             User user2 = userService.getById(1);
-//            User user = authenticationHelper.tryGetCurrentUser(session);
             Transfer outgoing = transferMapper.outgoingFromDto(user2,transferDto);
             walletService.transfer(outgoing);
             return "redirect:/";

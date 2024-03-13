@@ -8,9 +8,6 @@ import java.util.List;
 
 public interface TransactionRepository extends BaseCRUDRepository<Transaction> {
 
-    void createMultiple(Transaction transaction1, Transaction transaction2);
-
-
     List<Transaction> filterAndSort(User user, TransactionFilterOptions filterOptions);
 
 }

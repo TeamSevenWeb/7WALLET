@@ -31,10 +31,7 @@ public class TransactionMapper {
         User receiver = userService.searchByAnyMatch(transactionDto.getReceiver());
         transaction.setReceiver(receiver);
         transaction.setSender(sender);
-        transaction.setWallet(receiver.getWallet());
         transaction.setAmount(transactionDto.getAmount());
-        transaction.setDirection(1);
-        sender.getSentTransactions().add(transaction);
         transaction.setDate(LocalDateTime.now());
 
         return transaction;
@@ -45,9 +42,6 @@ public class TransactionMapper {
         transaction.setSender(sender);
         transaction.setReceiver(sender);
         transaction.setAmount(transactionDto.getAmount());
-        transaction.setWallet(sender.getWallet());
-        transaction.setDirection(2);
-        sender.getSentTransactions().add(transaction);
         transaction.setDate(LocalDateTime.now());
 
         return transaction;

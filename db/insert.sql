@@ -55,8 +55,8 @@ INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdin
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (9,1,'Personal',9,6666.50,1);
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (10,1,'Personal',10,777,1);
 
-INSERT INTO virtual_wallet.transaction_directions (direction_id, direction) VALUES (1, 'INGOING');
-INSERT INTO virtual_wallet.transaction_directions (direction_id, direction) VALUES (2, 'OUTGOING');
+INSERT INTO virtual_wallet.transfer_directions (direction_id, direction) VALUES (1, 'INGOING');
+INSERT INTO virtual_wallet.transfer_directions (direction_id, direction) VALUES (2, 'OUTGOING');
 
 
 

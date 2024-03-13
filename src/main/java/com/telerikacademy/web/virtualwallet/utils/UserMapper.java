@@ -22,8 +22,6 @@ public class UserMapper {
         User oldUser = userService.getById(id);
         user.setUserCards(oldUser.getUserCards());
         user.setUserRoles(oldUser.getUserRoles());
-        user.setReceivedTransactions(oldUser.getReceivedTransactions());
-        user.setSentTransactions(oldUser.getSentTransactions());
         user.setWallets(oldUser.getWallets());
         user.setId(oldUser.getId());
         return user;

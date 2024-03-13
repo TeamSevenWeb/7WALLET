@@ -29,20 +29,13 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
     }
 
     @Override
-    public void createMultiple(Transaction transaction1, Transaction transaction2) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.persist(transaction1);
-            session.persist(transaction2);
-            session.getTransaction().commit();
-        }
-    }
-
-    @Override
     public List<Transaction> filterAndSort(User user,TransactionFilterOptions filterOptions){
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
             Map<String, Object> params = new HashMap<>();
+
+            filters.add("(sender = :user OR receiver = :user)");
+            params.put("user", user);
 
             filterOptions.getReceiver().ifPresent(value -> {
                 if(value.isEmpty()||user.getUsername().equals(value)){
@@ -52,8 +45,6 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
                     User recipient = userRepository.getByField("username",value);
                     filters.add("receiver = :receiver");
                     params.put("receiver", recipient);
-                    filters.add("direction = :direction");
-                    params.put("direction",2);
                 } catch (EntityNotFoundException e){
                     throw new EntityNotFoundException("Transactions","receiver",value);
                 }
@@ -74,28 +65,14 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
                 if(value.equals("INGOING")){
                     filters.add("receiver = :receiver");
                     params.put("receiver", user);
-                    filters.add("direction = :direction");
-                    params.put("direction",1);
                 }
                 else {
                     filters.add("sender = :sender");
                     params.put("sender", user);
-                    filters.add("direction = :direction");
-                    params.put("direction",2);
                 }
             });
 
             StringBuilder queryString = new StringBuilder("from Transaction ");
-            if(!filters.isEmpty()) {
-                filters.add("(sender = :user OR receiver = :user)");
-                params.put("user", user);
-            }
-            else {
-                filters.add("(sender = :user AND direction = :outgoing) OR (receiver = :user AND direction = :ingoing)");
-                params.put("user", user);
-                params.put("ingoing", 1);
-                params.put("outgoing", 2);
-            }
 
             queryString.append(" where ")
                     .append(String.join(" and ", filters));

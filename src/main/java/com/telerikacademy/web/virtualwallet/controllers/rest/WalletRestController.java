@@ -93,12 +93,10 @@ public class WalletRestController {
     public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
         try {
             User sender = authenticationHelper.tryGetUser(headers);
-            Transaction ingoing = transactionMapper.fromDto(sender, transactionDto);
-            Transaction outgoing = new Transaction(ingoing);
-            outgoing.setWallet(sender.getWallet());
-            outgoing.setDirection(2);
-            transactionService.create(outgoing,ingoing);
-            return outgoing;
+            Transaction transaction = transactionMapper.fromDto(sender, transactionDto);
+
+            transactionService.create(transaction,sender.getWallet(),transaction.getReceiver().getWallet());
+            return transaction;
         }  catch (AuthenticationException | AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
@@ -111,15 +109,12 @@ public class WalletRestController {
     @PostMapping("/send/{id}")
     public Transaction sendToJoinWallet(@RequestHeader HttpHeaders headers,@PathVariable int id
             ,@Valid @RequestBody TransactionToJoinDto transactionDto) {
-        try {
+        try{
             User user = authenticationHelper.tryGetUser(headers);
             JoinWallet joinWallet = joinWalletService.get(id,user);
-            Transaction outgoing = transactionMapper.fromDtoToJoin(user,transactionDto);
-            Transaction ingoing = new Transaction(outgoing);
-            ingoing.setWallet(joinWallet);
-            ingoing.setDirection(1);
-            transactionService.create(outgoing,ingoing);
-            return outgoing;
+            Transaction transaction = transactionMapper.fromDtoToJoin(user,transactionDto);
+            transactionService.create(transaction,user.getWallet(),joinWallet);
+            return transaction;
         }  catch (AuthenticationException | AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {

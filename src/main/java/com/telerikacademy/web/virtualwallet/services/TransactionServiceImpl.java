@@ -45,24 +45,20 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void create(Transaction outgoing, Transaction ingoing) {
-        if(outgoing.getWallet().getHoldings()<outgoing.getAmount()){
+    public void create(Transaction transaction,Wallet sending, Wallet receiving) {
+        if(sending.getHoldings()<transaction.getAmount()){
             throw new FundsSupplyException();
         }
-        repository.createMultiple(outgoing,ingoing);
-        walletService.subtractFunds(outgoing.getWallet().getId(),outgoing.getAmount());
-        walletService.addFunds(ingoing.getWallet().getId(),outgoing.getAmount());
+        repository.create(transaction);
+        walletService.subtractFunds(sending.getId(),transaction.getAmount());
+        walletService.addFunds(receiving.getId(),transaction.getAmount());
     }
 
     public Transaction getTransaction(TransactionToJoinDto transactionDto, User user
             ,JoinWallet joinWalletOutgoing, Wallet walletIngoing) {
-        Transaction outgoing = transactionMapper.fromDtoToJoin(user,transactionDto);
-        outgoing.setWallet(joinWalletOutgoing);
-        Transaction ingoing = new Transaction(outgoing);
-        ingoing.setWallet(walletIngoing);
-        ingoing.setDirection(1);
-        create(outgoing,ingoing);
-        return outgoing;
+        Transaction transaction = transactionMapper.fromDtoToJoin(user,transactionDto);
+        create(transaction, joinWalletOutgoing, walletIngoing);
+        return transaction;
     }
     @Override
     public List<Transaction> getAll(User user, TransactionFilterOptions transactionFilterOptions) {
