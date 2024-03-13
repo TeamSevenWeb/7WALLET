@@ -9,10 +9,10 @@
        <div th:unless="${userCards.isEmpty()}">
         <label th:text="#{transfer.card.present.label}">Content</label>
         <br/>
-        <select class="number-input-style w-10" th:field="*{card}">
+        <select class="number-input-style w-10" th:field="*{cardId}">
             <option th:each="card2 : ${userCards}"
-                    th:value="${card2}"
-                    th:text="${card2.number}">
+                    th:value="${card2.getId()}"
+                    th:text="${'**** **** **** '+card2.number.subSequence(12,16)}">
                 BeerStyleOne
             </option>
         </select>
@@ -21,7 +21,7 @@
         <div th:unless="${!userCards.isEmpty()}">
             <label th:text="#{transfer.card.not.present.label}">Content</label>
         </div>
-        <label class="error" th:errors="*{card}">Receiver error placeholder</label>
+        <label class="error" th:errors="*{cardId}">Receiver error placeholder</label>
         <br/><br/>
         <label th:text="#{transaction.amount.label}">Content</label>
         <br/>

@@ -132,15 +132,15 @@ public class WalletMVC {
         }
     }
 
-        @GetMapping("/transfers/fund")
+        @GetMapping("/fund")
         public String showWalletFundPage(Model model){
             model.addAttribute("transfer",new TransferDto());
             return "FundWalletView";
         }
 
-        @PostMapping("transfers/fund")
+        @PostMapping("/fund")
         public String fundWallet(@Valid @ModelAttribute("transfer") TransferDto transferDto
-                ,BindingResult errors, HttpSession sessionl) {
+                ,BindingResult errors, HttpSession session) {
             if (errors.hasErrors()) {
                 return "FundWalletView";
             }
@@ -156,22 +156,23 @@ public class WalletMVC {
             }
         }
 
-    @GetMapping("/transfers/withdraw")
+    @GetMapping("/withdraw")
     public String showWalletWithdrawPage(Model model){
-        model.addAttribute("transfer",new TransactionDto());
+        model.addAttribute("transfer",new TransferDto());
         return "WithdrawFromWalletView";
     }
 
-    @PostMapping("transfers/withdraw")
+    @PostMapping("/withdraw")
     public String withdrawFromWallet(@Valid @ModelAttribute("transfer") TransferDto transferDto,BindingResult errors, HttpSession session, Model model) {
         if (errors.hasErrors()) {
             return "WithdrawFromWalletView";
         }
         try {
-            User user = authenticationHelper.tryGetCurrentUser(session);
-            Transfer outgoing = transferMapper.outgoingFromDto(user,transferDto);
+            User user2 = userService.getById(1);
+//            User user = authenticationHelper.tryGetCurrentUser(session);
+            Transfer outgoing = transferMapper.outgoingFromDto(user2,transferDto);
             walletService.transfer(outgoing);
-            return "redirect:/wallet/transfers";
+            return "redirect:/";
         }  catch (AuthenticationException | AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (TransferFailedException e){

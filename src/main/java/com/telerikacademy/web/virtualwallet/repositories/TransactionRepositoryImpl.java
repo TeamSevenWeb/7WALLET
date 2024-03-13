@@ -103,7 +103,6 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
 
             Query<Transaction> query = session.createQuery(queryString.toString(), Transaction.class);
             query.setProperties(params);
-            System.out.println(query.getQueryString());
 
             List<Transaction> result = query.list();
             if (result.isEmpty()){
