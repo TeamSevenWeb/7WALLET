@@ -1,23 +1,34 @@
 package com.telerikacademy.web.virtualwallet.controllers.mvc;
 
+import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
+import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.exceptions.InvalidFileException;
+import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
+import com.telerikacademy.web.virtualwallet.filters.dtos.TransactionFilterDto;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
+import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserPasswordDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserUpdateDto;
+import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.utils.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionSuspensionNotSupportedException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/users")
@@ -26,14 +37,17 @@ public class UserMvcController {
     private final ProfilePhotoMapper profilePhotoMapper;
     private final CloudinaryHelper cloudinaryHelper;
 
+    private final TransactionService transactionService;
+
     private final AuthenticationHelper authenticationHelper;
     private final UserService userService;
     private final UserUpdateMapper userUpdateMapper;
     private final UserPasswordMapper userPasswordMapper;
 
-    public UserMvcController(ProfilePhotoMapper profilePhotoMapper, CloudinaryHelper cloudinaryHelper, AuthenticationHelper authenticationHelper, UserService userService, UserUpdateMapper userUpdateMapper, UserPasswordMapper userPasswordMapper) {
+    public UserMvcController(ProfilePhotoMapper profilePhotoMapper, CloudinaryHelper cloudinaryHelper, TransactionService transactionService, AuthenticationHelper authenticationHelper, UserService userService, UserUpdateMapper userUpdateMapper, UserPasswordMapper userPasswordMapper) {
         this.profilePhotoMapper = profilePhotoMapper;
         this.cloudinaryHelper = cloudinaryHelper;
+        this.transactionService = transactionService;
         this.authenticationHelper = authenticationHelper;
         this.userService = userService;
         this.userUpdateMapper = userUpdateMapper;
@@ -163,5 +177,26 @@ public class UserMvcController {
     }
 
 
+    @GetMapping("/transactions")
+    public String get(@ModelAttribute("transactionFilterOptions") TransactionFilterDto filterDto
+            , Model model, HttpSession session) {
+        TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(filterDto.getStartDate(),
+                filterDto.getEndDate(),filterDto.getSender(),filterDto.getReceiver(),filterDto.getDirection(),
+                filterDto.getSortBy(),filterDto.getSortOrder());
+        try {
+            User user = userService.getById(1);
+            List<Transaction> transactions = transactionService.getAll(user, transactionFilterOptions);
+            model.addAttribute("transactionFilterOptions", filterDto);
+            model.addAttribute("transactions", transactions);
+            model.addAttribute("currentUser", user);
+            return "TransactionsView";
+        }catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
 
 }
