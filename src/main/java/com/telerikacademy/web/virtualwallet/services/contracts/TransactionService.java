@@ -13,7 +13,7 @@ public interface TransactionService {
 
     Transaction getById(int id, User user);
 
-    void create(Transaction outgoing, Transaction ingoing);
+    void create(Transaction transaction,Wallet receiving, Wallet sending);
 
     Transaction getTransaction(TransactionToJoinDto transactionDto, User user, JoinWallet joinWalletOutgoing, Wallet walletIngoing);
 

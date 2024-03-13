@@ -13,7 +13,7 @@ create table virtual_wallet.roles
     role_type varchar(64) not null
 );
 
-create table virtual_wallet.transaction_directions
+create table virtual_wallet.transfer_directions
 (
     direction_id int auto_increment
         primary key,
@@ -101,18 +101,12 @@ create table virtual_wallet.transactions
         primary key,
     sender         int         not null,
     receiver       int         not null,
-    wallet         int         not null,
     amount         mediumtext  not null,
-    direction      int         not null,
     date           varchar(30) null,
     constraint transactions_sender_fk
         foreign key (sender) references virtual_wallet.users (user_id),
     constraint transactions_sender_fk2
-        foreign key (receiver) references virtual_wallet.users (user_id),
-    constraint transactions_sender_fk4
-        foreign key (wallet) references virtual_wallet.wallets (wallet_id),
-    constraint transactions_sender_fk5
-        foreign key (direction) references virtual_wallet.transaction_directions (direction_id)
+        foreign key (receiver) references virtual_wallet.users (user_id)
 );
 
 create table virtual_wallet.transfers
@@ -127,7 +121,7 @@ create table virtual_wallet.transfers
     constraint transfers_card_fk2
         foreign key (card) references virtual_wallet.cards (card_id),
     constraint transfers_direction_fk3
-        foreign key (direction) references virtual_wallet.transaction_directions (direction_id),
+        foreign key (direction) references virtual_wallet.transfer_directions (direction_id),
     constraint transfers_wallet_fk
         foreign key (wallet) references virtual_wallet.wallets (wallet_id)
 );

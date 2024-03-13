@@ -27,29 +27,13 @@ public class Transaction {
     @JoinColumn(name = "receiver")
     private User receiver;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "wallet")
-    private Wallet wallet;
 
     @Column(name = "amount")
     private double amount;
 
-    @Column(name = "direction")
-    private int direction;
-
     @Column(name = "date")
     private LocalDateTime date;
 
-    //Used for creating a copy of a transaction
-    public Transaction(Transaction originalTransaction) {
-        this.id = originalTransaction.id;
-        this.sender = originalTransaction.sender;
-        this.receiver = originalTransaction.receiver;
-        this.amount = originalTransaction.amount;
-        this.direction = originalTransaction.direction;
-        this.date = originalTransaction.date;
-    }
 
     public Transaction(){}
 
@@ -77,13 +61,6 @@ public class Transaction {
         this.receiver = receiver;
     }
 
-    public Wallet getWallet() {
-        return wallet;
-    }
-
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
-    }
 
     public double getAmount() {
         return amount;
@@ -93,13 +70,6 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public int getDirection() {
-        return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
 
     public LocalDateTime getDate() {
         return date;
