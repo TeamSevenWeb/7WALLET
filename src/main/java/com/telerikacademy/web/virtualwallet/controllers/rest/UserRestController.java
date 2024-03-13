@@ -6,8 +6,7 @@ import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
 import com.telerikacademy.web.virtualwallet.models.*;
-import com.telerikacademy.web.virtualwallet.models.dtos.ProfilePhotoDto;
-import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.UserProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserDto;
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
@@ -131,9 +130,9 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/uploadPhoto")
-    public void uploadPhoto(@PathVariable int id, @Valid @RequestBody ProfilePhotoDto profilePhotoDto, @RequestHeader HttpHeaders headers) {
+    public void uploadPhoto(@PathVariable int id, @Valid @RequestBody UserProfilePhotoDto userProfilePhotoDto, @RequestHeader HttpHeaders headers) {
         try {
-            ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(profilePhotoDto);
+            ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(userProfilePhotoDto);
             User userToBeUpdated = userService.getById(id);
             User user = authenticationHelper.tryGetUser(headers);
             userService.uploadProfilePhoto(profilePhoto, userToBeUpdated, user);
@@ -148,9 +147,9 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/updatePhoto")
-    public void updatePhoto(@PathVariable int id, @Valid @RequestBody ProfilePhotoDto profilePhotoDto, @RequestHeader HttpHeaders headers) {
+    public void updatePhoto(@PathVariable int id, @Valid @RequestBody UserProfilePhotoDto userProfilePhotoDto, @RequestHeader HttpHeaders headers) {
         try {
-            ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(id, profilePhotoDto);
+            ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(id, userProfilePhotoDto);
             User userToBeUpdated = userService.getById(id);
             User user = authenticationHelper.tryGetUser(headers);
             userService.updateProfilePhoto(profilePhoto, userToBeUpdated, user);

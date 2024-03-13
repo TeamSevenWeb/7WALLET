@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 public class RegisterDto extends UserDto {
 
-    @NotEmpty(message = "Password confirmation can't be empty")
+    @NotEmpty(message = "Password confirmation cannot be empty")
     private String passwordConfirm;
 
 

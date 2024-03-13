@@ -1,9 +1,8 @@
 package com.telerikacademy.web.virtualwallet.utils;
 
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
-import com.telerikacademy.web.virtualwallet.models.dtos.ProfilePhotoDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.UserProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.ProfilePhotoRepository;
-import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,17 +16,17 @@ public class ProfilePhotoMapper {
         this.profilePhotoRepository = profilePhotoRepository;
     }
 
-    public ProfilePhoto fromDto(int id, ProfilePhotoDto profilePhotoDto) {
-        ProfilePhoto profilePhoto = fromDto(profilePhotoDto);
+    public ProfilePhoto fromDto(int id, UserProfilePhotoDto userProfilePhotoDto) {
+        ProfilePhoto profilePhoto = fromDto(userProfilePhotoDto);
         profilePhoto.setProfilePhotoId(id);
         profilePhoto.setUser(profilePhotoRepository.getById(id).getUser());
         return profilePhoto;
 
     }
 
-    public ProfilePhoto fromDto(ProfilePhotoDto profilePhotoDto) {
+    public ProfilePhoto fromDto(UserProfilePhotoDto userProfilePhotoDto) {
         ProfilePhoto profilePhoto = new ProfilePhoto();
-        profilePhoto.setProfilePhoto(profilePhotoDto.getUrl());
+        profilePhoto.setProfilePhoto(userProfilePhotoDto.getUrl());
         return profilePhoto;
     }
 

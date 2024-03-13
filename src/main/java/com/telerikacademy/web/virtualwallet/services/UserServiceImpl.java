@@ -141,6 +141,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user) {
         checkAdminOrOwner(userToBeUpdated,user);
+        if(user.getProfilePhoto()==null) {
+            profilePhotoRepository.delete(user.getProfilePhoto().getProfilePhotoId());
+        }
+         profilePhoto.setUser(user);
+
         profilePhotoRepository.update(profilePhoto);
     }
 
@@ -189,5 +194,6 @@ public class UserServiceImpl implements UserService {
         uploadProfilePhoto(userProfilePhoto, user, user);
         user.setProfilePhoto(userProfilePhoto);
     }
+
 
 }

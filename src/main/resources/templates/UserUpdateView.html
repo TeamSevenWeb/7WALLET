@@ -38,32 +38,8 @@
         <br/>
         <textarea class="textarea-title textarea-style" type="text" th:field="*{phoneNumber}"></textarea>
         <br/>
-        <label class="error" th:errors="*{email}">Email error placeholder</label>
+        <label class="error" th:errors="*{phoneNumber}">Phone error placeholder</label>
         <br/>
-
-<!--        <label th:text="#{user.label.password}">Password</label>-->
-<!--        <br/>-->
-<!--        <textarea class="textarea-title textarea-style" type="password" th:field="*{password}"></textarea>-->
-<!--        <br/>-->
-<!--        <label class="error" th:errors="*{password}">Password error placeholder</label>z-->
-<!--        <br/>-->
-<!--        <div th:if="${session.isAdmin}" class="table user-update-buttons-container">-->
-<!--            <div class="make-admin-button" th:unless="${user.isAdmin()}">-->
-<!--                <a href="#" style="color: forestgreen" th:href="@{__${requestURI}__/admin}">Make user admin</a>-->
-<!--            </div>-->
-<!--            <div class="make-no-admin-button" th:if="${user.isAdmin()}">-->
-<!--                <a href="#" th:href="@{__${requestURI}__/admin}">Make user regular</a>-->
-<!--            </div>-->
-<!--            <br/>-->
-<!--            <div class="make-admin-button" th:if="${user.isBlocked()}">-->
-<!--                <a href="#" style="color: forestgreen" th:href="@{__${requestURI}__/block}">Unblock user</a>-->
-<!--            </div>-->
-<!--            <div class="make-no-admin-button" th:unless="${user.isBlocked()}">-->
-<!--                <a href="#" th:href="@{__${requestURI}__/block}">Block user</a>-->
-<!--            </div>-->
-
-<!--        </div>-->
-
         <br/>
         <input class="py-3-create rounded" type="submit" value="Save"/>
 

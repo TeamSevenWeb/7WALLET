@@ -1,29 +1,43 @@
 package com.telerikacademy.web.virtualwallet.controllers.mvc;
 
+import com.telerikacademy.web.virtualwallet.exceptions.InvalidFileException;
+import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
+import com.telerikacademy.web.virtualwallet.models.dtos.UserPasswordDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.UserProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserUpdateDto;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
-import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
-import com.telerikacademy.web.virtualwallet.utils.UserUpdateMapper;
+import com.telerikacademy.web.virtualwallet.utils.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/users")
 public class UserMvcController {
 
+    private final ProfilePhotoMapper profilePhotoMapper;
+    private final CloudinaryHelper cloudinaryHelper;
+
     private final AuthenticationHelper authenticationHelper;
     private final UserService userService;
     private final UserUpdateMapper userUpdateMapper;
-    public UserMvcController(AuthenticationHelper authenticationHelper, UserService userService, UserUpdateMapper userUpdateMapper) {
+    private final UserPasswordMapper userPasswordMapper;
+
+    public UserMvcController(ProfilePhotoMapper profilePhotoMapper, CloudinaryHelper cloudinaryHelper, AuthenticationHelper authenticationHelper, UserService userService, UserUpdateMapper userUpdateMapper, UserPasswordMapper userPasswordMapper) {
+        this.profilePhotoMapper = profilePhotoMapper;
+        this.cloudinaryHelper = cloudinaryHelper;
         this.authenticationHelper = authenticationHelper;
-        this.userService = userService;this.userUpdateMapper = userUpdateMapper;
+        this.userService = userService;
+        this.userUpdateMapper = userUpdateMapper;
+        this.userPasswordMapper = userPasswordMapper;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -61,7 +75,7 @@ public class UserMvcController {
     public String showUserPage(@PathVariable String username, Model model, HttpSession session) {
         User user = userService.getByUsername(username);
         boolean isBlocked = userService.isBlocked(user);
-        model.addAttribute("isBlocked",isBlocked);
+        model.addAttribute("isBlocked", isBlocked);
         model.addAttribute("viewedUser", user);
         return "UserView";
     }
@@ -79,31 +93,73 @@ public class UserMvcController {
     public String showChangeProfilePhoto(@PathVariable String username, Model model, HttpSession session) {
         User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
         User userToBeUpdated = userService.getByUsername(username);
-        UserUpdateDto userDto = userUpdateMapper.toDto(userToBeUpdated);
-        model.addAttribute("userUpdateDto", userDto);
-            return "UserProfilePhotoUpdateView";
+        UserProfilePhotoDto userProfilePhotoDto = new UserProfilePhotoDto();
+        model.addAttribute("userProfilePhotoDto", userProfilePhotoDto);
+        return "UserProfilePhotoUpdateView";
     }
 
     @GetMapping("/{username}/changePassword")
     public String showChangePassword(@PathVariable String username, Model model, HttpSession session) {
         User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
         User userToBeUpdated = userService.getByUsername(username);
-        UserUpdateDto userDto = userUpdateMapper.toDto(userToBeUpdated);
-        model.addAttribute("userUpdateDto", userDto);
+        UserPasswordDto userPasswordDto = new UserPasswordDto();
+        model.addAttribute("userPasswordDto", userPasswordDto);
         return "UserPasswordUpdateView";
     }
 
     @PostMapping("/{username}/update")
     public String handleUpdate(@PathVariable String username
             , @Valid @ModelAttribute("userUpdateDto") UserUpdateDto userDto
-            ,HttpSession session
+            , BindingResult errors
+            , HttpSession session
 
-            ){
+    ) {
+        if (errors.hasErrors()){
+            return "UserUpdateView";
+        }
         User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
-        User existingUser = userService.getByUsername(username);
-        User userToBeUpdated = userUpdateMapper.fromDto(existingUser.getId(),userDto);
+        User viewedUser = userService.getByUsername(username);
+        User userToBeUpdated = userUpdateMapper.fromDto(viewedUser.getId(), userDto);
         userService.update(userToBeUpdated, loggedInUser);
         return "redirect:/users/{username}";
+    }
+
+    @PostMapping("/{username}/changePassword")
+    public String handleChangePassword(@PathVariable String username, Model model, HttpSession session,
+                                       @Valid @ModelAttribute("userPasswordDto") UserPasswordDto userPasswordDto,
+                                       BindingResult errors) {
+        if (!userPasswordDto.getPassword().equals(userPasswordDto.getPasswordConfirm())){
+            errors.rejectValue("passwordConfirm","passwordConfirm.noMatch","Entered passwords do not match.");
+        }
+        if (errors.hasErrors()) {
+            return "UserPasswordUpdateView";
+        }
+        User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+        User viewedUser = userService.getByUsername(username);
+        User userToBeUpdated = userPasswordMapper.fromDto(viewedUser.getId(), userPasswordDto);
+        userService.update(userToBeUpdated, loggedInUser);
+
+        return "redirect:/users/{username}";
+    }
+
+    @PostMapping("/{username}/changeProfilePhoto")
+    public String handleChangeProfilePhoto(@PathVariable String username, Model model, HttpSession session,
+                                           @ModelAttribute("userProfilePhotoDto") UserProfilePhotoDto userProfilePhotoDto,
+                                           @RequestParam("avatar") MultipartFile file,
+                                           BindingResult errors) throws IOException {
+        try {
+            User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+            User viewedUser = userService.getByUsername(username);
+            String url = cloudinaryHelper.cloudinaryUpload(file);
+            userProfilePhotoDto.setUrl(url);
+            ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(viewedUser.getProfilePhoto().getProfilePhotoId(), userProfilePhotoDto);
+            userService.updateProfilePhoto(profilePhoto, viewedUser, loggedInUser);
+        } catch (IOException | InvalidFileException e) {
+            model.addAttribute("avatarError", e.getMessage());
+            return "UserProfilePhotoUpdateView";
+        }
+        return "redirect:/users/{username}";
+
     }
 
 
