@@ -34,7 +34,7 @@ public class Wallet {
 
     @ManyToOne
     @JoinColumn(name = "currency")
-    private com.telerikacademy.web.virtualwallet.models.Currency currency;
+    private Currency currency;
 
     public int getId() {
         return id;
@@ -72,7 +72,7 @@ public class Wallet {
         this.holdings = holdings;
     }
 
-    public void setCurrency(com.telerikacademy.web.virtualwallet.models.Currency currency) {
+    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 
