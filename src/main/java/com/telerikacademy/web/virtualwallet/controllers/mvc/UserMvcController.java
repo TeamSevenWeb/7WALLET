@@ -180,8 +180,8 @@ public class UserMvcController {
     @GetMapping("/transactions")
     public String get(@ModelAttribute("transactionFilterOptions") TransactionFilterDto filterDto
             , Model model, HttpSession session) {
-        TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(filterDto.getStartDate(),
-                filterDto.getEndDate(),filterDto.getSender(),filterDto.getReceiver(),filterDto.getDirection(),
+        TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(filterDto.getDate()
+                ,filterDto.getSender(),filterDto.getReceiver(),filterDto.getDirection(),
                 filterDto.getSortBy(),filterDto.getSortOrder());
         try {
             User user = userService.getById(1);

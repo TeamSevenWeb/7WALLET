@@ -73,8 +73,6 @@ public class Helpers {
         transaction.setAmount(1000);
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
-        transaction.setDirection(2);
-        transaction.setWallet(sender.getWallet());
         transaction.setDate(LocalDateTime.now());
 
         return transaction;
@@ -88,8 +86,6 @@ public class Helpers {
         transaction.setAmount(1000);
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
-        transaction.setDirection(1);
-        transaction.setWallet(sender.getWallet());
         transaction.setDate(LocalDateTime.now());
 
         return transaction;

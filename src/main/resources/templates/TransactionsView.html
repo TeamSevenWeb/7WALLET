@@ -23,15 +23,14 @@
                 <input type="text" th:field="*{sender}" placeholder="Sender username"/>
                 <select th:field="*{direction}">
                     <option value="">Sort Order</option>
-                    <option value="INGOING">Ascending</option>
-                    <option value="OUTGOING">Descending</option>
+                    <option value="INGOING">INGOING</option>
+                    <option value="OUTGOING">OUTGOING</option>
                 </select>
-                <input th:field="*{startDate}" placeholder="Start date EX: 2024-03-13"/>
-                <input th:field="*{endDate}" placeholder="End date date EX: 2024-03-13"/>
+                <input th:field="*{date}" placeholder="End date EX: 2024-03-13"/>
                 <select th:field="*{sortBy}">
                     <option value="">Sort By</option>
-                    <option value="amount">Title</option>
-                    <option value="date">Creator</option>
+                    <option value="amount">Amount</option>
+                    <option value="date">Date</option>
                 </select>
                 <select th:field="*{sortOrder}">
                     <option value="">Sort Order</option>
@@ -73,8 +72,8 @@
                 <br>
             </div>
             <div class="cell">
-                <span th:unless="${transaction.receiver==currentUser}" class="cell-linebreak" th:text="INGOING"></span>
-                <span th:unless="${transaction.sender==currentUser}" class="cell-linebreak" th:text="OUTGOING"></span>
+                <span th:unless="${transaction.receiver==currentUser}" class="cell-linebreak" th:text="OUTGOING"></span>
+                <span th:unless="${transaction.sender==currentUser}" class="cell-linebreak" th:text="INGOING"></span>
                 <br>
             </div>
             <div class="cell">

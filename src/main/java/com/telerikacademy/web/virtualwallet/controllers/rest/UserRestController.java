@@ -176,8 +176,7 @@ public class UserRestController {
 
     @GetMapping("/transactions")
     public List<Transaction> get(@RequestHeader HttpHeaders headers,
-                                 @RequestParam(required = false) String startDate,
-                                 @RequestParam(required = false) String endDate,
+                                 @RequestParam(required = false) String date,
                                  @RequestParam(required = false) String sender,
                                  @RequestParam(required = false) String receiver,
                                  @RequestParam(required = false) String direction,
@@ -185,7 +184,7 @@ public class UserRestController {
                                  @RequestParam(required = false) String sortOrder) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(startDate,endDate,sender, receiver, direction, sortBy, sortOrder);
+            TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(date,sender, receiver, direction, sortBy, sortOrder);
             return transactionService.getAll(user, transactionFilterOptions);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

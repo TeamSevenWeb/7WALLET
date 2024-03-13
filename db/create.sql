@@ -102,7 +102,7 @@ create table virtual_wallet.transactions
     sender         int         not null,
     receiver       int         not null,
     amount         mediumtext  not null,
-    date           varchar(30) null,
+    date           date null,
     constraint transactions_sender_fk
         foreign key (sender) references virtual_wallet.users (user_id),
     constraint transactions_sender_fk2
@@ -117,7 +117,7 @@ create table virtual_wallet.transfers
     card        int         not null,
     amount      mediumtext  not null,
     direction   int         not null,
-    date        varchar(30) null,
+    date        date null,
     constraint transfers_card_fk2
         foreign key (card) references virtual_wallet.cards (card_id),
     constraint transfers_direction_fk3
