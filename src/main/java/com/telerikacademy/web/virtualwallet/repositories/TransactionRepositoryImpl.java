@@ -50,6 +50,20 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
                 }
             });
 
+            filterOptions.getSender().ifPresent(value -> {
+                if(value.isEmpty()||user.getUsername().equals(value)){
+                    return;
+                }
+                try {
+                    User sender = userRepository.getByField("username",value);
+                    filters.add("sender = :sender");
+                    params.put("sender", sender);
+                } catch (EntityNotFoundException e){
+                    throw new EntityNotFoundException("Transactions","receiver",value);
+                }
+            });
+
+
             if(filterOptions.getStartDate().isPresent()&&filterOptions.getEndDate().isPresent()){
                 filters.add("date BETWEEN :startDate AND :endDate");
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

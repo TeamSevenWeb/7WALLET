@@ -49,6 +49,9 @@ public class TransactionServiceImpl implements TransactionService {
         if(sending.getHoldings()<transaction.getAmount()){
             throw new FundsSupplyException();
         }
+        if(sending.equals(receiving)){
+            throw new AuthorizationException("Please enter different receiver");
+        }
         repository.create(transaction);
         walletService.subtractFunds(sending.getId(),transaction.getAmount());
         walletService.addFunds(receiving.getId(),transaction.getAmount());
