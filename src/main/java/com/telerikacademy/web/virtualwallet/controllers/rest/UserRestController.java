@@ -1,5 +1,7 @@
 package com.telerikacademy.web.virtualwallet.controllers.rest;
 
+import com.mailjet.client.MailjetClient;
+import com.mailjet.client.errors.MailjetException;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
@@ -10,6 +12,7 @@ import com.telerikacademy.web.virtualwallet.filters.dtos.UserFilterOptionsDto;
 import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserDto;
+import com.telerikacademy.web.virtualwallet.services.contracts.EmailService;
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
@@ -35,13 +38,19 @@ public class UserRestController {
     private final UserMapper userMapper;
     private final AuthenticationHelper authenticationHelper;
 
+    private final MailjetClient mailjetClient;
+
+    private final EmailService mailService;
+
     @Autowired
-    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService, TransactionService transactionService1, UserMapper userMapper, AuthenticationHelper authenticationHelper) {
+    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService, TransactionService transactionService1, UserMapper userMapper, AuthenticationHelper authenticationHelper, MailjetClient mailjetClient, EmailService mailService) {
         this.userService = userService;
         this.profilePhotoMapper = profilePhotoMapper;
         this.transactionService = transactionService1;
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
+        this.mailjetClient = mailjetClient;
+        this.mailService = mailService;
     }
 
     @GetMapping("/{id}")
@@ -51,6 +60,11 @@ public class UserRestController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    @PostMapping("/testmail")
+    public void testMail() throws MailjetException {
+        mailService.send();
     }
 
     @GetMapping
