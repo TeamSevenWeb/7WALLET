@@ -71,3 +71,108 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
 });
+
+function showFlyout() {
+    document.getElementById('cardFlyout').style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if the user has no cards and display the flyout accordingly
+    if(userCardsEmpty) {
+        showFlyout();
+    }
+});
+// Event listener for clicks on the "Add Card" button
+document.getElementById('openFlyout').addEventListener('click', function(event) {
+    // Check if the clicked element is the "Add Card" button
+    if (event.target.matches('button')) {
+        // Display the card details flyout
+        showFlyout();
+    }
+});
+
+document.getElementById('cardForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Collect card details
+    var cardNumber = document.getElementById('number').value;
+    var holder = document.getElementById('holder').value;
+    var cvv = document.getElementById('cvv').value;
+    var expiryDate = document.getElementById('expiryDate').value;
+
+    // Send request to save card details
+    // Example using fetch API
+    fetch('/api/users/cards', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : "alex.m ForumSeven"
+        },
+        body: JSON.stringify({
+            number: cardNumber,
+            holder: holder,
+            cvv: cvv,
+            expirationDate: expiryDate
+        })
+    }).then(response => {
+        if (response.ok) {
+            alert('Card saved successfully!');
+            // Close the flyout after saving
+            document.getElementById('cardFlyout').style.display = 'none';
+            location.reload();
+        } else {
+            alert('Error saving card. Please check your details and try again.');
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+        alert('An unexpected error occurred. Please try again later.');
+    });
+});
+
+
+// Function to display the success flyout
+// function showSuccessFlyout() {
+//     document.getElementById('successFlyout').style.display = 'block';
+// }
+
+// Function to hide the success flyout
+// function hideSuccessFlyout() {
+//     document.getElementById('successFlyout').style.display = 'none';
+// }
+
+// Handle form submission to perform the transfer
+document.getElementById('transferForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Simulate transfer (replace with actual transfer logic)
+    const transferAmount = document.getElementById('amount').value;
+    const cardId = document.getElementById('cardId').value;
+
+    // Simulate API request to perform transfer
+    fetch('/api/wallet/fund', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "alex.m ForumSeven"
+        },
+        body: JSON.stringify( {
+            cardId : cardId,
+            amount : transferAmount
+        })
+    }).then(response => {
+        if (response.ok) {
+            // Show success flyout
+            alert('Transfer successful!');
+
+            // showSuccessFlyout();
+            // Hide success flyout after a certain time (optional)
+
+            // setTimeout(hideSuccessFlyout, 5000); // Hide after 5 seconds
+        } else {
+            alert('Transfer failed. Please try again.');
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+        alert('An unexpected error occurred. Please try again later.');
+    });
+});

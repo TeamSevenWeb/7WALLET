@@ -1299,6 +1299,10 @@ header{
 .pd-b-1{
     padding-bottom: 2rem;
 }
+
+.pd-b-05{
+    padding-bottom: 0.5rem;
+}
 .px-0 {
     padding-right: 0 !important;
     padding-left: 0 !important;

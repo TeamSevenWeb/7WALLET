@@ -108,7 +108,7 @@ public class WalletMvcController {
             user = authenticationHelper.tryGetCurrentUser(session);
             Transaction transaction = transactionMapper.fromDto(user, transactionDto);
             transactionService.create(transaction,user.getWallet(),transaction.getReceiver().getWallet());
-            return "redirect:/wallet/transactions";
+            return "redirect:/users/transactions";
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
         } catch (FundsSupplyException e) {
@@ -127,24 +127,6 @@ public class WalletMvcController {
             return "FundWalletView";
         }
 
-        @PostMapping("/fund")
-        public String fundWallet(@Valid @ModelAttribute("transfer") TransferDto transferDto
-                ,BindingResult errors, HttpSession session) {
-            if (errors.hasErrors()) {
-                return "FundWalletView";
-            }
-        try {
-            User user2 = userService.getById(1);
-            Transfer ingoing = transferMapper.ingoingFromDto(user2,transferDto);
-                walletService.transfer(ingoing);
-                return "redirect:/";
-            }  catch (AuthenticationException | AuthorizationException e){
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-            } catch (TransferFailedException e){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-            }
-        }
-
     @GetMapping("/withdraw")
     public String showWalletWithdrawPage(Model model){
         model.addAttribute("transfer",new TransferDto());
@@ -160,7 +142,7 @@ public class WalletMvcController {
             User user2 = userService.getById(1);
             Transfer outgoing = transferMapper.outgoingFromDto(user2,transferDto);
             walletService.transfer(outgoing);
-            return "redirect:/";
+            return "redirect:/wallet";
         }  catch (AuthenticationException | AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (TransferFailedException e){
