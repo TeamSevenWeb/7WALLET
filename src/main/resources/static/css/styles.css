@@ -87,6 +87,7 @@ h1, .h1 {
 
 .page-section {
     padding: 8rem;
+    padding-top: 4rem;
 }
 .page-section .page-section-heading {
     font-size: 2.25rem;
@@ -157,6 +158,15 @@ h1, .h1 {
     justify-content: center;
     align-items: center;
     align-content: center;
+    padding-top: 10pt;
+}
+
+.center-wallet {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    font-family: aquire !important;
 }
 
 .subforum-icon i{
@@ -1244,12 +1254,18 @@ header{
 .ms-auto {
     margin-left: auto !important;
 }
+
+.wallet-button{
+    background-color: cornsilk;
+    color: black;
+    padding: 0 10px;
+}
+
 .py-3 {
-    border: 3px solid;
+    border: 2px solid white;
     width: fit-content;
     font-size: large;
 }
-
 .py-3:hover{
     background-color: rgba(128, 0, 128, 0.87);
     color: white;
@@ -1281,7 +1297,7 @@ header{
     padding-top: 10rem;
 }
 .pd-b-1{
-    padding-bottom: 6rem;
+    padding-bottom: 2rem;
 }
 .px-0 {
     padding-right: 0 !important;
@@ -1877,6 +1893,16 @@ header{
 .btn-xl {
     padding: 1rem 1.75rem;
     font-size: 1.25rem;
+}
+
+.wallet-block{
+    text-align: center;
+    border: 2px solid purple;
+    border-radius: 12px;
+    background-color: #131415;
+    padding-left: 20pt;
+    padding-right: 20pt;
+    font-size: 12pt;
 }
 
 

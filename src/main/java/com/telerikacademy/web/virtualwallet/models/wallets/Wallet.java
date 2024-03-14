@@ -5,6 +5,7 @@ import com.telerikacademy.web.virtualwallet.models.Currency;
 import com.telerikacademy.web.virtualwallet.models.User;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -74,6 +75,12 @@ public class Wallet {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public String getHoldingsByRating(){
+        BigDecimal holdingsDecimal = new BigDecimal(holdings);
+        BigDecimal decimalResult =  holdingsDecimal.multiply(BigDecimal.valueOf(currency.getRating()));
+        return String.format("%.2f",decimalResult.doubleValue());
     }
 
     @Override

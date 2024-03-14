@@ -21,11 +21,9 @@ public class JoinWalletMapper {
     }
 
     public JoinWallet fromDto(User user, String name, int id){
-        JoinWallet wallet = fromDto(user,name);
         JoinWallet oldWallet = joinWalletService.get(id,user);
-        wallet.setId(id);
-        wallet.setUsers(oldWallet.getUsers());
-        return wallet;
+        oldWallet.setName(name);
+        return oldWallet;
     }
 
     public JoinWallet fromDto(User user, String name){
