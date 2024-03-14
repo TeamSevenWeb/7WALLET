@@ -4,7 +4,7 @@
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
 <section class="page-section text-center font-aquire">
-    <h2 class="font-aquire pd-b-1" th:text="#{transaction.page.title}">Transaction</h2>
+    <h2 class="font-aquire pd-b-1" th:text="#{transaction.page.title.card}">Transaction</h2>
     <form action="#" th:action="@{__${requestURI}__}" th:object="${transfer}" method="post">
         <div th:unless="${userCards.isEmpty()}">
             <label th:text="#{transfer.card.present.label}">Content</label>

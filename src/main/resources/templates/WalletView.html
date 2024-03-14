@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Wallet')}"></div>
+<body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<section style="font-size: 25pt" class="page-section text-center">
+    <div class="center-wallet">
+        <h2 class="font-aquire pd-b-1" th:text="#{wallet}">Wallet</h2>
+    <div style="font-size: 20pt" class="wallet-block">
+    <br/>
+        <h2 class="font-aquire" th:text="${wallet.getName()}"></h2>
+        <br/>
+        <label style="font-weight: bold" th:text="#{holdings}">Holdings</label>
+        <br/><br/>
+        <span th:text="${wallet.getHoldingsByRating()}"></span>
+        <span th:text="${wallet.getCurrency().getCurrencyCode()}"></span>
+        <br/><br/>
+    </div>
+        <a class="center" href="#" th:href="@{/wallet/transactions/new}">
+            <div class="py-3 wallet-button rounded font-aquire" >Send</div></a>
+        <a class="center" href="#" th:href="@{/wallet/fund}">
+            <div class="py-3 wallet-button rounded font-aquire" >Withdraw from card</div></a>
+        <a class="center" href="#" th:href="@{/wallet/withdraw}">
+            <div class="py-3 wallet-button rounded font-aquire" >Withdraw to card</div></a>
+    </div>
+</section>
+</body>
+
+</html>
