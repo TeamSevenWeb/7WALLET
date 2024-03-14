@@ -5,10 +5,8 @@ import com.telerikacademy.web.virtualwallet.models.Card;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
-import com.telerikacademy.web.virtualwallet.models.dtos.CardDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
-import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.services.contracts.CardService;
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
@@ -27,11 +25,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/wallet")
-public class WalletMVC {
+public class WalletMvcController {
 
     private final WalletService walletService;
 
@@ -50,7 +47,7 @@ public class WalletMVC {
     private static User user;
 
 
-    public WalletMVC(WalletService walletService, UserService userService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransferMapper transferMapper, CardService cardService, TransactionService transactionService) {
+    public WalletMvcController(WalletService walletService, UserService userService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransferMapper transferMapper, CardService cardService, TransactionService transactionService) {
         this.walletService = walletService;
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
@@ -76,25 +73,19 @@ public class WalletMVC {
         model.addAttribute("userCards", cards);
         return cards;
     }
-    @GetMapping("/{id}")
-    public String showSingleWallet(@PathVariable int id, Model model, HttpSession session) {
+
+    @GetMapping
+    public String showPersonalWallet(Model model, HttpSession session){
+        User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
-            Wallet wallet = walletService.get(id, user);
-            model.addAttribute("wallet", wallet);
-            return "PostView";
-        } catch (AuthenticationException e){
+            model.addAttribute("wallet", user.getWallet());
+            return "WalletView";
+        } catch (AuthenticationException e) {
             return "redirect:/auth/login";
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "ErrorView";
-        }catch (AuthorizationException e){
-            model.addAttribute("statusCode",HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            model.addAttribute("error",e.getMessage());
-            return "ErrorView";
         }
     }
+
 
     @GetMapping("/transactions/new")
     public String showNewPostPage(Model model, HttpSession session){
