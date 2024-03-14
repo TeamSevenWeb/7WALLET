@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/cards")
+@RequestMapping("api/users/cards")
 public class CardRestController {
 
     private final CardService cardService;
