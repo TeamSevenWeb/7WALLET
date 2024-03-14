@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.services.contracts;
 
+import com.telerikacademy.web.virtualwallet.filters.UserFilterOptions;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.utils.UserRole;
@@ -20,7 +21,7 @@ public interface UserService {
 
     User getByPhoneNumber(String phoneNumber);
 
-    List<User> getAll();
+    List<User> getAll(UserFilterOptions userFilterOptions,User user);
 
     void create(User user);
 

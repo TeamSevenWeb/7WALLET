@@ -4,7 +4,9 @@ import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.exceptions.InvalidFileException;
 import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
+import com.telerikacademy.web.virtualwallet.filters.UserFilterOptions;
 import com.telerikacademy.web.virtualwallet.filters.dtos.TransactionFilterDto;
+import com.telerikacademy.web.virtualwallet.filters.dtos.UserFilterOptionsDto;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.User;
@@ -44,7 +46,9 @@ public class UserMvcController {
     private final UserUpdateMapper userUpdateMapper;
     private final UserPasswordMapper userPasswordMapper;
 
-    public UserMvcController(ProfilePhotoMapper profilePhotoMapper, CloudinaryHelper cloudinaryHelper, TransactionService transactionService, AuthenticationHelper authenticationHelper, UserService userService, UserUpdateMapper userUpdateMapper, UserPasswordMapper userPasswordMapper) {
+    private final UserFilterOptionsMapper userFilterOptionsMapper;
+
+    public UserMvcController(ProfilePhotoMapper profilePhotoMapper, CloudinaryHelper cloudinaryHelper, TransactionService transactionService, AuthenticationHelper authenticationHelper, UserService userService, UserUpdateMapper userUpdateMapper, UserPasswordMapper userPasswordMapper, UserFilterOptionsMapper userFilterOptionsMapper) {
         this.profilePhotoMapper = profilePhotoMapper;
         this.cloudinaryHelper = cloudinaryHelper;
         this.transactionService = transactionService;
@@ -52,6 +56,7 @@ public class UserMvcController {
         this.userService = userService;
         this.userUpdateMapper = userUpdateMapper;
         this.userPasswordMapper = userPasswordMapper;
+        this.userFilterOptionsMapper = userFilterOptionsMapper;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -80,8 +85,12 @@ public class UserMvcController {
     }
 
     @GetMapping
-    public String showAllUsers(Model model, HttpSession session) {
-        model.addAttribute("allUsers", userService.getAll());
+    public String showAllUsers(Model model
+            , HttpSession session
+            , @ModelAttribute("userFilterOptionsDto") UserFilterOptionsDto filterDto) {
+        User user = authenticationHelper.tryGetCurrentUser(session);
+        UserFilterOptions userFilterOptions = userFilterOptionsMapper.fromDto(filterDto);
+        model.addAttribute("allUsers", userService.getAll(userFilterOptions, user));
         return "UsersView";
     }
 
@@ -198,5 +207,29 @@ public class UserMvcController {
             return "ErrorView";
         }
     }
+
+    @GetMapping("/{username}/block")
+    public String block(@PathVariable String username
+            , HttpSession session
+
+    ) {
+        User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+        User viewedUser = userService.getByUsername(username);
+        userService.block(viewedUser.getId(),loggedInUser);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/{username}/unblock")
+    public String unblock(@PathVariable String username
+            , HttpSession session
+
+    ) {
+        User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+        User viewedUser = userService.getByUsername(username);
+        userService.unblock(viewedUser.getId(),loggedInUser);
+        return "redirect:/users";
+    }
+
+
 
 }

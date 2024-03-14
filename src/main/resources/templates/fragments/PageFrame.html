@@ -30,6 +30,9 @@
                     <a th:href="@{/auth/register}" class="nav-link py-3 px-0 px-lg-3 rounded" href="#">Register</a></li>
                 <li th:if="${isAuthenticated}" class="nav-item mx-0 mx-lg-1">
                     <a href="#" th:href="@{/users/__${session.currentUser}__}" class="nav-link py-3 px-0 px-lg-3 rounded">Profile</a></li>
+                <li th:if="${isAuthenticated && session.isAdmin}" class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#" th:href="@{/users}"
+                       th:text="#{navigation.all-users}">Browse all Users</a></li>
                 <li th:if="${isAuthenticated}" class="nav-item mx-0 mx-lg-1">
                     <a th:href="@{/auth/logout}" class="nav-link py-3 px-0 px-lg-3 rounded" href="#">Logout</a></li>
             </ul>

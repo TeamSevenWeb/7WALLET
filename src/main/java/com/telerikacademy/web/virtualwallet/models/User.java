@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
+import com.telerikacademy.web.virtualwallet.utils.UserRole;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -154,6 +155,10 @@ public class User {
 
     public void setUserRoles(Set<Role> userRoles) {
         this.userRoles = userRoles;
+    }
+
+    public boolean isBlocked(){
+        return getUserRoles().stream().anyMatch(r -> r.getRoleType().equals(UserRole.blocked.toString()));
     }
 
     public Wallet getWallet() {

@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
+import com.telerikacademy.web.virtualwallet.filters.UserFilterOptions;
 import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.*;
@@ -72,8 +73,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.getAll();
+    public List<User> getAll(UserFilterOptions userFilterOptions,User user) {
+        if (!isAdmin(user)){
+            throw new AuthorizationException("Only admins are allowed to view all users.");
+        }
+        return userRepository.getAllUsersFiltered(userFilterOptions);
     }
 
     @Override

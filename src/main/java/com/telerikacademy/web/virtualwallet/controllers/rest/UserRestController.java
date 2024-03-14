@@ -5,6 +5,8 @@ import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
+import com.telerikacademy.web.virtualwallet.filters.UserFilterOptions;
+import com.telerikacademy.web.virtualwallet.filters.dtos.UserFilterOptionsDto;
 import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserDto;
@@ -52,9 +54,13 @@ public class UserRestController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(@RequestHeader HttpHeaders headers,
+                                  @RequestParam(required = false) String username,
+                                  @RequestParam(required = false) String email,
+                                  @RequestParam(required = false) String phone) {
         try {
-            return userService.getAll();
+            User user = authenticationHelper.tryGetUser(headers);
+            return userService.getAll(new UserFilterOptions(username,email,phone),user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -184,7 +190,7 @@ public class UserRestController {
                                  @RequestParam(required = false) String sortOrder) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(date,sender, receiver, direction, sortBy, sortOrder);
+            TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(date, sender, receiver, direction, sortBy, sortOrder);
             return transactionService.getAll(user, transactionFilterOptions);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
