@@ -18,6 +18,10 @@ import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -195,17 +199,24 @@ public class UserRestController {
     }
 
     @GetMapping("/transactions")
-    public List<Transaction> get(@RequestHeader HttpHeaders headers,
+    public Page<Transaction> get(@RequestHeader HttpHeaders headers,
                                  @RequestParam(required = false) String date,
                                  @RequestParam(required = false) String sender,
                                  @RequestParam(required = false) String receiver,
                                  @RequestParam(required = false) String direction,
                                  @RequestParam(required = false) String sortBy,
-                                 @RequestParam(required = false) String sortOrder) {
+                                 @RequestParam(required = false) String sortOrder,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int pageSize) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(date, sender, receiver, direction, sortBy, sortOrder);
-            return transactionService.getAll(user, transactionFilterOptions);
+            Pageable pageable;
+            if (sortBy != null && sortOrder != null) {
+                pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
+            } else {
+                pageable = PageRequest.of(page, pageSize);
+            }            return transactionService.getAll(user, transactionFilterOptions,pageable);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {

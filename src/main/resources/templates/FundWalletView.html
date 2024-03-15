@@ -16,10 +16,10 @@
         <div id="cardFlyout" style="display: none;">
         <div class="font-aquire pd-b-05">Enter Card Details</div>
         <form id="cardForm">
-            <input class="number-input-style w-10" type="text" id="number" placeholder="Card Number" required><br>
-            <input class="number-input-style w-10" type="text" id="holder" placeholder="Cardholder Name" required><br>
-            <input class="number-input-style w-10" type="text" id="cvv" placeholder="Cvv Number" required><br>
-            <input class="number-input-style w-10" type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
+            <input class="simple-input-style w-10" type="text" id="number" placeholder="Card Number" required><br>
+            <input class="simple-input-style w-10" type="text" id="holder" placeholder="Cardholder Name" required><br>
+            <input class="simple-input-style w-10" type="text" id="cvv" placeholder="Cvv Number" required><br>
+            <input class="simple-input-style w-10" type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
             <br>
             <button class="py-3-create w-8 rounded font-aquire" type="submit">Save card</button>
         </form>
@@ -30,7 +30,7 @@
        <div th:unless="${userCards.isEmpty()}">
            <label th:text="#{transfer.card.present.label}">Content</label>
         <br/>
-        <select class="number-input-style w-10" id="cardId">
+        <select class="simple-input-style w-10" id="cardId">
             <option th:each="card2 : ${userCards}"
                     th:value="${card2.getId()}"
                     th:text="${'**** **** **** '+card2.number.subSequence(12,16)}">
@@ -40,7 +40,7 @@
        </div>
         <label th:text="#{transaction.amount.label}">Content</label>
         <br/>
-        <input class="number-input-style" type="number" id="amount" th:text="BGN">
+        <input class="simple-input-style" type="number" id="amount" th:text="BGN">
         <br/><br/>
         <input class="py-3-create w-8 rounded font-aquire" type="submit" value="Send"/>
     </form>

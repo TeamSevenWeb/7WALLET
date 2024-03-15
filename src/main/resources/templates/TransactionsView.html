@@ -6,44 +6,43 @@
 <section class="page-section">
     <header class="navigate">
         <!-- Masthead Heading-->
-        <h1 class="text-uppercase mb-0" th:if="${transactions.isEmpty()}" th:text="#{transactions.page.empty}">No
-            transactions found</h1>
-        <h1 class="text-uppercase mb-0" th:unless="${transactions.isEmpty()}" th:text="#{transactions.page.title}">All
+        <h1 class="text-uppercase mb-0 font-aquire" th:text="#{transactions.page.title}">All
             Transactions</h1>
     </header>
 </section>
 <!-- Section 2-->
-<section class="py-5">
+<section class="py-5 font-aquire">
     <div class="navigate">
         <form action="#" th:action="@{__${requestURI}__}" method="get" th:object="${transactionFilterOptions}">
-            <h3 th:text="#{transactions.page.filters.title}">Filter Options</h3>
+            <h3 class="font-aquire" th:text="#{transactions.page.filters.title}">Filter Options</h3>
             <br/><br/>
             <div>
-                <input type="text" placeholder="Receiver username" th:field="*{receiver}"/>
-                <input type="text" th:field="*{sender}" placeholder="Sender username"/>
-                <select th:field="*{direction}">
+                <input class="simple-input-style w-8" type="text" placeholder="Receiver username" th:field="*{receiver}"/>
+                <input class="simple-input-style w-8" type="text" th:field="*{sender}" placeholder="Sender username"/>
+                <input class="simple-input-style w-8" th:field="*{date}" placeholder="Date EX: 2024-03-13"/>
+                <select class="simple-input-style w-8" th:field="*{direction}">
                     <option value="">Sort Order</option>
                     <option value="INGOING">INGOING</option>
                     <option value="OUTGOING">OUTGOING</option>
                 </select>
-                <input th:field="*{date}" placeholder="End date EX: 2024-03-13"/>
-                <select th:field="*{sortBy}">
+                <select class="simple-input-style w-8" th:field="*{sortBy}">
                     <option value="">Sort By</option>
                     <option value="amount">Amount</option>
                     <option value="date">Date</option>
                 </select>
-                <select th:field="*{sortOrder}">
+                <select class="simple-input-style w-8" th:field="*{sortOrder}">
                     <option value="">Sort Order</option>
                     <option value="asc">Ascending</option>
                     <option value="desc">Descending</option>
                 </select>
             </div>
             <br/><br/>
-
-            <input class="py-3-create rounded" type="submit" value="Search"/>
+            <input class="py-3-create rounded font-aquire" type="submit" value="Search"/>
+            <br/>
         </form>
     </div>
-    <div class="table text-center">
+    <div th:if="${transactions != null and not #lists.isEmpty(transactions)}">
+    <div class="table text-center font-aquire">
         <div class="table-head">
             <div class="table-header-cell">Transaction #</div>
             <div class="table-header-cell">Sender</div>
@@ -53,7 +52,7 @@
             <div class="table-header-cell">Date</div>
         </div>
         <div class="table-row" th:each="transaction : ${transactions}">
-            <!-- Post details-->
+            <!-- Transaction details-->
             <div class="cell">
                 <a href="#" th:href="@{/users/transactions/__${transaction.id}__}">
                     <span class="cell-linebreak" th:text="${transaction.id}"></span></a>
@@ -81,7 +80,27 @@
                 <br>
             </div>
         </div>
+        <br>
+        <div class="pagination">
+            <ul>
+                <li th:if="${currentPage > 0}">
+                    <a th:href="@{/users/transactions(page=${currentPage - 1})}">Previous</a>
+                </li>
+                <th:block th:if="${lastPage > 0}" th:each="pageNumber : ${#numbers.sequence(0, lastPage)}">
+                    <li th:class="${pageNumber == currentPage ? 'active' : ''}">
+                        <a th:href="@{/users/transactions(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                    </li>
+                </th:block>
+                <li th:unless="${lastPage == currentPage}">
+                    <a th:href="@{/users/transactions(page=${currentPage + 1})}">Next</a>
+                </li>
+            </ul>
+        </div>
+        </div>
     </div>
+        <br/>
+        <br/>
+    <div class="centered-error" th:if="${error}" th:text="${error}">No records with filter</div>
 </section>
 <div th:replace="~{fragments/PageFrame :: scripts}"></div>
 </body>

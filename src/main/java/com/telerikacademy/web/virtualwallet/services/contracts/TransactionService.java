@@ -6,6 +6,8 @@ import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionToJoinDto;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -17,5 +19,5 @@ public interface TransactionService {
 
     Transaction getTransaction(TransactionToJoinDto transactionDto, User user, JoinWallet joinWalletOutgoing, Wallet walletIngoing);
 
-    List<Transaction> getAll(User user, TransactionFilterOptions transactionFilterOptions);
+    Page<Transaction> getAll(User user, TransactionFilterOptions transactionFilterOptions, Pageable pageable);
 }
