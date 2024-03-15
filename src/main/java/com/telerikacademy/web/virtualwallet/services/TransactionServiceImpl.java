@@ -1,7 +1,6 @@
 package com.telerikacademy.web.virtualwallet.services;
 
 
-import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
@@ -14,6 +13,9 @@ import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRe
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,8 +66,8 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
     @Override
-    public List<Transaction> getAll(User user, TransactionFilterOptions transactionFilterOptions) {
-        return repository.filterAndSort(user ,transactionFilterOptions);
+    public Page<Transaction> getAll(User user, TransactionFilterOptions transactionFilterOptions,Pageable pageable) {
+        return repository.filterAndSort(user ,transactionFilterOptions,pageable);
     }
     private void checkModifyPermissions(Transaction transaction, User user) {
         if (!transaction.getSender().equals(user) & !transaction.getReceiver().equals(user)) {

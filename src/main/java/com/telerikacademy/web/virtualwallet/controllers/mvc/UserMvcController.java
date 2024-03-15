@@ -3,6 +3,7 @@ package com.telerikacademy.web.virtualwallet.controllers.mvc;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.exceptions.InvalidFileException;
+import com.telerikacademy.web.virtualwallet.exceptions.TransactionsNotFoundException;
 import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
 import com.telerikacademy.web.virtualwallet.filters.UserFilterOptions;
 import com.telerikacademy.web.virtualwallet.filters.dtos.TransactionFilterDto;
@@ -19,6 +20,9 @@ import com.telerikacademy.web.virtualwallet.utils.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -187,24 +191,28 @@ public class UserMvcController {
 
 
     @GetMapping("/transactions")
-    public String get(@ModelAttribute("transactionFilterOptions") TransactionFilterDto filterDto
-            , Model model, HttpSession session) {
+    public String get(@ModelAttribute("transactionFilterOptions") TransactionFilterDto filterDto,
+                      @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int pageSize, Model model, HttpSession session,BindingResult errors) {
+
         TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(filterDto.getDate()
                 ,filterDto.getSender(),filterDto.getReceiver(),filterDto.getDirection(),
                 filterDto.getSortBy(),filterDto.getSortOrder());
+
         try {
             User user = userService.getById(1);
-            List<Transaction> transactions = transactionService.getAll(user, transactionFilterOptions);
+            Pageable pageable = PageRequest.of(page, pageSize);
+            Page<Transaction> transactions = transactionService.getAll(user, transactionFilterOptions,pageable);
             model.addAttribute("transactionFilterOptions", filterDto);
-            model.addAttribute("transactions", transactions);
+            model.addAttribute("transactions", transactions.getContent());
             model.addAttribute("currentUser", user);
+            model.addAttribute("currentPage", transactions.getNumber());
+            model.addAttribute("lastPage", transactions.getTotalPages() - 1);
             return "TransactionsView";
         }catch (AuthenticationException e) {
             return "redirect:/auth/login";
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+        } catch (EntityNotFoundException | TransactionsNotFoundException e) {
             model.addAttribute("error", e.getMessage());
-            return "ErrorView";
+            return "TransactionsView";
         }
     }
 
@@ -229,7 +237,4 @@ public class UserMvcController {
         userService.unblock(viewedUser.getId(),loggedInUser);
         return "redirect:/users";
     }
-
-
-
 }

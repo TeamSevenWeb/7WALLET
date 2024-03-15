@@ -7,10 +7,14 @@ import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -31,7 +35,7 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
     }
 
     @Override
-    public List<Transaction> filterAndSort(User user,TransactionFilterOptions filterOptions){
+    public Page<Transaction> filterAndSort(User user, TransactionFilterOptions filterOptions, Pageable pageable){
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
             Map<String, Object> params = new HashMap<>();
@@ -107,9 +111,12 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
 
             List<Transaction> result = query.list();
             if (result.isEmpty()){
-                throw new TransactionsNotFoundException("Transaction","these","filters");
+                throw new TransactionsNotFoundException("Transactions");
             }
-            return result;
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), result.size());
+
+            return new PageImpl<>(result.subList(start, end), pageable, result.size());
         }
     };
 

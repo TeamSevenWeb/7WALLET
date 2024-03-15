@@ -945,20 +945,9 @@ header{
 }
 
 /* ########################################### */
-/*            posts.html                       */
+/*            users.html                       */
 /* ########################################### */
-.post-container{
-    display: flex;
-    border-top: 3px solid grey;
-    border-bottom: 3px solid grey;
-}
-.user-post-container{
 
-}
-
-.post-details-container{
-    border-top: 3px solid grey;
-}
 
 .user-profile-container{
     width: 60px;
@@ -978,18 +967,6 @@ header{
     object-fit: cover; /* Ensures the image covers the entire container */
 }
 
-.post-content-container{
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.post-content-linebreak{
-    width: 23em;
-    margin: 0.5em;
-    white-space: normal;
-    vertical-align: top;
-    overflow-wrap: break-word;
-}
 
 /* posts table's head  */
 .table {
@@ -1109,9 +1086,25 @@ header{
 
 /* Pagination*/
 
-.pagination{
-    padding: 20px;
-    font-size: 15px;
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination ul {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    display: inline;
+    margin-right: 5px;
+}
+
+.pagination li.active a {
+    font-weight: bold; /* Highlight current page */
+    color: #007bff; /* Change color for current page */
 }
 
 .pagination a{
@@ -1163,7 +1156,6 @@ header{
     margin-top: 5px;
     width: 800px;
     border-bottom: 3px solid grey;
-
 }
 
 .body .authors .username{
@@ -2056,7 +2048,7 @@ header{
     justify-content: center;
     grid-template-columns: 45% 45%;
     padding-left: 100px;
-    font-family: 'aquire',FangSong,Georgia;
+    font-family: 'aquire', FangSong, Georgia, serif;
     text-align: center;
 }
 .count-box{
@@ -2160,7 +2152,7 @@ header{
     resize: vertical; /* Allows vertical resizing */
 }
 
-.number-input-style{
+.simple-input-style{
     width: 5%;
     padding: 4px;
     margin: 4px;
@@ -2325,4 +2317,15 @@ header{
 }
 .w-5{
     width: 5%;
+}
+
+.centered-error {
+    position: fixed;
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Centering trick */
+    color: #721c24; /* Text color for error messages */
+    background-color: #f8d7da; /* Background color for error messages */
+    border: 1px solid #f5c6cb; /* Border color for error messages */
+    padding: 4px;
+    border-radius: 5px; /* Rounded corners for better appearance */
 }
