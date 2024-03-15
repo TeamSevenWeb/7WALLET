@@ -33,6 +33,8 @@ public interface UserService {
 
     void unblock(int id, User user);
 
+    void makeRegular(User user);
+
     void uploadProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user);
 
     void updateProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user);

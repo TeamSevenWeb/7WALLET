@@ -76,6 +76,9 @@ public class AuthenticationHelper {
             if (!user.getPassword().equals(password)) {
                 throw new AuthenticationException(INVALID_AUTHENTICATION_ERROR);
             }
+            if (!userService.isRegular(user)){
+                throw new AuthenticationException("Please check your email to verify your account.");
+            }
             return user;
         } catch (EntityNotFoundException e) {
             throw new AuthenticationException(INVALID_AUTHENTICATION_ERROR);
