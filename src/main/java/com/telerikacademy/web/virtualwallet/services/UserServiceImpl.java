@@ -133,6 +133,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void makeRegular(User user) {
+        user.getUserRoles().add(roleRepository.getByField("roleType", UserRole.regular.toString()));
+        userRepository.update(user);
+    }
+
+    @Override
     public void uploadProfilePhoto(ProfilePhoto profilePhoto, User userToBeUpdated, User user) {
 //        checkAdminOrOwner(userToBeUpdated, userToBeUpdated);
         if (userToBeUpdated.getProfilePhoto() != null) {

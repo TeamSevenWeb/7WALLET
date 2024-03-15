@@ -32,13 +32,16 @@ INSERT INTO virtual_wallet.roles (role_id, role_type) VALUES (3, 'regular');
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (1, 1);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (2, 1);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (3, 1);
+INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (1, 3);
+INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (2, 3);
+INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (3, 3);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (4, 3);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (5, 3);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (6, 3);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (7, 3);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (8, 3);
 INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (9, 3);
-INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (10, 2);
+INSERT INTO virtual_wallet.users_roles (user_id, role_id) VALUES (10, 3);
 
 INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (1, 1,'6703444444444449','933','03/30');
 INSERT INTO virtual_wallet.cards (card_id, holder, number, cvv, expiration_date)  VALUES (2, 2,'4360000001000005	','633','03/30');

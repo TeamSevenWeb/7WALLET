@@ -3,7 +3,7 @@ create table virtual_wallet.currencies
     currency_id   int auto_increment
         primary key,
     currency_code varchar(10) not null,
-    rating double not null
+    rating        double      not null
 );
 
 create table virtual_wallet.roles
@@ -42,7 +42,7 @@ create table virtual_wallet.cards
 (
     card_id         int auto_increment
         primary key,
-    holder          int not null,
+    holder          int         not null,
     number          varchar(16) not null,
     cvv             varchar(3)  not null,
     expiration_date varchar(5)  not null,
@@ -60,6 +60,20 @@ create table virtual_wallet.profile_photos
         foreign key (user_id) references virtual_wallet.users (user_id)
 );
 
+create table virtual_wallet.transactions
+(
+    transaction_id int auto_increment
+        primary key,
+    sender         int        not null,
+    receiver       int        not null,
+    amount         mediumtext not null,
+    date           date       not null,
+    constraint transactions_sender_fk
+        foreign key (sender) references virtual_wallet.users (user_id),
+    constraint transactions_sender_fk2
+        foreign key (receiver) references virtual_wallet.users (user_id)
+);
+
 create table virtual_wallet.users_roles
 (
     user_id int not null,
@@ -72,13 +86,13 @@ create table virtual_wallet.users_roles
 
 create table virtual_wallet.wallets
 (
-    wallet_id int auto_increment
+    wallet_id   int auto_increment
         primary key,
-    wallet_type int not null,
-    name varchar(30) not null,
-    holder    int        not null,
-    holdings  double not null,
-    currency  int        not null,
+    wallet_type int         not null,
+    name        varchar(30) not null,
+    holder      int         not null,
+    holdings    double      not null,
+    currency    int         not null,
     constraint wallets_fk2
         foreign key (currency) references virtual_wallet.currencies (currency_id),
     constraint wallets_holder_fk
@@ -88,36 +102,22 @@ create table virtual_wallet.wallets
 create table virtual_wallet.join_wallets_users
 (
     wallet_id int not null,
-    user_id int not null,
-    constraint join_wallets_users_wallets_wallet_id_fk
-        foreign key (wallet_id) references virtual_wallet.wallets (wallet_id),
+    user_id   int not null,
     constraint join_wallets_users_users_users_user_id_fk
-        foreign key (user_id) references virtual_wallet.users (user_id)
-);
-
-create table virtual_wallet.transactions
-(
-    transaction_id int auto_increment
-        primary key,
-    sender         int         not null,
-    receiver       int         not null,
-    amount         mediumtext  not null,
-    date           date not null,
-    constraint transactions_sender_fk
-        foreign key (sender) references virtual_wallet.users (user_id),
-    constraint transactions_sender_fk2
-        foreign key (receiver) references virtual_wallet.users (user_id)
+        foreign key (user_id) references virtual_wallet.users (user_id),
+    constraint join_wallets_users_wallets_wallet_id_fk
+        foreign key (wallet_id) references virtual_wallet.wallets (wallet_id)
 );
 
 create table virtual_wallet.transfers
 (
     transfer_id int auto_increment
         primary key,
-    wallet      int         not null,
-    card        int         not null,
-    amount      mediumtext  not null,
-    direction   int         not null,
-    date        date not  null,
+    wallet      int        not null,
+    card        int        not null,
+    amount      mediumtext not null,
+    direction   int        not null,
+    date        date       not null,
     constraint transfers_card_fk2
         foreign key (card) references virtual_wallet.cards (card_id),
     constraint transfers_direction_fk3
