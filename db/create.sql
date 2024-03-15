@@ -86,7 +86,7 @@ create or replace table virtual_wallet.users_roles
 
 create or replace table virtual_wallet.verification_codes
 (
-    column_name       int auto_increment
+    verification_code_id       int auto_increment
         primary key,
     user_id           int         not null,
     verification_code varchar(10) not null,
