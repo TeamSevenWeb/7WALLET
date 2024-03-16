@@ -1,7 +1,5 @@
 package com.telerikacademy.web.virtualwallet.controllers.mvc;
 
-import com.cloudinary.Cloudinary;
-import com.mailjet.client.MailjetClient;
 import com.mailjet.client.errors.MailjetException;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
@@ -119,7 +117,7 @@ public class AuthenticationMvcController {
         try {
             User user = userRegisterMapper.fromDto(register);
             userService.create(user);
-            verificationService.send(user);
+            verificationService.sendUserCode(user);
             session.setAttribute("isAdmin", false);
 
             return "redirect:/";

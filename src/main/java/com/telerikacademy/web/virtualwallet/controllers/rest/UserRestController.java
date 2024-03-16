@@ -68,7 +68,7 @@ public class UserRestController {
     @PostMapping("/testmail")
     public void testMail() throws MailjetException {
         User user = userService.getById(3);
-        mailService.send(user);
+        mailService.sendUserCode(user);
     }
 
     @GetMapping
