@@ -71,9 +71,16 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
 });
+/*Close button*/
+var closeModalBtn = document.getElementsByClassName("close");
 
+/*Flyout for cards*/
+var modalOverlay = document.getElementById("modalOverlay");
+
+var cardFlyout = document.getElementById('cardFlyout');
 function showFlyout() {
-    document.getElementById('cardFlyout').style.display = 'block';
+    cardFlyout.style.display = 'block';
+    modalOverlay.style.display = "block"; // Show the overlay
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -82,6 +89,15 @@ document.addEventListener('DOMContentLoaded', function() {
         showFlyout();
     }
 });
+
+modalOverlay.addEventListener("click", closeModal);
+for (var i = 0; i < closeModalBtn.length; i++) {
+    closeModalBtn[i].addEventListener("click", closeModal);
+}
+function closeModal() {
+    cardFlyout.style.display = "none"; // Hide the modal
+    modalOverlay.style.display = "none"; // Hide the overlay
+}
 // Event listener for clicks on the "Add Card" button
 document.getElementById('openFlyout').addEventListener('click', function(event) {
     // Check if the clicked element is the "Add Card" button
@@ -90,7 +106,11 @@ document.getElementById('openFlyout').addEventListener('click', function(event) 
         showFlyout();
     }
 });
-
+window.addEventListener("click", function(event) {
+    if (event.target !== cardFlyout) {
+        modal.style.display = "none"; // Hide the modal
+    }
+});
 document.getElementById('cardForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form submission
 
@@ -175,4 +195,24 @@ document.getElementById('transferForm').addEventListener('submit', function(even
         console.error('Error:', error);
         alert('An unexpected error occurred. Please try again later.');
     });
+});
+
+
+//open modals
+// Get the button element
+var openModalBtn = document.getElementById("openModalBtn");
+
+// Get the modal element
+var modal = document.getElementById("myModal");
+
+// When the user clicks the button, open the modal
+openModalBtn.addEventListener("click", function() {
+    modal.style.display = "block"; // Show the modal
+});
+
+// When the user clicks anywhere outside of the modal, close it
+window.addEventListener("click", function(event) {
+    if (event.target === modal) {
+        modal.style.display = "none"; // Hide the modal
+    }
 });

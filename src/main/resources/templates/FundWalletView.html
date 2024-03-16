@@ -9,22 +9,6 @@
 <section class="page-section text-center font-aquire">
     <h2 class="font-aquire pd-b-1" th:text="#{transaction.page.title.wallet}">Transfer</h2>
     <div style="font-size: 13pt" class="wallet-block">
-    <div th:if="${userCards.isEmpty()}">
-        <label th:text="#{transfer.card.not.present.label}">Content</label>
-    </div>
-        </br></br>
-        <div id="cardFlyout" style="display: none;">
-        <div class="font-aquire pd-b-05">Enter Card Details</div>
-        <form id="cardForm">
-            <input class="simple-input-style w-10" type="text" id="number" placeholder="Card Number" required><br>
-            <input class="simple-input-style w-10" type="text" id="holder" placeholder="Cardholder Name" required><br>
-            <input class="simple-input-style w-10" type="text" id="cvv" placeholder="Cvv Number" required><br>
-            <input class="simple-input-style w-10" type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
-            <br>
-            <button class="py-3-create w-8 rounded font-aquire" type="submit">Save card</button>
-        </form>
-            </br>
-    </div>
 
     <form id="transferForm">
        <div th:unless="${userCards.isEmpty()}">
@@ -45,6 +29,31 @@
         <input class="py-3-create w-8 rounded font-aquire" type="submit" value="Send"/>
     </form>
     <br>
+        <div th:if="${userCards.isEmpty()}">
+            <label th:text="#{transfer.card.not.present.label}">Content</label>
+        </div>
+        <br/><br/>
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal" id="cardFlyout" style="display: none;">
+            <div class="modal-header">
+                <span type="button" class="close" data-dismiss="modal">&times;</span>
+                <span class="modal-title font-aquire">Enter Card Details</span>
+            </div>
+            <div class="modal-content">
+            <br/>
+            <br/>
+                <form id="cardForm">
+                    <input class="simple-input-style w-10" type="text" id="number" placeholder="Card Number" required><br>
+                    <input class="simple-input-style w-10" type="text" id="holder" placeholder="Cardholder Name" required><br>
+                    <input class="simple-input-style w-10" type="text" id="cvv" placeholder="Cvv Number" required><br>
+                    <input class="simple-input-style w-10" type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
+                    <br>
+                    <button class="py-3-create w-8 rounded font-aquire" type="submit">Save card</button>
+                </form>
+            </div>
+            </br>
+        </div>
+
         <button class="py-3-create w-8 rounded font-aquire" id="openFlyout">Add Card</button>
     </div>
 </section>
