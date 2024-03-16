@@ -62,16 +62,28 @@ create or replace table virtual_wallet.profile_photos
 
 create or replace table virtual_wallet.transactions
 (
-    transaction_id int auto_increment
+    transaction_id  int auto_increment
         primary key,
-    sender         int        not null,
-    receiver       int        not null,
-    amount         mediumtext not null,
-    date           date       not null,
+    sender          int        not null,
+    receiver        int        not null,
+    amount          mediumtext not null,
+    date            date       not null,
+    is_confirmed    tinyint(1) not null,
+    expiration_date date       not null,
     constraint transactions_sender_fk
         foreign key (sender) references virtual_wallet.users (user_id),
     constraint transactions_sender_fk2
         foreign key (receiver) references virtual_wallet.users (user_id)
+);
+
+create or replace table virtual_wallet.transaction_verification_codes
+(
+    transaction_verification_code_id int(64) auto_increment
+        primary key,
+    transaction_id                   int(64)    not null,
+    verification_code                varchar(7) not null,
+    constraint transaction_verification_codes_transactions_transaction_id_fk
+        foreign key (transaction_id) references virtual_wallet.transactions (transaction_id)
 );
 
 create or replace table virtual_wallet.users_roles
@@ -86,10 +98,10 @@ create or replace table virtual_wallet.users_roles
 
 create or replace table virtual_wallet.verification_codes
 (
-    verification_code_id       int auto_increment
+    verification_code_id int auto_increment
         primary key,
-    user_id           int         not null,
-    verification_code varchar(10) not null,
+    user_id              int         not null,
+    verification_code    varchar(10) not null,
     constraint verification_codes_users_user_id_fk
         foreign key (user_id) references virtual_wallet.users (user_id)
 );

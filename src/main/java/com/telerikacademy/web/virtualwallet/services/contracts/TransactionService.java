@@ -20,4 +20,6 @@ public interface TransactionService {
     Transaction getTransaction(TransactionToJoinDto transactionDto, User user, JoinWallet joinWalletOutgoing, Wallet walletIngoing);
 
     Page<Transaction> getAll(User user, TransactionFilterOptions transactionFilterOptions, Pageable pageable);
+
+    void processTransaction(Transaction transaction,Wallet sending, Wallet receiving);
 }
