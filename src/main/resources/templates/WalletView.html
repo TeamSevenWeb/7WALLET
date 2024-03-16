@@ -18,6 +18,8 @@
     </div>
         <a class="center" href="#" th:href="@{/wallet/transactions/new}">
             <div class="py-3 wallet-button rounded font-aquire" >Send</div></a>
+        <a th:if="${userWalletsCount > 1}" class="center" href="#" th:href="@{/wallet/transfer/new}">
+            <div class="py-3 wallet-button rounded font-aquire" >Transfer to other wallet</div></a>
         <a class="center" href="#" th:href="@{/wallet/fund}">
             <div class="py-3 wallet-button rounded font-aquire" >Withdraw from card</div></a>
         <a class="center" href="#" th:href="@{/wallet/withdraw}">
