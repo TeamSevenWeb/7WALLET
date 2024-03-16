@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -45,8 +46,9 @@ public class WalletMvcController {
 
     private final TransactionService transactionService;
 
+    private final VerificationService verificationService;
 
-    public WalletMvcController(WalletService walletService, JoinWalletService joinWalletService, UserService userService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransferMapper transferMapper, CardService cardService, TransactionService transactionService) {
+    public WalletMvcController(WalletService walletService, JoinWalletService joinWalletService, UserService userService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransferMapper transferMapper, CardService cardService, TransactionService transactionService, VerificationService verificationService) {
         this.walletService = walletService;
         this.joinWalletService = joinWalletService;
         this.userService = userService;
@@ -55,6 +57,7 @@ public class WalletMvcController {
         this.transferMapper = transferMapper;
         this.cardService = cardService;
         this.transactionService = transactionService;
+        this.verificationService = verificationService;
     }
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
@@ -93,7 +96,7 @@ public class WalletMvcController {
     public String showNewPostPage(Model model, HttpSession session){
         model.addAttribute("transaction",new TransactionDto());
         try {
-           User user =  authenticationHelper.tryGetCurrentUser(session);
+            User user =  authenticationHelper.tryGetCurrentUser(session);
             return "NewTransactionView";
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
@@ -101,12 +104,12 @@ public class WalletMvcController {
     }
 
     @PostMapping("/transactions/new")
-    public String createTransaction(@Valid @ModelAttribute("transaction") TransactionDto transactionDto, BindingResult errors, HttpSession session, Model model) {
+    public String createTransaction(@Valid @ModelAttribute("transaction") TransactionDto transactionDto, BindingResult errors, HttpSession session, Model model,RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             return "NewTransactionView";
         }
         try {
-           User user = authenticationHelper.tryGetCurrentUser(session);
+            User user = authenticationHelper.tryGetCurrentUser(session);
             Transaction transaction = transactionMapper.fromDto(user, transactionDto);
             transactionService.create(transaction,user.getWallet(),transaction.getReceiver().getWallet());
             return "redirect:/users/transactions";
@@ -120,12 +123,17 @@ public class WalletMvcController {
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         }
+        catch (TransactionConfirmationException | TransactionExpiredException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
+
     }
 
     @GetMapping("/transfer/new")
     public String transferToOtherWallet(Model model, HttpSession session){
         try {
-           User user =  authenticationHelper.tryGetCurrentUser(session);
+            User user =  authenticationHelper.tryGetCurrentUser(session);
             List<JoinWallet> wallets = joinWalletService.getAllByUser(user);
             model.addAttribute("transfer", new TransactionToJoinDto());
             model.addAttribute("wallets", wallets);
@@ -191,4 +199,11 @@ public class WalletMvcController {
         }
     }
 
+    @GetMapping("/transactions/verify/{verificationCode}")
+    public String verifyTransaction(@PathVariable String verificationCode) {
+        Transaction transaction = verificationService.verifyTransaction(verificationCode);
+        transactionService.processTransaction(transaction, transaction.getSender().getWallet(), transaction.getReceiver().getWallet());
+        return "redirect:/users/transactions";
     }
+
+}
