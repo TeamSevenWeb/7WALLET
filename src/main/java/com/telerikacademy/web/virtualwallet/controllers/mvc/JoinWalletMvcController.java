@@ -166,7 +166,8 @@ public class JoinWalletMvcController {
 
     @PostMapping("/{id}/transfer/new")
     public String createTransferToOtherWallet(@Valid @ModelAttribute("transfer") TransactionToJoinDto transactionDto
-            , BindingResult errors, HttpSession session, Model model, @PathVariable int id) {
+            , BindingResult errors, HttpSession session, Model model, RedirectAttributes redirectAttributes,
+                                              @PathVariable int id) {
         if (errors.hasErrors()) {
             return "TransactionToOtherWalletView";
         }
@@ -193,6 +194,10 @@ public class JoinWalletMvcController {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
+        }
+        catch (TransactionConfirmationException | TransactionExpiredException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
         }
     }
 

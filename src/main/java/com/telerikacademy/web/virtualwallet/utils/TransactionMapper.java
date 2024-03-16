@@ -44,6 +44,7 @@ public class TransactionMapper {
         transaction.setReceiver(sender);
         transaction.setAmount(transactionDto.getAmount());
         transaction.setDate(LocalDateTime.now());
+        transaction.setExpirationDate(LocalDateTime.now().plusDays(5));
 
         return transaction;
     }

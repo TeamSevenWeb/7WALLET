@@ -1,4 +1,4 @@
-create or replace table virtual_wallet.currencies
+create table virtual_wallet.currencies
 (
     currency_id   int auto_increment
         primary key,
@@ -6,21 +6,21 @@ create or replace table virtual_wallet.currencies
     rating        double      not null
 );
 
-create or replace table virtual_wallet.roles
+create table virtual_wallet.roles
 (
     role_id   int auto_increment
         primary key,
     role_type varchar(64) not null
 );
 
-create or replace table virtual_wallet.transfer_directions
+create table virtual_wallet.transfer_directions
 (
     direction_id int auto_increment
         primary key,
     direction    varchar(15) null
 );
 
-create or replace table virtual_wallet.users
+create table virtual_wallet.users
 (
     user_id      int auto_increment
         primary key,
@@ -38,7 +38,7 @@ create or replace table virtual_wallet.users
         unique (phone_number)
 );
 
-create or replace table virtual_wallet.cards
+create table virtual_wallet.cards
 (
     card_id         int auto_increment
         primary key,
@@ -50,7 +50,7 @@ create or replace table virtual_wallet.cards
         foreign key (holder) references virtual_wallet.users (user_id)
 );
 
-create or replace table virtual_wallet.profile_photos
+create table virtual_wallet.profile_photos
 (
     profile_photo_id int auto_increment
         primary key,
@@ -60,7 +60,7 @@ create or replace table virtual_wallet.profile_photos
         foreign key (user_id) references virtual_wallet.users (user_id)
 );
 
-create or replace table virtual_wallet.transactions
+create table virtual_wallet.transactions
 (
     transaction_id  int auto_increment
         primary key,
@@ -76,17 +76,7 @@ create or replace table virtual_wallet.transactions
         foreign key (receiver) references virtual_wallet.users (user_id)
 );
 
-create or replace table virtual_wallet.transaction_verification_codes
-(
-    transaction_verification_code_id int(64) auto_increment
-        primary key,
-    transaction_id                   int(64)    not null,
-    verification_code                varchar(7) not null,
-    constraint transaction_verification_codes_transactions_transaction_id_fk
-        foreign key (transaction_id) references virtual_wallet.transactions (transaction_id)
-);
-
-create or replace table virtual_wallet.users_roles
+create table virtual_wallet.users_roles
 (
     user_id int not null,
     role_id int not null,
@@ -96,7 +86,7 @@ create or replace table virtual_wallet.users_roles
         foreign key (user_id) references virtual_wallet.users (user_id)
 );
 
-create or replace table virtual_wallet.verification_codes
+create table virtual_wallet.verification_codes
 (
     verification_code_id int auto_increment
         primary key,
@@ -106,7 +96,7 @@ create or replace table virtual_wallet.verification_codes
         foreign key (user_id) references virtual_wallet.users (user_id)
 );
 
-create or replace table virtual_wallet.wallets
+create table virtual_wallet.wallets
 (
     wallet_id   int auto_increment
         primary key,
@@ -121,7 +111,7 @@ create or replace table virtual_wallet.wallets
         foreign key (holder) references virtual_wallet.users (user_id)
 );
 
-create or replace table virtual_wallet.join_wallets_users
+create table virtual_wallet.join_wallets_users
 (
     wallet_id int not null,
     user_id   int not null,
@@ -131,7 +121,23 @@ create or replace table virtual_wallet.join_wallets_users
         foreign key (wallet_id) references virtual_wallet.wallets (wallet_id)
 );
 
-create or replace table virtual_wallet.transfers
+create table virtual_wallet.transaction_verification_codes
+(
+    transaction_verification_code_id int(64) auto_increment
+        primary key,
+    transaction_id                   int(64)    not null,
+    verification_code                varchar(7) not null,
+    sender_wallet                    int        not null,
+    receiver_wallet                  int        not null,
+    constraint transaction_verification_codes_transactions_transaction_id_fk
+        foreign key (transaction_id) references virtual_wallet.transactions (transaction_id),
+    constraint transaction_verification_codes_wallets_wallet_id_fk
+        foreign key (sender_wallet) references virtual_wallet.wallets (wallet_id),
+    constraint transaction_verification_codes_wallets_wallet_id_fk_2
+        foreign key (receiver_wallet) references virtual_wallet.wallets (wallet_id)
+);
+
+create table virtual_wallet.transfers
 (
     transfer_id int auto_increment
         primary key,
