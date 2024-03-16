@@ -2010,7 +2010,9 @@ header{
 }
 .user-wall{
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 40% 40%;
+    justify-content: space-evenly;
+    font-family: aquire
 }
 
 .user-photo{

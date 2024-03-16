@@ -14,6 +14,8 @@ import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserPasswordDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserProfilePhotoDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.UserUpdateDto;
+import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
+import com.telerikacademy.web.virtualwallet.services.contracts.JoinWalletService;
 import com.telerikacademy.web.virtualwallet.services.contracts.TransactionService;
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.utils.*;
@@ -23,15 +25,11 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSuspensionNotSupportedException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,17 +45,21 @@ public class UserMvcController {
 
     private final AuthenticationHelper authenticationHelper;
     private final UserService userService;
+
+    private final JoinWalletService joinWalletService;
+
     private final UserUpdateMapper userUpdateMapper;
     private final UserPasswordMapper userPasswordMapper;
 
     private final UserFilterOptionsMapper userFilterOptionsMapper;
 
-    public UserMvcController(ProfilePhotoMapper profilePhotoMapper, CloudinaryHelper cloudinaryHelper, TransactionService transactionService, AuthenticationHelper authenticationHelper, UserService userService, UserUpdateMapper userUpdateMapper, UserPasswordMapper userPasswordMapper, UserFilterOptionsMapper userFilterOptionsMapper) {
+    public UserMvcController(ProfilePhotoMapper profilePhotoMapper, CloudinaryHelper cloudinaryHelper, TransactionService transactionService, AuthenticationHelper authenticationHelper, UserService userService, JoinWalletService joinWalletService, UserUpdateMapper userUpdateMapper, UserPasswordMapper userPasswordMapper, UserFilterOptionsMapper userFilterOptionsMapper) {
         this.profilePhotoMapper = profilePhotoMapper;
         this.cloudinaryHelper = cloudinaryHelper;
         this.transactionService = transactionService;
         this.authenticationHelper = authenticationHelper;
         this.userService = userService;
+        this.joinWalletService = joinWalletService;
         this.userUpdateMapper = userUpdateMapper;
         this.userPasswordMapper = userPasswordMapper;
         this.userFilterOptionsMapper = userFilterOptionsMapper;
@@ -83,6 +85,11 @@ public class UserMvcController {
         return session.getAttribute("isRegular") != null;
     }
 
+    @ModelAttribute("userId")
+    public int populateUserId(HttpSession session) {
+        return (int) session.getAttribute("userId");
+    }
+
     @ModelAttribute("requestURI")
     public String requestURI(final HttpServletRequest request) {
         return request.getRequestURI();
@@ -102,8 +109,10 @@ public class UserMvcController {
     public String showUserPage(@PathVariable String username, Model model, HttpSession session) {
         User user = userService.getByUsername(username);
         boolean isBlocked = userService.isBlocked(user);
+        List<JoinWallet> userJoinWallets = joinWalletService.getAllByUser(user);
         model.addAttribute("isBlocked", isBlocked);
         model.addAttribute("viewedUser", user);
+        model.addAttribute("userJoinWallets",userJoinWallets);
         return "UserView";
     }
 
