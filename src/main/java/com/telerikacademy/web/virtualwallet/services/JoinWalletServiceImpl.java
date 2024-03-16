@@ -18,22 +18,17 @@ import java.util.List;
 public class JoinWalletServiceImpl implements JoinWalletService {
 
     public static final String NOT_OWNER_ERR = "Only owner can add/remove users from join wallets";
-    public static final String UNAUTHORIZED = "Unauthorized";
-    private final JoinWalletRepository joinWalletRepository;
 
-    private final WalletRepository walletRepository;
+    public static final String UNAUTHORIZED = "Unauthorized";
+
+    private final JoinWalletRepository joinWalletRepository;
 
     private final UserRepository userRepository;
 
-    private final CurrencyService currencyService;
-
-    private final  String apiUrl = "https://65df74a2ff5e305f32a25197.mockapi.io/api/card/withdraw";
     @Autowired
-    public JoinWalletServiceImpl(JoinWalletRepository joinWalletRepository, WalletRepository walletRepository, UserRepository userRepository, CurrencyService currencyService) {
+    public JoinWalletServiceImpl(JoinWalletRepository joinWalletRepository, UserRepository userRepository) {
         this.joinWalletRepository = joinWalletRepository;
-        this.walletRepository = walletRepository;
         this.userRepository = userRepository;
-        this.currencyService = currencyService;
     }
 
 

@@ -10,8 +10,8 @@ INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_
 INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (10, 'linuxenjoyer93', 'ForumSeven', 'Dragomir', 'Georgiev', 'dragolinux@yahoo.com', '0863333330');
 
 INSERT INTO virtual_wallet.currencies(currency_id, currency_code, rating) VALUES (1,'BGN',1);
-INSERT INTO virtual_wallet.currencies(currency_id, currency_code, rating) VALUES (2,'EUR',0.55);
-INSERT INTO virtual_wallet.currencies(currency_id, currency_code, rating) VALUES (3,'USD',0.51);
+INSERT INTO virtual_wallet.currencies(currency_id, currency_code, rating) VALUES (2,'EUR',0.51);
+INSERT INTO virtual_wallet.currencies(currency_id, currency_code, rating) VALUES (3,'USD',0.56);
 
 INSERT INTO virtual_wallet.profile_photos (profile_photo_id, user_id, profile_photo) VALUES (29, 3, 'http://res.cloudinary.com/dykfvzq8y/image/upload/v1708322421/f8plknzgwh933vtxglek.png');
 INSERT INTO virtual_wallet.profile_photos (profile_photo_id, user_id, profile_photo) VALUES (30, 4, 'http://res.cloudinary.com/dykfvzq8y/image/upload/v1708322664/s0o7t91zi8bkwjkg9bht.jpg');
