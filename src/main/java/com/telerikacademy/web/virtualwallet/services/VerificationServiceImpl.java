@@ -8,6 +8,7 @@ import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.TransactionVerificationCodes;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.VerificationCodes;
+import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionVerificationCodesRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.VerificationCodesRepository;
@@ -63,7 +64,8 @@ public class VerificationServiceImpl implements VerificationService {
     }
 
     @Override
-    public void sendTransactionCode(User user, Transaction transaction) throws MailjetException {
+    public void sendTransactionCode(User user, Transaction transaction, Wallet senderWallet, Wallet receiverWallet)
+            throws MailjetException {
         TransactionalEmail message = TransactionalEmail
                 .builder()
                 .to(new SendContact(user.getEmail(), user.getFirstName()))
@@ -72,7 +74,7 @@ public class VerificationServiceImpl implements VerificationService {
                         String.format("<p>Please click on the link below to verify your transaction to %s"
                                 , transaction.getReceiver().getUsername())
                                 + String.format("<p>http://localhost:8080/wallet/transactions/verify/%s</p>"
-                                , generateTransactionVerificationCode(transaction)))
+                                , generateTransactionVerificationCode(transaction,senderWallet,receiverWallet)))
                 .subject("Confirm Transaction")
                 .trackOpens(TrackOpens.ENABLED)
                 .build();
@@ -83,6 +85,11 @@ public class VerificationServiceImpl implements VerificationService {
                 .build();
 
         SendEmailsResponse response = request.sendWith(mailjetClient);
+    }
+
+    @Override
+    public TransactionVerificationCodes getByCode(String code) {
+       return transactionVerificationCodesRepository.getByField("verificationCode",code);
     }
 
     @Override
@@ -118,12 +125,13 @@ public class VerificationServiceImpl implements VerificationService {
 
     }
 
-    private String generateTransactionVerificationCode(Transaction transaction) {
+    private String generateTransactionVerificationCode(Transaction transaction, Wallet senderWallet, Wallet receiverWallet) {
         String verificationCode = generateCode();
         TransactionVerificationCodes transactionVerificationCodes = new TransactionVerificationCodes();
         transactionVerificationCodes.setTransaction(transaction);
         transactionVerificationCodes.setVerificationCode(verificationCode);
-
+        transactionVerificationCodes.setSenderWallet(senderWallet);
+        transactionVerificationCodes.setReceiverWallet(receiverWallet);
         transactionVerificationCodesRepository.create(transactionVerificationCodes);
         return verificationCode;
     }

@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.models;
 
+import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,30 @@ public class TransactionVerificationCodes {
     @Column(name = "verification_code")
     private String verificationCode;
 
+
+    @OneToOne
+    @JoinColumn(name = "sender_wallet")
+    private Wallet senderWallet;
+
+    @OneToOne
+    @JoinColumn(name = "receiver_wallet")
+    private Wallet receiverWallet;
+
+    public Wallet getSenderWallet() {
+        return senderWallet;
+    }
+
+    public void setSenderWallet(Wallet senderWallet) {
+        this.senderWallet = senderWallet;
+    }
+
+    public Wallet getReceiverWallet() {
+        return receiverWallet;
+    }
+
+    public void setReceiverWallet(Wallet receiverWallet) {
+        this.receiverWallet = receiverWallet;
+    }
     public int getTransactionVerificationCodeId() {
         return transactionVerificationCodeId;
     }

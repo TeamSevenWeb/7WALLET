@@ -1,14 +1,12 @@
 package com.telerikacademy.web.virtualwallet.controllers.mvc;
 
 import com.telerikacademy.web.virtualwallet.exceptions.*;
-import com.telerikacademy.web.virtualwallet.models.Card;
-import com.telerikacademy.web.virtualwallet.models.Transaction;
-import com.telerikacademy.web.virtualwallet.models.Transfer;
-import com.telerikacademy.web.virtualwallet.models.User;
+import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionToJoinDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
+import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.services.contracts.*;
 import com.telerikacademy.web.virtualwallet.utils.AuthenticationHelper;
 import com.telerikacademy.web.virtualwallet.utils.TransactionMapper;
@@ -201,8 +199,12 @@ public class WalletMvcController {
 
     @GetMapping("/transactions/verify/{verificationCode}")
     public String verifyTransaction(@PathVariable String verificationCode) {
+        TransactionVerificationCodes transactionVerificationCodes = verificationService.getByCode(verificationCode);
+        Wallet senderWallet = transactionVerificationCodes.getSenderWallet();
+        Wallet receiverWallet = transactionVerificationCodes.getReceiverWallet();
         Transaction transaction = verificationService.verifyTransaction(verificationCode);
-        transactionService.processTransaction(transaction, transaction.getSender().getWallet(), transaction.getReceiver().getWallet());
+        transactionService.processTransaction(transaction, senderWallet
+                , receiverWallet);
         return "redirect:/users/transactions";
     }
 

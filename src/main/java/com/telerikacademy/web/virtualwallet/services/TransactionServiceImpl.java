@@ -66,7 +66,7 @@ public class TransactionServiceImpl implements TransactionService {
         try {
             if (transaction.getAmount() >= 1000) {
                 transaction.setConfirmed(false);
-                verificationService.sendTransactionCode(transaction.getSender(),transaction);
+                verificationService.sendTransactionCode(transaction.getSender(),transaction,sending,receiving);
             }
             else transaction.setConfirmed(true);
         } catch (MailjetException e) {

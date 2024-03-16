@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +117,7 @@ public class JoinWalletMvcController {
 
     @PostMapping("/{id}/transactions/new")
     public String createTransaction(@Valid @ModelAttribute("transaction") TransactionDto transactionDto
-            ,BindingResult errors, HttpSession session, Model model,@PathVariable int id) {
+            , BindingResult errors, HttpSession session, Model model, RedirectAttributes redirectAttributes, @PathVariable int id) {
         if (errors.hasErrors()) {
             return "NewTransactionView";
         }
@@ -139,6 +140,10 @@ public class JoinWalletMvcController {
         } catch (FundsSupplyException e) {
             errors.rejectValue("amount", "insufficient.funds", e.getMessage());
             return "NewTransactionView";
+        }
+        catch (TransactionConfirmationException | TransactionExpiredException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
         }
     }
 
@@ -238,6 +243,9 @@ public class JoinWalletMvcController {
         } catch (TransferFailedException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
+
     }
+
+
 
 }
