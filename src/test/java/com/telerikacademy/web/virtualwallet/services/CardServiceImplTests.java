@@ -28,8 +28,6 @@ public class CardServiceImplTests {
     @Mock
     CardRepository cardRepository;
 
-    @Mock
-    UserService mockUserService;
 
     @Test
     void getById_Should_ReturnCard_When_MatchByIdExists(){
