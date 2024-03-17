@@ -3,6 +3,7 @@ package com.telerikacademy.web.virtualwallet.services;
 import com.telerikacademy.web.virtualwallet.Helpers;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
+import com.telerikacademy.web.virtualwallet.filters.UserFilterOptions;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
@@ -31,11 +32,13 @@ public class UserServiceImplTests {
     @Test
       void getAll_Should_CallRepository(){
         //Arrange, Act
-        Mockito.when(mockUserRepository.getAll()).thenReturn(null);
-        mockUserService.getAll();
+        Mockito.when(mockUserRepository.getAllUsersFiltered(new UserFilterOptions())).thenReturn(null);
+        User user = createMockUser();
+        mockUserService.getAll(new UserFilterOptions()
+        ,user);
 
         //Assert
-        Mockito.verify(mockUserRepository,Mockito.times(1)).getAll();
+        Mockito.verify(mockUserRepository,Mockito.times(1)).getAllUsersFiltered(new UserFilterOptions());
     }
 
     @Test

@@ -1,9 +1,6 @@
 package com.telerikacademy.web.virtualwallet;
 
-import com.telerikacademy.web.virtualwallet.models.Card;
-import com.telerikacademy.web.virtualwallet.models.ProfilePhoto;
-import com.telerikacademy.web.virtualwallet.models.Transaction;
-import com.telerikacademy.web.virtualwallet.models.User;
+import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 
 import java.time.LocalDateTime;
@@ -13,6 +10,8 @@ public class Helpers {
 
     public static User createMockUser() {
         var mockUser = new User();
+        Role role = new Role();
+        role.setRoleType("admin");
         mockUser.setId(1);
         mockUser.setUsername("MockUsername");
         mockUser.setPassword("MockPassword");
@@ -21,6 +20,7 @@ public class Helpers {
         mockUser.setEmail("mock@user.com");
         mockUser.setPhoneNumber("123456789123");
         mockUser.setUserRoles(new HashSet<>());
+        mockUser.getUserRoles().add(role);
         mockUser.setUserCards(new HashSet<>());
         mockUser.setWallets(new HashSet<>());
         mockUser.getWallets().add(new Wallet());
@@ -41,6 +41,7 @@ public class Helpers {
         mockUser.setUserCards(new HashSet<>());
         mockUser.setWallets(new HashSet<>());
         mockUser.getWallets().add(new Wallet());
+        mockUser.getWallet().setId(2);
         mockUser.setProfilePhoto(new ProfilePhoto());
         return mockUser;
     }
@@ -65,28 +66,16 @@ public class Helpers {
         return profilePhoto;
     }
 
-    public static Transaction createMockTransactionOutgoing(){
+    public static Transaction createMockTransaction(){
         var transaction = new Transaction();
         User sender = createMockUser();
         User receiver = createMockUser2();
         transaction.setId(1);
-        transaction.setAmount(1000);
+        transaction.setAmount(500);
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
         transaction.setDate(LocalDateTime.now());
-
-        return transaction;
-    }
-
-    public static Transaction createMockTransactionIngoing(){
-        var transaction = new Transaction();
-        User sender = createMockUser();
-        User receiver = createMockUser2();
-        transaction.setId(2);
-        transaction.setAmount(1000);
-        transaction.setSender(sender);
-        transaction.setReceiver(receiver);
-        transaction.setDate(LocalDateTime.now());
+        transaction.setExpirationDate(LocalDateTime.now().plusDays(2));
 
         return transaction;
     }

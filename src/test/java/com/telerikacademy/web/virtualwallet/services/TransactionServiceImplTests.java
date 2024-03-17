@@ -1,10 +1,10 @@
 package com.telerikacademy.web.virtualwallet.services;
 
-import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRepository;
+import com.telerikacademy.web.virtualwallet.services.contracts.VerificationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +21,9 @@ public class TransactionServiceImplTests {
     TransactionServiceImpl mockTransactionService;
 
     @Mock
+    VerificationService verificationService;
+
+    @Mock
     TransactionRepository transactionRepository;
 
     @Mock
@@ -29,7 +32,7 @@ public class TransactionServiceImplTests {
     @Test
     void getById_Should_ReturnTransaction_When_MatchByIdExists(){
         //Arrange
-        Transaction mockTransaction = createMockTransactionOutgoing();
+        Transaction mockTransaction = createMockTransaction();
 
         Mockito.when(transactionRepository.getById(Mockito.anyInt()))
                 .thenReturn(mockTransaction);
@@ -43,26 +46,24 @@ public class TransactionServiceImplTests {
     @Test
     void create_Should_throw_When_WalletAmountIsLessThanTransactionAmount(){
         //Arrange
-        Transaction mockTransaction1 = createMockTransactionOutgoing();
-        Transaction mockTransaction2 = createMockTransactionIngoing();
+        Transaction mockTransaction1 = createMockTransaction();
 
         //Assert
         Assertions.assertThrows(FundsSupplyException.class, ()->mockTransactionService.create(mockTransaction1,
-                mockTransaction2));
+                mockTransaction1.getSender().getWallet(),mockTransaction1.getReceiver().getWallet()));
 
     }
 
     @Test
     void create_Should_CallWalletService_When_WalletAmountIsEnoughForTheTransaction(){
         //Arrange
-        Transaction mockTransaction1 = createMockTransactionOutgoing();
+        Transaction mockTransaction1 = createMockTransaction();
         Wallet senderWallet = mockTransaction1.getSender().getWallet();
         Wallet receiverWallet = mockTransaction1.getReceiver().getWallet();
-        Transaction mockTransaction2 = createMockTransactionIngoing();
 
         //Act
         senderWallet.setHoldings(2000);
-        mockTransactionService.create(mockTransaction1,mockTransaction2);
+        mockTransactionService.create(mockTransaction1,senderWallet,receiverWallet);
 
         //Assert
         Mockito.verify(mockWalletService,Mockito.times(1))
@@ -75,16 +76,16 @@ public class TransactionServiceImplTests {
     @Test
     void create_Should_CallRepository_When_WalletAmountIsEnoughForTheTransaction(){
         //Arrange
-        Transaction mockTransaction1 = createMockTransactionOutgoing();
+        Transaction mockTransaction1 = createMockTransaction();
         Wallet senderWallet = mockTransaction1.getSender().getWallet();
-        Transaction mockTransaction2 = createMockTransactionIngoing();
+        Wallet receiverWallet = mockTransaction1.getReceiver().getWallet();
 
         //Act
-        senderWallet.setHoldings(2000);
-        mockTransactionService.create(mockTransaction1,mockTransaction2);
+        senderWallet.setHoldings(1000);
+        mockTransactionService.create(mockTransaction1,senderWallet,receiverWallet);
 
         //Assert
         Mockito.verify(transactionRepository,Mockito.times(1))
-                .createMultiple(mockTransaction1, mockTransaction2);
+                .create(mockTransaction1);
     }
 }
