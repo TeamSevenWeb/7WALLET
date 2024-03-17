@@ -24,6 +24,8 @@ public class UserServiceImpl implements UserService {
 
     private static final String MODIFY_USER_ERROR_MESSAGE = "Only admin or account holder can modify a user.";
     public static final String BLOCK_UNBLOCK_PERMISSIONS_ERR = "Only admins are allowed to block or unblock users.";
+    public static final String GETALL_AUTH_ERR = "Only admins are allowed to view all users.";
+    public static final String DEFAULT_PROFILE_SRC_PATH = "./src/main/resources/static/images/default_profile.jpg";
     private final UserRepository userRepository;
     private final ProfilePhotoRepository profilePhotoRepository;
     private final RoleRepository roleRepository;
@@ -75,7 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll(UserFilterOptions userFilterOptions,User user) {
         if (!isAdmin(user)){
-            throw new AuthorizationException("Only admins are allowed to view all users.");
+            throw new AuthorizationException(GETALL_AUTH_ERR);
         }
         return userRepository.getAllUsersFiltered(userFilterOptions);
     }
@@ -196,7 +198,7 @@ public class UserServiceImpl implements UserService {
     private void setDefaultProfilePhoto(User user) throws IOException {
         ProfilePhoto userProfilePhoto = new ProfilePhoto();
         Map upload = cloudinary.uploader()
-                .upload("./src/main/resources/static/images/default_profile.jpg"
+                .upload(DEFAULT_PROFILE_SRC_PATH
                         , ObjectUtils.asMap("resource_type", "auto"));
         String url = (String) upload.get("url");
         userProfilePhoto.setProfilePhoto(url);

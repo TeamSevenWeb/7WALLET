@@ -2428,3 +2428,23 @@ header{
     color: #1a1e21;
     margin: 5px; /* Adjust spacing between close button and title */
 }
+.error-home{
+    color: #721c24; /* Text color for error messages (red or a color of your choice) */
+    background-color: #f8d7da; /* Background color for error messages (light red or a color of your choice) */
+    border: 1px solid #f5c6cb; /* Border color for error messages (lighter red or a color of your choice) */
+    padding: 4px;
+    margin: 10px 0;
+    border-radius: 5px; /* Rounded corners for better appearance */
+    text-align: center;
+    justify-content: center;
+}
+.success {
+    color: #27721c; /* Text color for error messages (red or a color of your choice) */
+    background-color: #d7f8d8; /* Background color for error messages (light red or a color of your choice) */
+    border: 1px solid #d7f5c6; /* Border color for error messages (lighter red or a color of your choice) */
+    padding: 4px;
+    margin: 10px 0;
+    border-radius: 5px; /* Rounded corners for better appearance */
+    text-align: center;
+    justify-content: center;
+}

@@ -23,6 +23,12 @@ import java.util.Random;
 @Service
 public class VerificationServiceImpl implements VerificationService {
 
+    public static final String SENDER_EMAIL = "sup3rrXDA1@gmail.com";
+    public static final String WALLET_DEVELOPER_TEAM = "7Wallet developer team";
+    public static final String CODE_POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    public static final String VERIFICATION_CODE_FIELD = "verificationCode";
+    public static final String WELCOME_HEADER = "Welcome to 7Wallet";
+    public static final String CONFIRM_TRANSACTION_HEADER = "Confirm Transaction";
     private final VerificationCodesRepository verificationCodesRepository;
     private final TransactionVerificationCodesRepository transactionVerificationCodesRepository;
     private final MailjetClient mailjetClient;
@@ -44,15 +50,13 @@ public class VerificationServiceImpl implements VerificationService {
         TransactionalEmail message = TransactionalEmail
                 .builder()
                 .to(new SendContact(user.getEmail(), user.getFirstName()))
-                .from(new SendContact("sup3rrXDA1@gmail.com", "7Wallet developer team"))
+                .from(new SendContact(SENDER_EMAIL, WALLET_DEVELOPER_TEAM))
                 .htmlPart("<h1>Welcome to 7Wallet!</h1>"
                         + "<p>Please click on the link below to verify your account"
                         + String.format("<p>http://localhost:8080/auth/verify/%s</p>"
                         , generateUserVerificationCode(user)))
-                .subject("Welcome to 7Wallet")
+                .subject(WELCOME_HEADER)
                 .trackOpens(TrackOpens.ENABLED)
-                .header("test-header-key", "test-value")
-                .customID("custom-id-value")
                 .build();
 
         SendEmailsRequest request = SendEmailsRequest
@@ -69,13 +73,13 @@ public class VerificationServiceImpl implements VerificationService {
         TransactionalEmail message = TransactionalEmail
                 .builder()
                 .to(new SendContact(user.getEmail(), user.getFirstName()))
-                .from(new SendContact("sup3rrXDA1@gmail.com", "7Wallet developer team"))
+                .from(new SendContact(SENDER_EMAIL, WALLET_DEVELOPER_TEAM))
                 .htmlPart(
                         String.format("<p>Please click on the link below to verify your transaction to %s"
                                 , transaction.getReceiver().getUsername())
                                 + String.format("<p>http://localhost:8080/wallet/transactions/verify/%s</p>"
-                                , generateTransactionVerificationCode(transaction,senderWallet,receiverWallet)))
-                .subject("Confirm Transaction")
+                                , generateTransactionVerificationCode(transaction, senderWallet, receiverWallet)))
+                .subject(CONFIRM_TRANSACTION_HEADER)
                 .trackOpens(TrackOpens.ENABLED)
                 .build();
 
@@ -89,13 +93,13 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     public TransactionVerificationCodes getByCode(String code) {
-       return transactionVerificationCodesRepository.getByField("verificationCode",code);
+        return transactionVerificationCodesRepository.getByField(VERIFICATION_CODE_FIELD, code);
     }
 
     @Override
     public void verifyUser(String verificationCode) {
 
-        VerificationCodes verificationCodesEntity = verificationCodesRepository.getByField("verificationCode", verificationCode);
+        VerificationCodes verificationCodesEntity = verificationCodesRepository.getByField(VERIFICATION_CODE_FIELD, verificationCode);
 
         if (verificationCodesEntity != null) {
             userService.makeRegular(verificationCodesEntity.getUser());
@@ -105,7 +109,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     public Transaction verifyTransaction(String verificationCode) {
-        TransactionVerificationCodes transactionVerificationCodes = transactionVerificationCodesRepository.getByField("verificationCode", verificationCode);
+        TransactionVerificationCodes transactionVerificationCodes = transactionVerificationCodesRepository.getByField(VERIFICATION_CODE_FIELD, verificationCode);
         Transaction transaction = transactionVerificationCodes.getTransaction();
         if (verificationCode != null) {
             transaction.setConfirmed(true);
@@ -138,7 +142,7 @@ public class VerificationServiceImpl implements VerificationService {
 
 
     private String generateCode() {
-        String englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        String englishAlphabet = CODE_POOL;
         StringBuilder verificationCode = new StringBuilder();
         Random random = new Random();
 

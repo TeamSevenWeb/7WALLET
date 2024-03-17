@@ -5,7 +5,10 @@
 <body>
 <div th:insert="~{fragments/PageFrame :: navbar}"></div>
 <section class="home-background">
-    <div th:if="${error}" class="error" role="alert">
+    <div th:if="${success}" class="success" role="alert">
+        <p th:text="${success}"></p>
+    </div>
+    <div th:if="${error}" class="error-home" role="alert">
         <p th:text="${error}"></p>
     </div>
     <div class="home-container">

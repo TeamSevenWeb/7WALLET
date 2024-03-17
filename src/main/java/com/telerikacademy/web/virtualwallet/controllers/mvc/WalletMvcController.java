@@ -121,7 +121,7 @@ public class WalletMvcController {
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         } catch (TransactionConfirmationException | TransactionExpiredException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("success", e.getMessage());
             return "redirect:/";
         }
 
@@ -165,7 +165,7 @@ public class WalletMvcController {
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         } catch (TransactionConfirmationException | TransactionExpiredException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("success", e.getMessage());
             return "redirect:/";
         }
     }
