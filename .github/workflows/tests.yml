@@ -13,6 +13,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
@@ -21,3 +24,5 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+    # Optionally, you can add steps for other testing tasks here
