@@ -11,8 +11,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticationHelper {
-    private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+    private static final String AUTHENTICATION_HEADER_NAME = "Authentication";
     private static final String INVALID_AUTHENTICATION_ERROR = "Invalid authentication.";
+    private final HttpHeaders headers = new HttpHeaders();
 
     private final UserService userService;
 
@@ -21,13 +22,10 @@ public class AuthenticationHelper {
         this.userService = userService;
     }
 
-    public User tryGetUser(HttpHeaders headers) {
-        if (!headers.containsKey(AUTHORIZATION_HEADER_NAME)) {
-            throw new AuthenticationException(INVALID_AUTHENTICATION_ERROR);
-        }
-
+    public User tryGetUser(String headers1) {
         try {
-            String userInfo = headers.getFirst(AUTHORIZATION_HEADER_NAME);
+            headers.add(AUTHENTICATION_HEADER_NAME,headers1);
+            String userInfo = headers.getFirst(AUTHENTICATION_HEADER_NAME);
             String username = getUsername(userInfo);
             String password = getPassword(userInfo);
             User user = userService.getByUsername(username);

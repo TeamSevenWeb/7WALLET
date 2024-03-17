@@ -37,9 +37,10 @@ public class CardRestController {
     }
 
     @GetMapping("/{id}")
-    public Card getById(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public Card getById(@RequestHeader(name = "Authentication")
+                            String authentication, @PathVariable int id){
         try {
-            User holder =  authenticationHelper.tryGetUser(headers);
+            User holder =  authenticationHelper.tryGetUser(authentication);
             return cardService.get(holder,id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -47,9 +48,10 @@ public class CardRestController {
     }
 
     @PostMapping()
-    public void create(@RequestHeader HttpHeaders headers,@Valid @RequestBody CardDto cardDto) {
+    public void create(@RequestHeader(name = "Authentication")
+                           String authentication,@Valid @RequestBody CardDto cardDto) {
         try {
-            User holder =  authenticationHelper.tryGetUser(headers);
+            User holder =  authenticationHelper.tryGetUser(authentication);
             Card card = cardMapper.fromDto(holder,cardDto);
             cardService.create(holder,card);
         } catch (EntityDuplicateException e) {
@@ -60,9 +62,10 @@ public class CardRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@RequestHeader HttpHeaders headers,@PathVariable int id){
+    public void delete(@RequestHeader(name = "Authentication")
+                           String authentication,@PathVariable int id){
         try {
-            User holder =  authenticationHelper.tryGetUser(headers);
+            User holder =  authenticationHelper.tryGetUser(authentication);
             cardService.delete(holder,id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

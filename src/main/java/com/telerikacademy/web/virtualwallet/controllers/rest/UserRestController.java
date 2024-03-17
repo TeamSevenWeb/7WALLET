@@ -16,7 +16,10 @@ import com.telerikacademy.web.virtualwallet.services.contracts.TransactionServic
 import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import com.telerikacademy.web.virtualwallet.services.contracts.WalletService;
 import com.telerikacademy.web.virtualwallet.utils.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import org.apache.http.client.methods.HttpHead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +29,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 
@@ -63,12 +67,13 @@ public class UserRestController {
     }
 
     @GetMapping
-    public List<User> getAllUsers(@RequestHeader HttpHeaders headers,
+    public List<User> getAllUsers(@RequestHeader(name = "Authentication")
+                                      String authentication,
                                   @RequestParam(required = false) String username,
                                   @RequestParam(required = false) String email,
                                   @RequestParam(required = false) String phone) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             return userService.getAll(new UserFilterOptions(username,email,phone),user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -76,9 +81,10 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public void delete(@RequestHeader(name = "Authentication")
+                           String authentication, @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             userService.delete(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -90,9 +96,10 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody UserDto userDto) {
+    public void update(@RequestHeader(name = "Authentication")
+                           String authentication, @PathVariable int id, @Valid @RequestBody UserDto userDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             User userToBeUpdated = userMapper.fromDto(id, userDto);
             userService.update(userToBeUpdated, user);
         } catch (EntityNotFoundException e) {
@@ -120,9 +127,10 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/block")
-    public void blockUser(@PathVariable int id, @RequestHeader HttpHeaders headers) {
+    public void blockUser(@PathVariable int id, @RequestHeader(name = "Authentication")
+    String authentication) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             userService.block(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -135,9 +143,10 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/unblock")
-    public void unBlockUser(@PathVariable int id, @RequestHeader HttpHeaders headers) {
+    public void unBlockUser(@PathVariable int id, @RequestHeader(name = "Authentication")
+    String authentication) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             userService.unblock(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -149,11 +158,13 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/uploadPhoto")
-    public void uploadPhoto(@PathVariable int id, @Valid @RequestBody UserProfilePhotoDto userProfilePhotoDto, @RequestHeader HttpHeaders headers) {
+    public void uploadPhoto(@PathVariable int id, @Valid @RequestBody UserProfilePhotoDto userProfilePhotoDto,
+                            @RequestHeader(name = "Authentication")
+                            String authentication) {
         try {
             ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(userProfilePhotoDto);
             User userToBeUpdated = userService.getById(id);
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             userService.uploadProfilePhoto(profilePhoto, userToBeUpdated, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -166,11 +177,13 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/updatePhoto")
-    public void updatePhoto(@PathVariable int id, @Valid @RequestBody UserProfilePhotoDto userProfilePhotoDto, @RequestHeader HttpHeaders headers) {
+    public void updatePhoto(@PathVariable int id, @Valid @RequestBody UserProfilePhotoDto userProfilePhotoDto,
+                            @RequestHeader(name = "Authentication")
+                            String authentication) {
         try {
             ProfilePhoto profilePhoto = profilePhotoMapper.fromDto(id, userProfilePhotoDto);
             User userToBeUpdated = userService.getById(id);
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             userService.updateProfilePhoto(profilePhoto, userToBeUpdated, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -182,9 +195,10 @@ public class UserRestController {
     }
 
     @GetMapping("/transactions/{id}")
-    public Transaction getTransaction(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public Transaction getTransaction(@RequestHeader(name = "Authentication")
+                                          String authentication, @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             return transactionService.getById(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -193,8 +207,10 @@ public class UserRestController {
         }
     }
 
+
     @GetMapping("/transactions")
-    public Page<Transaction> get(@RequestHeader HttpHeaders headers,
+    public Page<Transaction> get(@RequestHeader(name = "Authentication")
+                                     String authentication,
                                  @RequestParam(required = false) String date,
                                  @RequestParam(required = false) String sender,
                                  @RequestParam(required = false) String receiver,
@@ -204,7 +220,7 @@ public class UserRestController {
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int pageSize) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(date, sender, receiver, direction, sortBy, sortOrder);
             Pageable pageable;
             if (sortBy != null && sortOrder != null) {
