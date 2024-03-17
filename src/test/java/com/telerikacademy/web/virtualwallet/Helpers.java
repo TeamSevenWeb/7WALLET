@@ -2,6 +2,7 @@ package com.telerikacademy.web.virtualwallet;
 
 import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
+import com.telerikacademy.web.virtualwallet.utils.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -10,8 +11,6 @@ public class Helpers {
 
     public static User createMockUser() {
         var mockUser = new User();
-        Role role = new Role();
-        role.setRoleType("admin");
         mockUser.setId(1);
         mockUser.setUsername("MockUsername");
         mockUser.setPassword("MockPassword");
@@ -20,7 +19,7 @@ public class Helpers {
         mockUser.setEmail("mock@user.com");
         mockUser.setPhoneNumber("123456789123");
         mockUser.setUserRoles(new HashSet<>());
-        mockUser.getUserRoles().add(role);
+        mockUser.getUserRoles().add(createMockAdminRole());
         mockUser.setUserCards(new HashSet<>());
         mockUser.setWallets(new HashSet<>());
         mockUser.getWallets().add(new Wallet());
@@ -56,6 +55,13 @@ public class Helpers {
         mockCard.setHolder(user);
         user.getUserCards().add(mockCard);
         return mockCard;
+    }
+
+    public static Role createMockAdminRole(){
+        var mockRole = new Role();
+        mockRole.setRoleId(1);
+        mockRole.setRoleType("admin");
+        return mockRole;
     }
 
     public static ProfilePhoto createMockProfilePhoto() {
