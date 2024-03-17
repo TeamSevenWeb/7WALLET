@@ -40,6 +40,7 @@ public class Helpers {
         mockUser.setUserCards(new HashSet<>());
         mockUser.setWallets(new HashSet<>());
         mockUser.getWallets().add(new Wallet());
+        mockUser.getWallet().setId(2);
         mockUser.setProfilePhoto(new ProfilePhoto());
         return mockUser;
     }
@@ -71,28 +72,16 @@ public class Helpers {
         return profilePhoto;
     }
 
-    public static Transaction createMockTransactionOutgoing(){
+    public static Transaction createMockTransaction(){
         var transaction = new Transaction();
         User sender = createMockUser();
         User receiver = createMockUser2();
         transaction.setId(1);
-        transaction.setAmount(1000);
+        transaction.setAmount(500);
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
         transaction.setDate(LocalDateTime.now());
-
-        return transaction;
-    }
-
-    public static Transaction createMockTransactionIngoing(){
-        var transaction = new Transaction();
-        User sender = createMockUser();
-        User receiver = createMockUser2();
-        transaction.setId(2);
-        transaction.setAmount(1000);
-        transaction.setSender(sender);
-        transaction.setReceiver(receiver);
-        transaction.setDate(LocalDateTime.now());
+        transaction.setExpirationDate(LocalDateTime.now().plusDays(2));
 
         return transaction;
     }
