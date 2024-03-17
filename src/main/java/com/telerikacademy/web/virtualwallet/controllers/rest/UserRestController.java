@@ -41,18 +41,15 @@ public class UserRestController {
     private final UserMapper userMapper;
     private final AuthenticationHelper authenticationHelper;
 
-    private final MailjetClient mailjetClient;
-
     private final VerificationService mailService;
 
     @Autowired
-    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService, TransactionService transactionService1, UserMapper userMapper, AuthenticationHelper authenticationHelper, MailjetClient mailjetClient, VerificationService mailService) {
+    public UserRestController(UserService userService, TransactionService transactionService, ProfilePhotoMapper profilePhotoMapper, TransactionMapper transactionMapper, TransferMapper transferMapper, WalletService walletService, TransactionService transactionService1, UserMapper userMapper, AuthenticationHelper authenticationHelper, VerificationService mailService) {
         this.userService = userService;
         this.profilePhotoMapper = profilePhotoMapper;
         this.transactionService = transactionService1;
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
-        this.mailjetClient = mailjetClient;
         this.mailService = mailService;
     }
 
@@ -63,12 +60,6 @@ public class UserRestController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-    }
-
-    @PostMapping("/testmail")
-    public void testMail() throws MailjetException {
-        User user = userService.getById(3);
-        mailService.sendUserCode(user);
     }
 
     @GetMapping
@@ -117,9 +108,13 @@ public class UserRestController {
     @PostMapping()
     public void createUser(@Valid @RequestBody UserDto userDto) {
         try {
-            userService.create(userMapper.fromDto(userDto));
+            User user = userMapper.fromDto(userDto);
+            userService.create(user);
+            mailService.sendUserCode(user);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (MailjetException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
 
     }
