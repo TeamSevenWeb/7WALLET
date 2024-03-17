@@ -38,7 +38,7 @@ public class CurrencyRestController {
     public List<Currency> getAllCurrencies(@RequestHeader HttpHeaders headers){
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            return currencyService.getAll();
+            return currencyService.getAll(user);
         }  catch (AuthenticationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

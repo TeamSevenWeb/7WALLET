@@ -120,8 +120,7 @@ public class WalletMvcController {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
-        }
-        catch (TransactionConfirmationException | TransactionExpiredException e) {
+        } catch (TransactionConfirmationException | TransactionExpiredException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/";
         }
@@ -165,8 +164,7 @@ public class WalletMvcController {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
-        }
-        catch (TransactionConfirmationException | TransactionExpiredException e) {
+        } catch (TransactionConfirmationException | TransactionExpiredException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/";
         }

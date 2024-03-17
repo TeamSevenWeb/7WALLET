@@ -116,6 +116,9 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     }
 
     private void checkIsDuplicated(JoinWallet wallet, User user) {
+        if (wallet.getName().equalsIgnoreCase("Personal")){
+            throw new EntityDuplicateException("Wallet","name", wallet.getName());
+        }
         try {
             joinWalletRepository.getByUserAndName(user, wallet.getName());
             throw new EntityDuplicateException("Wallet","name", wallet.getName());
@@ -123,6 +126,9 @@ public class JoinWalletServiceImpl implements JoinWalletService {
     }
 
     private void checkIsDuplicated(JoinWallet wallet, User user,int id) {
+        if (wallet.getName().equalsIgnoreCase("Personal")){
+            throw new EntityDuplicateException("Wallet","name", wallet.getName());
+        }
         try {
             JoinWallet duplicateWallet = joinWalletRepository.getByUserAndName(user, wallet.getName());
             if (duplicateWallet.getId() != id) {
