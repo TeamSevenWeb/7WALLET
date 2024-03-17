@@ -1,10 +1,17 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.Uploader;
+import com.cloudinary.utils.ObjectUtils;
 import com.telerikacademy.web.virtualwallet.Helpers;
+import com.telerikacademy.web.virtualwallet.config.CloudinaryConfig;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
+import com.telerikacademy.web.virtualwallet.filters.UserFilterOptions;
+import com.telerikacademy.web.virtualwallet.models.Role;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
+import com.telerikacademy.web.virtualwallet.repositories.contracts.ProfilePhotoRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,6 +20,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.*;
 
 import static com.telerikacademy.web.virtualwallet.Helpers.createMockUser;
 
@@ -28,14 +37,25 @@ public class UserServiceImplTests {
     @Mock
     UserRepository mockUserRepository;
 
+    @Mock
+    private Cloudinary cloudinary;
+
+    @Mock
+    private Uploader uploader;
+
+    @Mock
+    private ProfilePhotoRepository profilePhotoRepository;
+
     @Test
       void getAll_Should_CallRepository(){
         //Arrange, Act
-        Mockito.when(mockUserRepository.getAll()).thenReturn(null);
-        mockUserService.getAll();
+        User testUser = createMockUser();
+        UserFilterOptions userFilterOptions = new UserFilterOptions("testUsername","test@email.com","1234567890");
+        Mockito.when(mockUserRepository.getAllUsersFiltered(userFilterOptions)).thenReturn(new ArrayList<>());
+        mockUserService.getAll(userFilterOptions,testUser);
 
         //Assert
-        Mockito.verify(mockUserRepository,Mockito.times(1)).getAll();
+        Mockito.verify(mockUserRepository,Mockito.times(1)).getAllUsersFiltered(userFilterOptions);
     }
 
     @Test
@@ -128,7 +148,7 @@ public class UserServiceImplTests {
         User user = createMockUser();
         Mockito.when(mockUserRepository.getByField("username",user.getUsername())).thenThrow(EntityNotFoundException.class);
         Mockito.when(mockUserRepository.getByField("email",user.getEmail())).thenThrow(EntityNotFoundException.class);
-
+        Mockito.when(cloudinary.uploader()).thenReturn(uploader);
         //Act
         mockUserService.create(user);
 
@@ -144,7 +164,7 @@ public class UserServiceImplTests {
         User user = createMockUser();
         Mockito.when(mockUserRepository.getByField("username",user.getUsername())).thenThrow(EntityNotFoundException.class);
         Mockito.when(mockUserRepository.getByField("email",user.getEmail())).thenThrow(EntityNotFoundException.class);
-
+        Mockito.when(cloudinary.uploader()).thenReturn(uploader);
         //Act
         mockUserService.create(user);
 
