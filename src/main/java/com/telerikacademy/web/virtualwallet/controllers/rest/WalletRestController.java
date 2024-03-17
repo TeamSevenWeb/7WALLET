@@ -50,9 +50,10 @@ public class WalletRestController {
     }
 
     @GetMapping
-    public Wallet getWallet(@RequestHeader HttpHeaders headers){
+    public Wallet getWallet(@RequestHeader(name = "Authentication")
+                                String authentication){
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             return walletService.getByUser(user);
         }  catch (AuthenticationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -60,9 +61,10 @@ public class WalletRestController {
     }
 
     @PostMapping("/fund")
-    public Transfer fundWallet(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
+    public Transfer fundWallet(@RequestHeader(name = "Authentication")
+                                   String authentication, @Valid @RequestBody TransferDto transferDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             Transfer ingoing = transferMapper.ingoingFromDto(user,transferDto);
             walletService.transfer(ingoing);
             return ingoing;
@@ -73,9 +75,10 @@ public class WalletRestController {
         }
     }
     @PostMapping("/withdraw")
-    public Transfer withdrawToCard(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
+    public Transfer withdrawToCard(@RequestHeader(name = "Authentication")
+                                       String authentication, @Valid @RequestBody TransferDto transferDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             Transfer outgoing = transferMapper.outgoingFromDto(user,transferDto);
             walletService.transfer(outgoing);
             return outgoing;
@@ -90,9 +93,10 @@ public class WalletRestController {
 
 
     @PostMapping("/send")
-    public Transaction createTransaction(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransactionDto transactionDto) {
+    public Transaction createTransaction(@RequestHeader(name = "Authentication")
+                                             String authentication, @Valid @RequestBody TransactionDto transactionDto) {
         try {
-            User sender = authenticationHelper.tryGetUser(headers);
+            User sender = authenticationHelper.tryGetUser(authentication);
             Transaction transaction = transactionMapper.fromDto(sender, transactionDto);
 
             transactionService.create(transaction,sender.getWallet(),transaction.getReceiver().getWallet());
@@ -107,10 +111,11 @@ public class WalletRestController {
     }
 
     @PostMapping("/send/{id}")
-    public Transaction sendToJoinWallet(@RequestHeader HttpHeaders headers,@PathVariable int id
+    public Transaction sendToJoinWallet(@RequestHeader(name = "Authentication")
+                                            String authentication,@PathVariable int id
             ,@Valid @RequestBody TransactionToJoinDto transactionDto) {
         try{
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             JoinWallet joinWallet = joinWalletService.get(id,user);
             Transaction transaction = transactionMapper.fromDtoToJoin(user,transactionDto);
             transactionService.create(transaction,user.getWallet(),joinWallet);
@@ -125,9 +130,10 @@ public class WalletRestController {
     }
 
     @PutMapping("/currency/{id}")
-    public void changeCurrency(@RequestHeader HttpHeaders headers,@PathVariable int id){
+    public void changeCurrency(@RequestHeader(name = "Authentication")
+                                   String authentication,@PathVariable int id){
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             Wallet wallet = walletService.getByUser(user);
             walletService.changeCurrency(wallet.getId(),id);
         }  catch (AuthenticationException e){

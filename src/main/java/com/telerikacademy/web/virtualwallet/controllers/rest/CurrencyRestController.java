@@ -35,9 +35,10 @@ public class CurrencyRestController {
     }
 
     @GetMapping
-    public List<Currency> getAllCurrencies(@RequestHeader HttpHeaders headers){
+    public List<Currency> getAllCurrencies(@RequestHeader(name = "Authentication")
+                                               String authentication){
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             return currencyService.getAll(user);
         }  catch (AuthenticationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -45,9 +46,10 @@ public class CurrencyRestController {
     }
 
     @GetMapping("/{id}")
-    public Currency getCurrency(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public Currency getCurrency(@RequestHeader(name = "Authentication")
+                                    String authentication, @PathVariable int id){
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             return currencyService.getById(id);
         }  catch (AuthenticationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -57,9 +59,10 @@ public class CurrencyRestController {
     }
 
     @PostMapping
-    public void createCurrency(@RequestHeader HttpHeaders headers, @Valid @RequestBody CurrencyDto currencyDto){
+    public void createCurrency(@RequestHeader(name = "Authentication")
+                                   String authentication, @Valid @RequestBody CurrencyDto currencyDto){
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             Currency currency = currencyMapper.fromDto(currencyDto);
             currencyService.create(currency,user);
         }  catch (AuthenticationException | AuthorizationException e){
@@ -70,10 +73,11 @@ public class CurrencyRestController {
     }
 
     @PutMapping("/{id}")
-    public void updateCurrency(@RequestHeader HttpHeaders headers, @Valid @RequestBody CurrencyDto currencyDto
+    public void updateCurrency(@RequestHeader(name = "Authentication")
+                                   String authentication, @Valid @RequestBody CurrencyDto currencyDto
             ,@PathVariable int id){
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             Currency currency = currencyMapper.fromDto(id,currencyDto);
             currencyService.update(currency,user);
         }  catch (AuthenticationException | AuthorizationException e){
@@ -86,9 +90,10 @@ public class CurrencyRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCurrency(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public void deleteCurrency(@RequestHeader(name = "Authentication")
+                                   String authentication, @PathVariable int id){
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(authentication);
             currencyService.delete(id,user);
         }  catch (AuthenticationException | AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
