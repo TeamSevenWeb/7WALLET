@@ -159,6 +159,7 @@ h1, .h1 {
     align-items: center;
     align-content: center;
     padding-top: 10pt;
+    text-align: center;
 }
 
 .center-wallet {
@@ -979,6 +980,7 @@ header{
 .table1 {
     vertical-align: top; /* Aligns tables at the top */
     display: inline-block;
+    font-family: aquire;
 }
 
 .table2 {
@@ -1007,7 +1009,6 @@ header{
     display: table-cell;
     width: auto;
     padding: 12px;
-    border-bottom: 1px solid #dee2e6;
 }
 
 /* posts table's body  */
@@ -2012,6 +2013,7 @@ header{
     display: grid;
     grid-template-columns: 40% 40%;
     justify-content: space-evenly;
+    grid-row-gap: 15pt;
     font-family: aquire
 }
 

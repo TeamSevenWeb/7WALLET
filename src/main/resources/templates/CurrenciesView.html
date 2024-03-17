@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Currencies')}"></div>
+<body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+
+<section class="page-section ">
+    <div class="center">
+    <h2 class="font-aquire pd-b-1" style="font-size: 40pt" th:text="#{currencies}">Currencies</h2>
+    </div>
+    <div class="center" style="font-size: 20pt">
+    <div class="table1 center">
+        <div class="table-head">
+            <div class="table-header-cell outline">Id</div>
+            <div class="table-header-cell outline">Currency code</div>
+            <div class="table-header-cell outline" >Rating to BGN</div>
+        </div>
+        <!--starts here-->
+        <div class="table-row outline break-word" th:each="currency : ${currencies}">
+            <div class="cell">
+                <span  th:text="${currency.getId()}"></span>
+            </div>
+            <div class="cell">
+                <span  th:text="${currency.getCurrencyCode()}"></span>
+            </div>
+            <div class="cell">
+                <span  th:text="${currency.getRating()}"></span>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+<div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+</body>
+
+</html>
