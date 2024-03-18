@@ -30,6 +30,9 @@
         <a  th:if="${session.isAdmin && isBlocked}" href="#" th:href="@{/users/__${viewedUser.getUsername()}__/unblock}">
             <div class="user-button" >Unblock User</div></a>
         <br/>
+        <a href="#" th:href="@{/users/cards}">
+            <div class="user-button" >Cards</div></a>
+        <br/>
         <div class="user-info">
             <h2 class="center" th:text="${viewedUser.username}"></h2>
             <hr>

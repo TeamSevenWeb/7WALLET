@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.controllers.rest;
 
+import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
 import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
@@ -44,6 +45,8 @@ public class CardRestController {
             return cardService.get(holder,id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (AuthenticationException | AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
@@ -56,7 +59,7 @@ public class CardRestController {
             cardService.create(holder,card);
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
+        } catch (AuthenticationException | AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
@@ -69,6 +72,8 @@ public class CardRestController {
             cardService.delete(holder,id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (AuthenticationException | AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 

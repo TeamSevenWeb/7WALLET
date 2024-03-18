@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Currencies')}"></div>
 <body>
-<div class="body-content">
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<div class="body-content font-aquire">
     <h2 class="label-error" th:text="${statusCode}">HTTP Status Code</h2>
     <h3 class="error" th:text="${error}">Error placeholder</h3>
 </div>

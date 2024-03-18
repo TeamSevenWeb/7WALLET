@@ -1,6 +1,7 @@
 package com.telerikacademy.web.virtualwallet.models.dtos;
 
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public class TransferDto {
@@ -10,6 +11,7 @@ public class TransferDto {
 
     @NotNull(message = "Amount can't be empty")
     @Digits(integer = 10, fraction = 2)
+    @Min(value = 1)
     private long amount;
 
     public TransferDto(){
