@@ -198,14 +198,14 @@ public class UserMvcController {
 
     @GetMapping("/transactions")
     public String get(@ModelAttribute("transactionFilterOptions") TransactionFilterDto filterDto,
-                      @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int pageSize, Model model, HttpSession session,BindingResult errors) {
+                      @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int pageSize, Model model, HttpSession session) {
 
         TransactionFilterOptions transactionFilterOptions = new TransactionFilterOptions(filterDto.getDate()
                 ,filterDto.getSender(),filterDto.getReceiver(),filterDto.getDirection(),
                 filterDto.getSortBy(),filterDto.getSortOrder());
 
         try {
-            User user = userService.getById(1);
+            User user = authenticationHelper.tryGetCurrentUser(session);
             Pageable pageable = PageRequest.of(page, pageSize);
             Page<Transaction> transactions = transactionService.getAll(user, transactionFilterOptions,pageable);
             model.addAttribute("transactionFilterOptions", filterDto);
