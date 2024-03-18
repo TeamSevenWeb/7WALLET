@@ -52,7 +52,7 @@ public class Card {
     }
 
     public void setNumber(String number) {
-        this.number = number;
+        this.number = number.replaceAll("\\s", "");
     }
 
     public String getCvv() {

@@ -11,8 +11,7 @@ public class CardDto {
     @Size(min = 2,max = 32,message = "Please enter a name between 2 and 30 symbols.")
     private String holder;
 
-    @Pattern(regexp = "(^[0-9]*$)")
-    @Size(min = 16,max = 16,message = "Please enter a valid card number.")
+    @Pattern(regexp = "^[0-9]{16}$")
     private String number;
 
     @Pattern(regexp = "(^[0-9]*$)")
