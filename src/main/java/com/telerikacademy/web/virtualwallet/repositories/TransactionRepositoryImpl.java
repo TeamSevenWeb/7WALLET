@@ -7,6 +7,7 @@ import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRepository;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
+import com.telerikacademy.web.virtualwallet.services.contracts.UserService;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,10 +29,13 @@ import java.util.*;
 public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transaction> implements TransactionRepository {
 
     private final UserRepository userRepository;
+
+    private final UserService userService;
     @Autowired
-    public TransactionRepositoryImpl(SessionFactory sessionFactory, UserRepository userRepository) {
+    public TransactionRepositoryImpl(SessionFactory sessionFactory, UserRepository userRepository, UserService userService) {
         super(Transaction.class,sessionFactory);
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -41,9 +45,10 @@ public class TransactionRepositoryImpl extends AbstractCRUDRepository<Transactio
             Map<String, Object> params = new HashMap<>();
             StringBuilder queryString = new StringBuilder("from Transaction ");
 
-
-            filters.add("(sender = :user OR receiver = :user)");
-            params.put("user", user);
+            if(!userService.isAdmin(user)) {
+                filters.add("(sender = :user OR receiver = :user)");
+                params.put("user", user);
+            }
 
             filterOptions.getReceiver().ifPresent(value -> {
                 if(value.isEmpty()||user.getUsername().equals(value)){

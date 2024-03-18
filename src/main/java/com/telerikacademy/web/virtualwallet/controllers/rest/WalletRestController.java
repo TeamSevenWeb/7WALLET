@@ -98,7 +98,6 @@ public class WalletRestController {
         try {
             User sender = authenticationHelper.tryGetUser(authentication);
             Transaction transaction = transactionMapper.fromDto(sender, transactionDto);
-
             transactionService.create(transaction,sender.getWallet(),transaction.getReceiver().getWallet());
             return transaction;
         }  catch (AuthenticationException | AuthorizationException e){

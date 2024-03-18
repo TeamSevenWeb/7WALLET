@@ -48,7 +48,7 @@
             <div class="table-header-cell">Sender</div>
             <div class="table-header-cell">Receiver</div>
             <div class="table-header-cell">Amount</div>
-            <div class="table-header-cell">Direction</div>
+            <div class="table-header-cell" th:unless="isAdmin">Direction</div>
             <div class="table-header-cell">Date</div>
         </div>
         <div class="table-row" th:each="transaction : ${transactions}">
@@ -70,7 +70,7 @@
                 <span class="cell-linebreak" th:text="${transaction.amount}"></span>
                 <br>
             </div>
-            <div class="cell">
+            <div class="cell" th:unless="isAdmin">
                 <span th:unless="${transaction.receiver==currentUser}" class="cell-linebreak" th:text="OUTGOING"></span>
                 <span th:unless="${transaction.sender==currentUser}" class="cell-linebreak" th:text="INGOING"></span>
                 <br>
