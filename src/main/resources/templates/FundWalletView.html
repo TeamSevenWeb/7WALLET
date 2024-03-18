@@ -45,10 +45,12 @@
             <br/>
             <br/>
                 <form id="cardForm">
-                    <input class="simple-input-style w-10" type="text" id="number" placeholder="Card Number" required><br>
+                    <input class="simple-input-style w-10" oninput="removeSpaces()" type="text" id="number" placeholder="Card Number" required><br>
                     <input class="simple-input-style w-10" type="text" id="holder" placeholder="Cardholder Name" required><br>
-                    <input class="simple-input-style w-10" type="text" id="cvv" placeholder="Cvv Number" required><br>
-                    <input class="simple-input-style w-10" type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
+                    <input class="simple-input-style w-10" oninput="formatCVV()" type="text" id="cvv" placeholder="Cvv Number" required><br>
+                    <input class="simple-input-style w-10" oninput="formatExpiryDate()" onblur="validateExpiryDate()"
+                           type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
+                    <span id="expiryDateError" class="error f-size-08 display-none">Invalid date</span><br>
                     <br>
                     <button class="py-3-create w-8 rounded font-aquire" type="submit">Save card</button>
                 </form>
