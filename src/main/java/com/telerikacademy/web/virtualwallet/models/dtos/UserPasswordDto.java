@@ -7,8 +7,7 @@ import jakarta.validation.constraints.Size;
 public class UserPasswordDto {
     @NotEmpty(message = "Password cannot be empty.")
     @Pattern(regexp = "((?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&+^-])[A-Za-z\\d@$!%*?&+^-]{8,}$)"
-            , message = "Password must contain at least one capital letter, special symbol and number.")
-    @Size(min = 8, message = "Password must be at least 8 characters.")
+            , message = "Password must be at least 8 characters, contain at least one capital letter, special symbol and number.")
     private String password;
 
     @NotEmpty(message = "Password confirmation cannot be empty")

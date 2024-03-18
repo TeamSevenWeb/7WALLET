@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -104,7 +105,8 @@ public class AuthenticationMvcController {
     @PostMapping("/register")
     public String handleRegister(@Valid @ModelAttribute("register") RegisterDto register,
                                  BindingResult bindingResult,
-                                 HttpSession session) {
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "RegisterView";
         }
@@ -118,6 +120,7 @@ public class AuthenticationMvcController {
             User user = userRegisterMapper.fromDto(register);
             userService.create(user);
             verificationService.sendUserCode(user);
+            redirectAttributes.addFlashAttribute("error", "Please check your inbox to confirm your account!");
             session.setAttribute("isAdmin", false);
 
             return "redirect:/";
@@ -131,8 +134,9 @@ public class AuthenticationMvcController {
     }
 
     @GetMapping("/verify/{verificationCode}")
-    public String verifyRegistration(@PathVariable String verificationCode){
+    public String verifyRegistration(@PathVariable String verificationCode, RedirectAttributes redirectAttributes){
         verificationService.verifyUser(verificationCode);
-        return "LoginView";
+        redirectAttributes.addFlashAttribute("success", "Successfully confirmed account.");
+        return "redirect:/";
     }
 }

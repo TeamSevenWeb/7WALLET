@@ -8,9 +8,7 @@ public class UserDto {
     @Size(min = 2, max = 20, message = "Username must be between 2 and 20 characters.")
     private String username;
 
-    @NotEmpty(message = "Password cannot be empty.")
-    @Pattern(regexp = "((?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&+^-])[A-Za-z\\d@$!%*?&+^-]{8,}$)")
-    @Size(min = 8, message = "Password must be at least 8 characters.")
+    @Pattern(regexp = "((?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&+^-])[A-Za-z\\d@$!%*?&+^-]{8,}$)", message = "Password must be at least 8 characters, contain at least one capital letter, special symbol and number.")
     private String password;
     @Pattern(regexp = "(^[a-zA-Z]*$)")
     @NotBlank(message = "First name cannot be empty.")
