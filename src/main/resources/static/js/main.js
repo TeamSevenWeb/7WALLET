@@ -126,7 +126,7 @@ document.getElementById('cardForm').addEventListener('submit', function(event) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization' : "alex.m ForumSeven"
+            'Authentication' : "alex.m ForumSeven"
         },
         body: JSON.stringify({
             number: cardNumber,
@@ -173,7 +173,7 @@ document.getElementById('transferForm').addEventListener('submit', function(even
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': "alex.m ForumSeven"
+            'Authentication': "alex.m ForumSeven"
         },
         body: JSON.stringify( {
             cardId : cardId,
