@@ -22,8 +22,6 @@
             <span style="font-size: 12pt" th:text="${user.getUsername()}"></span>
         <br/>
       </div>
-      <div th:if="${userId == wallet.getHolder().getId()}">
-      </div>
     </div>
     <a class="center" href="#" th:href="@{/join wallet/__${wallet.getId()}__/transactions/new}">
       <div class="py-3 wallet-button rounded font-aquire" >Send</div></a>
@@ -33,6 +31,30 @@
       <div class="py-3 wallet-button rounded font-aquire" >Withdraw from card</div></a>
     <a class="center" href="#" th:href="@{/join wallet/__${wallet.getId()}__/withdraw}">
       <div class="py-3 wallet-button rounded font-aquire" >Withdraw to card</div></a>
+    <div th:if="${userId == wallet.getHolder().getId()}">
+      <br/>
+      <form class="outline" action="#" th:action="@{__${requestURI}__/add-user}" th:object="${newUser}" method="get">
+        <input class="join-fields" type="text" th:field="*{user}" placeholder="Username, phone number or email">
+        <br/>
+        <input class="py-3 wallet-button rounded font-aquire" type="submit" value="Add user"/>
+      </form>
+      <br/>
+      <form class="outline" action="#" th:action="@{__${requestURI}__/remove-user}" th:object="${newUser}" method="get">
+        <select class="join-fields" th:field="*{user}">
+          <option th:each="user : ${wallet.getUsers()}"
+                  th:value="${user.getUsername()}"
+                  th:text="${user.getUsername()}">
+            Username
+          </option>
+        </select>
+        <br/>
+        <input class="py-3 wallet-button rounded font-aquire" type="submit" value="Remove user"/>
+      </form>
+    </div>
+    <div th:unless="${userId == wallet.getHolder().getId()}">
+      <a class="center" href="#" th:href="@{__${requestURI}__/remove}">
+        <div class="py-3 wallet-button rounded font-aquire" >Remove From Wallet</div></a>
+    </div>
   </div>
 </section>
 </body>

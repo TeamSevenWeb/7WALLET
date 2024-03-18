@@ -31,8 +31,7 @@
             <div class="user-button" >Unblock User</div></a>
         <br/>
         <div class="user-info">
-            <a href="#" th:href="@{/users/__${viewedUser.getId()}__}">
-                <h2 class="center" th:text="${viewedUser.username}"></h2></a>
+            <h2 class="center" th:text="${viewedUser.username}"></h2>
             <hr>
             <h3 class="center" th:text="${viewedUser.firstName}"></h3>
             <hr>
@@ -45,7 +44,7 @@
     <div th:if="${userId == viewedUser.getId()}" class="user-rightside">
         <h2 class="font-aquire pd-b-1" style="font-size: 40pt" th:text="#{wallets}">Wallets</h2>
        <div  class="user-wall">
-               <div style="font-size: 20pt" class="wallet-block">
+           <div style="font-size: 20pt" class="wallet-block">
                    <br/>
                    <a href="#" th:href="@{/wallet}">
                    <h2 class="font-aquire" th:text="${viewedUser.getWallet().getName()}"></h2></a>
@@ -55,7 +54,7 @@
                    <span th:text="${viewedUser.getWallet().getHoldingsByRating()}"></span>
                    <span th:text="${viewedUser.getWallet().getCurrency().getCurrencyCode()}"></span>
                    <br/><br/>
-               </div>
+           </div>
 
            <div th:each="wallet : ${userJoinWallets}">
                <div style="font-size: 20pt" class="wallet-block">
@@ -69,6 +68,29 @@
                    <span th:text="${wallet.getCurrency().getCurrencyCode()}"></span>
                    <br/><br/>
                </div>
+           </div>
+
+           <div class="modal-overlay" id="modalOverlay"></div>
+           <div class="modal" id="cardFlyout" style="display: none;">
+               <div class="modal-header">
+                   <span type="button" class="close" data-dismiss="modal">&times;</span>
+                   <span class="modal-title font-aquire">Enter Wallet Name</span>
+               </div>
+               <div class="modal-content">
+                   <br/>
+                   <br/>
+                   <form id="walletForm">
+                       <input class="simple-input-style w-10" type="text" id="name" placeholder="Wallet Name" required><br>
+                       <br>
+
+                       <button class="py-3 wallet-button rounded font-aquire" type="submit">Create wallet</button>
+
+                   </form>
+               </div>
+               </br>
+           </div>
+           <div class="center">
+           <div class="user-button"  onclick="showFlyout()" >Create join wallet</div>
            </div>
        </div>
     </div>

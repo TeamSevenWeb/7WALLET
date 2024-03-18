@@ -11,7 +11,7 @@
             <select class="textarea-style w-10" th:field="*{walletId}">
                 <option th:each="wallet : ${wallets}"
                         th:value="${wallet.getId()}"
-                        th:text="${wallet.getName()}">
+                        th:text="${wallet.getName() + ' - Holder ' + wallet.getHolder().getUsername()}">
                     Wallet name
                 </option>
             </select>

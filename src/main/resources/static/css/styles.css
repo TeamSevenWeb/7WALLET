@@ -1255,7 +1255,7 @@ header{
 }
 
 .py-3 {
-    border: 2px solid white;
+    border: 3px solid;
     width: fit-content;
     font-size: large;
 }
@@ -2316,8 +2316,14 @@ header{
     text-align: center;
 }
 
+.join-fields {
+    padding: 4px;
+    border-width: 2px;
+    border-radius: 10px;
+}
+
 .w-10{
-    width: 15%;
+    width: 20%;
 }
 .w-8{
     width: 8%;
@@ -2406,6 +2412,7 @@ header{
 .modal-header {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 /* Close button */

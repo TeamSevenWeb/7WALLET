@@ -56,6 +56,7 @@ INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdin
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (7,1,'Personal',7,1111.50,1);
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (8,1,'Personal',8,2333.50,1);
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (9,1,'Personal',9,6666.50,1);
+INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (10,1,'Personal',10,6666.50,1);
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (11,2,'Family',1,10777,1);
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (12,2,'Friends',1,6777,1);
 INSERT INTO virtual_wallet.wallets (wallet_id, wallet_type, name, holder, holdings, currency) VALUES (13,2,'Kids',2,12777,1);
@@ -73,10 +74,10 @@ INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (12,2);
 INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (12,3);
 INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (13,7);
 INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (13,8);
-INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (14,8);
-INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (14,8);
-INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (15,10);
-INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (15,9);
+INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (14,9);
+INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (14,10);
+INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (15,7);
+INSERT INTO virtual_wallet.join_wallets_users(wallet_id, user_id) VALUES (15,8);
 
 
 
