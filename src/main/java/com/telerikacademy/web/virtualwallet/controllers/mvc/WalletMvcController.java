@@ -116,7 +116,7 @@ public class WalletMvcController {
             return "ErrorView";
         } catch (TransactionConfirmationException | TransactionExpiredException e) {
             redirectAttributes.addFlashAttribute("success", e.getMessage());
-            return "redirect:/";
+            return "redirect:/users/transactions";
         }
 
     }

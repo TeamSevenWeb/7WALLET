@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-XXXXX" crossorigin="anonymous" />
+<div th:insert="~{fragments/PageFrame :: head('Cards')}"></div>
+<script th:inline="javascript">
+    var userCardsEmpty = [[${currentUser.userCards.isEmpty()}]];
+    var username = [[${currentUser.username}]];
+    var password = [[${currentUser.password}]];
+</script>
+<body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<section class="page-section">
+    <header class="navigate">
+        <!-- Masthead Heading-->
+        <h1 th:unless="${userCards.isEmpty()}" class="text-uppercase mb-0 font-aquire" th:text="#{cards.page.title}">All
+            Cards</h1>
+        <h1 th:if="${userCards.isEmpty()}" class="text-uppercase mb-0 font-aquire" th:text="#{cards.page.empty.title}">No
+            Cards </h1>
+    </header>
+</section>
+<section class="page-section text-center font-aquire">
+    <div th:unless="${userCards.isEmpty()}">
+
+    <div class="multi-container navigate mar-l-r-40">
+    <div th:each="card : ${userCards}">
+            <div class="wallet-block">
+            <br/>
+                <span class="font-aquire" th:text="${'**** **** **** '+card.number.subSequence(12,16)}"></span>
+            <br/>
+            <label style="font-weight: bold" th:text="${card.holder.firstName}">Holdings</label>
+            <br/><br/>
+                <span class="font-aquire" th:text="${card.expirationDate}"></span>
+                <br/><br/>
+                <i th:if="${card.number.startsWith('6')}" class="enlarged-fab fab fa-cc-discover"></i> <!-- Discover -->
+                <i th:if="${card.number.startsWith('5')}" class="enlarged-fab fab fa-cc-mastercard"></i> <!-- Mastercard -->
+                <i th:if="${card.number.startsWith('4')}" class="enlarged-fab fab fa-cc-visa"></i> <!-- VISA -->
+                <i th:if="${card.number.startsWith('3')}" class="enlarged-fab fab fa-cc-amex"></i> <!-- AMEX -->
+                <i th:unless="${card.number.startsWith('6') or card.number.startsWith('5') or card.number.startsWith('4') or card.number.startsWith('3')}" class="enlarged-fab fab fa-credit-card"></i> <!-- Default icon (Credit Card) -->
+            </div>
+        </div>
+    </div>
+    </div>
+    <br/><br/>
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal" id="cardFlyout" style="display: none;">
+        <div class="modal-header">
+            <span type="button" class="close" data-dismiss="modal">&times;</span>
+            <span class="modal-title font-aquire">Enter Card Details</span>
+        </div>
+        <div class="modal-content">
+            <br/>
+            <br/>
+            <form id="cardForm">
+                <input class="simple-input-style w-10" oninput="removeSpaces()" type="text" id="number" placeholder="Card Number" required><br>
+                <input class="simple-input-style w-10" type="text" id="holder" placeholder="Cardholder Name" required><br>
+                <input class="simple-input-style w-10" oninput="formatCVV()" type="text" id="cvv" placeholder="Cvv Number" required><br>
+                <input class="simple-input-style w-10" oninput="formatExpiryDate()" onblur="validateExpiryDate()"
+                       type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
+                <span id="expiryDateError" class="error f-size-08 display-none">Invalid date</span><br>
+                <br>
+                <button class="py-3-create w-8 rounded font-aquire" type="submit">Save card</button>
+            </form>
+        </div>
+        </br>
+    </div>
+
+    <button class="py-3-create w-8 rounded font-aquire" id="openFlyout">Add Card</button>
+</section>
+<div th:replace="~{fragments/PageFrame :: scripts}"></div>
+</body>
+<script src="../../static/js/card.js" th:src="@{/js/card.js}"></script>
+</html>

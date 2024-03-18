@@ -938,11 +938,11 @@ header{
 .copyright {
     background-color: rgb(0,0,0);
 }
-
 .multi-container {
     display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to new lines */
     justify-content: center; /* Center the items horizontally */
-    padding-bottom: 10rem;
+    gap: 20px; /* Add some spacing between items */
 }
 
 /* ########################################### */
@@ -2348,6 +2348,11 @@ header{
     margin-left: 2.5em ;
 }
 
+.mar-l-r-40{
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
 .marg-l-1em{
     margin-left: 1.5em ;
 }
@@ -2482,4 +2487,9 @@ header{
 
 .display-none{
     display: none;
+}
+
+.enlarged-fab {
+    font-size: 80px; /* Adjust the font size as needed */
+    transition: font-size 0.3s ease; /* Add a smooth transition effect */
 }
