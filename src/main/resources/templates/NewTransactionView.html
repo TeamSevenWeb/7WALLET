@@ -8,7 +8,7 @@
 <form action="#" th:action="@{__${requestURI}__}" th:object="${transaction}" method="post">
     <label th:text="#{transaction.receiver.label}">Content</label>
     <br/>
-    <input class="textarea-style w-10" type="text" th:field="*{receiver}" placeholder="Username, phone number or email">
+    <input class="textarea-style w-20" type="text" th:field="*{receiver}" placeholder="Username, phone number or email">
     <br/>
     <label class="error" th:errors="*{receiver}">Receiver error placeholder</label>
     <br/><br/>

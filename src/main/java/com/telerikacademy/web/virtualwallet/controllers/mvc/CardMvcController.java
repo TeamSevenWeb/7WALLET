@@ -36,16 +36,16 @@ public class CardMvcController {
     }
 
 
-    @PostMapping()
-    public void create(@RequestHeader HttpHeaders headers, @Valid @RequestBody CardDto cardDto) {
-        try {
-            User holder = userService.getById(1);
-            Card card = cardMapper.fromDto(holder,cardDto);
-            cardService.create(holder,card);
-        } catch (EntityDuplicateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
+//    @PostMapping()
+//    public void create(@RequestHeader HttpHeaders headers, @Valid @RequestBody CardDto cardDto) {
+//        try {
+//            User holder = userService.getById(1);
+//            Card card = cardMapper.fromDto(holder,cardDto);
+//            cardService.create(holder,card);
+//        } catch (EntityDuplicateException e) {
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+//        } catch (AuthorizationException e) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//        }
+//    }
 }
