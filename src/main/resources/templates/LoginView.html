@@ -12,16 +12,16 @@
         <form class="outline login-container" action="#" th:action="@{/auth/login}" th:object="${login}" method="post">
             <label  class="font-aquire" th:text="#{user.label.username}">Username</label>
             <br/>
-            <input type="text" th:field="*{username}"/><br/>
-            <div class="error error-login" th:errors="*{username}">Username error placeholder</div>
+            <input class="simple-input-style w-70 marg-l-2em" type="text" th:field="*{username}"/><br/>
+            <div class="error error-login marg-l-1em" th:errors="*{username}">Username error placeholder</div>
 
             <label class="font-aquire" th:text="#{user.label.password}">Password</label>
             <br/>
-            <input type="password" th:field="*{password}"/>
-            <div class="error error-login" th:errors="*{password}">Password error placeholder</div>
+            <input class="simple-input-style w-70 marg-l-2em" type="password" th:field="*{password}"/>
+            <div class="error error-login marg-l-1em" th:errors="*{password}">Password error placeholder</div>
             <br/>
             <div class="login-button">
-                <input class="py-3 rounded" type="submit" value="Login"/>
+                <input class="py-3 rounded font-aquire" type="submit" value="Login"/>
             </div>
         </form>
     </div>

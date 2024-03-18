@@ -2328,6 +2328,11 @@ header{
 .w-10{
     width: 10%;
 }
+
+.w-70{
+    width: 70%;
+}
+
 .w-8{
     width: 8%;
 }
@@ -2335,9 +2340,18 @@ header{
     width: 5%;
 }
 
-.pd-l-3{
+.marg-l-3{
     margin-left: 3rem ;
 }
+
+.marg-l-2em{
+    margin-left: 2.5em ;
+}
+
+.marg-l-1em{
+    margin-left: 1.5em ;
+}
+
 .centered-error {
     position: fixed;
     left: 50%; /* Center horizontally */
