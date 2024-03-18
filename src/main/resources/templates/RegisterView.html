@@ -11,41 +11,41 @@
         <form class="outline login-container" action="#" th:action="@{/auth/register}" th:object="${register}" method="post">
             <label class="font-aquire" th:text="#{user.label.username}">Username</label>
             <br/>
-            <input type="text" th:field="*{username}"/><br/>
-            <div class="error error-login" th:errors="*{username}">Username error placeholder</div>
+            <input class="simple-input-style marg-l-2em w-70" type="text" th:field="*{username}"/><br/>
+            <div class="error error-login marg-l-1em" th:errors="*{username}">Username error placeholder</div>
 
             <label class="font-aquire" th:text="#{user.label.password}">Password</label>
             <br/>
-            <input type="password" th:field="*{password}"/><br/>
-            <div class="error error-login" th:errors="*{password}">Password error placeholder</div>
+            <input class="simple-input-style marg-l-2em w-70" type="password" th:field="*{password}"/><br/>
+            <div class="error error-login marg-l-1em" th:errors="*{password}">Password error placeholder</div>
 
             <label class="font-aquire" th:text="#{user.label.confirm.password}">Confirm Password</label>
             <br/>
-            <input type="password" th:field="*{passwordConfirm}"/><br/>
-            <div class="error error-login" th:errors="*{passwordConfirm}">Password confirm error placeholder</div>
+            <input class="simple-input-style marg-l-2em w-70" type="password" th:field="*{passwordConfirm}"/><br/>
+            <div class="error error-login marg-l-1em" th:errors="*{passwordConfirm}">Password confirm error placeholder</div>
 
             <label class="font-aquire" th:text="#{user.label.first-name}">First Name</label>
             <br/>
-            <input type="text" th:field="*{firstName}"/><br/>
-            <div class="error error-login" th:errors="*{firstName}">First name error placeholder</div>
+            <input class="simple-input-style marg-l-2em w-70" type="text" th:field="*{firstName}"/><br/>
+            <div class="error error-login marg-l-1em" th:errors="*{firstName}">First name error placeholder</div>
 
             <label class="font-aquire" th:text="#{user.label.last-name}">Last Name</label>
             <br/>
-            <input type="text" th:field="*{lastName}"/><br/>
-            <div class="error error-login" th:errors="*{lastName}">Last name error placeholder</div>
+            <input class="simple-input-style marg-l-2em w-70" type="text" th:field="*{lastName}"/><br/>
+            <div class="error error-login marg-l-1em" th:errors="*{lastName}">Last name error placeholder</div>
 
             <label class="font-aquire" th:text="#{user.label.email}">Email</label>
             <br/>
-            <input type="text" th:field="*{email}"/><br/>
-            <div class="error error-login" th:errors="*{email}">Email</div>
+            <input class="simple-input-style marg-l-2em w-70" type="text" th:field="*{email}"/><br/>
+            <div class="error error-login marg-l-1em" th:errors="*{email}">Email</div>
 
 
             <label class="font-aquire" th:text="#{user.label.phone}">Phone</label>
             <br/>
-            <input type="text" th:field="*{phoneNumber}"/><br/>
-            <div class="error error-login" th:errors="*{phoneNumber}">Phone number</div>
+            <input class="simple-input-style marg-l-2em w-70" type="text" th:field="*{phoneNumber}"/><br/>
+            <div class="error error-login marg-l-1em" th:errors="*{phoneNumber}">Phone number</div>
             <div class="login-button">
-                <input class="py-3 rounded" type="submit" value="Register"/>
+                <input class="py-3 rounded font-aquire" type="submit" value="Register"/>
             </div>
         </form>
     </div>
