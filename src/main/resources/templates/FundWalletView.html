@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <div th:insert="~{fragments/PageFrame :: head('Transfer')}"></div>
 <script th:inline="javascript">
-    var userCardsEmpty = [[${userCards.isEmpty()}]];
+    var userCardsEmpty = [[${currentUser.userCards.isEmpty()}]];
     var username = [[${currentUser.username}]];
     var password = [[${currentUser.password}]];
 </script>
@@ -13,11 +13,11 @@
     <div style="font-size: 13pt" class="wallet-block">
 
     <form id="transferForm">
-       <div th:unless="${userCards.isEmpty()}">
+       <div th:unless="${currentUser.userCards.isEmpty()}">
            <label th:text="#{transfer.card.present.label}">Content</label>
         <br/>
            <label for="cardId"></label><select class="simple-input-style w-10" id="cardId">
-            <option th:each="card2 : ${userCards}"
+            <option th:each="card2 : ${currentUser.userCards}"
                     th:value="${card2.id}"
                     th:text="${'**** **** **** '+card2.number.subSequence(12,16)}">
             </option>
@@ -31,7 +31,7 @@
         <button class="py-3-create w-8 rounded font-aquire" type="submit">Fund</button>
     </form>
     <br>
-        <div th:if="${userCards.isEmpty()}">
+        <div th:if="${currentUser.userCards.isEmpty()}">
             <label th:text="#{transfer.card.not.present.label}">Content</label>
         </div>
         <br/><br/>
