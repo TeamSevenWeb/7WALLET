@@ -7,6 +7,7 @@ import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionToJoinDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.UserToWalletDto;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.services.contracts.*;
@@ -80,6 +81,7 @@ public class JoinWalletMvcController {
             model.addAttribute("userWalletsCount", userWalletsCount);
             model.addAttribute("wallet", wallet);
             model.addAttribute("userId", user.getId());
+            model.addAttribute("newUser",new UserToWalletDto());
             return "JoinWalletView";
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
@@ -219,6 +221,65 @@ public class JoinWalletMvcController {
         wallets.remove(wallet);
         walletList.addAll(wallets);
         return walletList;
+    }
+
+    @GetMapping("/{id}/add-user")
+    public String addUserToWallet(HttpSession session, @PathVariable int id, Model model
+            ,@Valid @ModelAttribute("newUser") UserToWalletDto userToWalletDto){
+        try {
+            User owner = authenticationHelper.tryGetCurrentUser(session);
+            joinWalletService.addUser(id,userToWalletDto.getUser(),owner);
+            return "redirect:/join wallet/{id}";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", (HttpStatus.UNAUTHORIZED));
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @GetMapping("/{id}/remove-user")
+    public String removeUserFromWallet(HttpSession session, @PathVariable int id, Model model
+            ,@Valid @ModelAttribute("newUser") UserToWalletDto userToWalletDto){
+        try {
+            User owner = authenticationHelper.tryGetCurrentUser(session);
+            joinWalletService.removeOtherUser(id,userToWalletDto.getUser(),owner);
+            return "redirect:/join wallet/{id}";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", (HttpStatus.UNAUTHORIZED));
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @GetMapping("/{id}/remove")
+    public String removeJoinWallet(HttpSession session, @PathVariable int id, Model model){
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            joinWalletService.removeWallet(id,user);
+            return "redirect:/users/" + user.getUsername();
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", (HttpStatus.UNAUTHORIZED));
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
     }
 
     @GetMapping("/{id}/fund")

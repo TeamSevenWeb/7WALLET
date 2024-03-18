@@ -28,7 +28,7 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
     @Override
     public User searchByAnyMatch(String parameter) {
         final String query = format("from %s where concat(username,phoneNumber,email) like :value", clazz.getSimpleName());
-        final String notFoundErrorMessage = format("%s is", clazz.getSimpleName());
+        final String notFoundErrorMessage = format("%s is not found", clazz.getSimpleName());
 
         try (Session session = sessionFactory.openSession()) {
             return session

@@ -85,11 +85,6 @@ public class UserMvcController {
         return session.getAttribute("isRegular") != null;
     }
 
-    @ModelAttribute("userId")
-    public int populateUserId(HttpSession session) {
-        return (int) session.getAttribute("userId");
-    }
-
     @ModelAttribute("requestURI")
     public String requestURI(final HttpServletRequest request) {
         return request.getRequestURI();
@@ -107,12 +102,14 @@ public class UserMvcController {
 
     @GetMapping("/{username}")
     public String showUserPage(@PathVariable String username, Model model, HttpSession session) {
-        User user = userService.getByUsername(username);
+        User user = authenticationHelper.tryGetCurrentUser(session);
+        User viewedUser = userService.getByUsername(username);
         boolean isBlocked = userService.isBlocked(user);
-        List<JoinWallet> userJoinWallets = joinWalletService.getAllByUser(user);
+        List<JoinWallet> userJoinWallets = joinWalletService.getAllByUser(viewedUser);
         model.addAttribute("isBlocked", isBlocked);
-        model.addAttribute("viewedUser", user);
+        model.addAttribute("viewedUser", viewedUser);
         model.addAttribute("userJoinWallets",userJoinWallets);
+        model.addAttribute("userId", user.getId());
         return "UserView";
     }
 
