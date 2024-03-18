@@ -14,6 +14,7 @@ import com.telerikacademy.web.virtualwallet.utils.TransferMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.boot.Banner;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,17 +68,6 @@ public class WalletMvcController {
         return request.getRequestURI();
     }
 
-    @ModelAttribute("userCards")
-    public List<Card> userCards(Model model,HttpSession session) {
-        User user2 = authenticationHelper.tryGetCurrentUser(session);
-        List<Card> cards = cardService.getUsersCards(user2);
-        model.addAttribute("userCards", cards);
-        return cards;
-    }
-    @ModelAttribute("currentUser")
-    public User currentUser(HttpSession session) {
-        return authenticationHelper.tryGetCurrentUser(session);
-    }
 
     @GetMapping
     public String showPersonalWallet(Model model, HttpSession session){
@@ -175,8 +165,14 @@ public class WalletMvcController {
     }
 
     @GetMapping("/fund")
-    public String showWalletFundPage(){
-        return "FundWalletView";
+    public String showWalletFundPage(HttpSession session, Model model){
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            model.addAttribute("currentUser", user);
+            return "FundWalletView";
+    }catch (AuthenticationException | AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
     }
 
     @GetMapping("/withdraw")
