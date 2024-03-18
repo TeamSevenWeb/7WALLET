@@ -3,6 +3,8 @@
 <div th:insert="~{fragments/PageFrame :: head('Transfer')}"></div>
 <script th:inline="javascript">
     var userCardsEmpty = [[${userCards.isEmpty()}]];
+    var username = [[${currentUser.username}]];
+    var password = [[${currentUser.password}]];
 </script>
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
@@ -14,9 +16,9 @@
        <div th:unless="${userCards.isEmpty()}">
            <label th:text="#{transfer.card.present.label}">Content</label>
         <br/>
-        <select class="simple-input-style w-10" id="cardId">
+           <label for="cardId"></label><select class="simple-input-style w-10" id="cardId">
             <option th:each="card2 : ${userCards}"
-                    th:value="${card2.getId()}"
+                    th:value="${card2.id}"
                     th:text="${'**** **** **** '+card2.number.subSequence(12,16)}">
             </option>
         </select>
@@ -24,9 +26,9 @@
        </div>
         <label th:text="#{transaction.amount.label}">Content</label>
         <br/>
-        <input class="simple-input-style" type="number" id="amount" th:text="BGN">
+        <input class="simple-input-style w-5 pd-l" type="number" id="amount" th:text="BGN">
         <br/><br/>
-        <input class="py-3-create w-8 rounded font-aquire" type="submit" value="Send"/>
+        <button class="py-3-create w-8 rounded font-aquire" type="submit">Fund</button>
     </form>
     <br>
         <div th:if="${userCards.isEmpty()}">
@@ -59,4 +61,6 @@
 </section>
 <div th:replace="~{/fragments/PageFrame :: scripts}"></div>
 </body>
+<script src="../../static/js/walletFund.js" th:src="@{/js/walletFund.js}"></script>
+<script src="../../static/js/card.js" th:src="@{/js/card.js}"></script>
 </html>

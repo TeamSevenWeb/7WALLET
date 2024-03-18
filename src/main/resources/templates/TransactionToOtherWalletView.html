@@ -8,7 +8,7 @@
     <form action="#" th:action="@{__${requestURI}__}" th:object="${transfer}" method="post">
         <label th:text="#{transaction.receiving.wallet.label}">Content</label>
         <br/>
-            <select class="textarea-style w-10" th:field="*{walletId}">
+            <select class="textarea-style w-20" th:field="*{walletId}">
                 <option th:each="wallet : ${wallets}"
                         th:value="${wallet.getId()}"
                         th:text="${wallet.getName() + ' - Holder ' + wallet.getHolder().getUsername()}">

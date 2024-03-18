@@ -2322,8 +2322,11 @@ header{
     border-radius: 10px;
 }
 
-.w-10{
+.w-20{
     width: 20%;
+}
+.w-10{
+    width: 10%;
 }
 .w-8{
     width: 8%;
@@ -2332,6 +2335,9 @@ header{
     width: 5%;
 }
 
+.pd-l{
+    margin-left: 3rem ;
+}
 .centered-error {
     position: fixed;
     left: 50%; /* Center horizontally */

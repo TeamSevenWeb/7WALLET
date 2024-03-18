@@ -9,7 +9,7 @@
         <div th:unless="${userCards.isEmpty()}">
             <label th:text="#{transfer.card.present.label}">Content</label>
             <br/>
-            <select class="simple-input-style w-10" th:field="*{cardId}">
+            <select class="simple-input-style w-20" th:field="*{cardId}">
                 <option th:each="card2 : ${userCards}"
                         th:value="${card2.getId()}"
                         th:text="${'**** **** **** '+card2.number.subSequence(12,16)}">

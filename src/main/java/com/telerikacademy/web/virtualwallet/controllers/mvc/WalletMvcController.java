@@ -68,11 +68,15 @@ public class WalletMvcController {
     }
 
     @ModelAttribute("userCards")
-    public List<Card> userCards(Model model) {
-        User user2 = userService.getById(1);
+    public List<Card> userCards(Model model,HttpSession session) {
+        User user2 = authenticationHelper.tryGetCurrentUser(session);
         List<Card> cards = cardService.getUsersCards(user2);
         model.addAttribute("userCards", cards);
         return cards;
+    }
+    @ModelAttribute("currentUser")
+    public User currentUser(HttpSession session) {
+        return authenticationHelper.tryGetCurrentUser(session);
     }
 
     @GetMapping
@@ -171,8 +175,7 @@ public class WalletMvcController {
     }
 
     @GetMapping("/fund")
-    public String showWalletFundPage(Model model){
-        model.addAttribute("transfer",new TransferDto());
+    public String showWalletFundPage(){
         return "FundWalletView";
     }
 
