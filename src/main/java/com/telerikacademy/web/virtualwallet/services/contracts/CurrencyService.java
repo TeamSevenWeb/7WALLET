@@ -9,7 +9,7 @@ public interface CurrencyService {
 
     Currency getById(int id);
 
-    List<Currency> getAll(User user);
+    List<Currency> getAll();
 
     void create(Currency currency, User user);
 

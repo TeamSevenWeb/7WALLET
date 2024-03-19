@@ -50,15 +50,11 @@ public class CurrenciesMvcController {
     public String showAllUsers(Model model, HttpSession session) {
         try {
             User  user = authenticationHelper.tryGetCurrentUser(session);
-            List<Currency> currencies = currencyService.getAll(user);
+            List<Currency> currencies = currencyService.getAll();
             model.addAttribute("currencies", currencies);
             return "CurrenciesView";
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
-        }  catch (AuthorizationException e) {
-            model.addAttribute("statusCode", (HttpStatus.UNAUTHORIZED));
-            model.addAttribute("error", e.getMessage());
-            return "ErrorView";
         }
     }
 }

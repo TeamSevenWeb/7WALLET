@@ -39,7 +39,7 @@ public class CurrencyRestController {
                                                String authentication){
         try {
             User user = authenticationHelper.tryGetUser(authentication);
-            return currencyService.getAll(user);
+            return currencyService.getAll();
         }  catch (AuthenticationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

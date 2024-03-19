@@ -2318,8 +2318,10 @@ header{
 
 .join-fields {
     padding: 4px;
-    border-width: 2px;
     border-radius: 10px;
+    border-style: double;
+    border-width: 6px;
+    border-color: deepskyblue;
 }
 
 .w-20{

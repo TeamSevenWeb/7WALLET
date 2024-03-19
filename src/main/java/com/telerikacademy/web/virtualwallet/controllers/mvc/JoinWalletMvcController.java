@@ -4,10 +4,7 @@ import com.telerikacademy.web.virtualwallet.exceptions.*;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.Transfer;
 import com.telerikacademy.web.virtualwallet.models.User;
-import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
-import com.telerikacademy.web.virtualwallet.models.dtos.TransactionToJoinDto;
-import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
-import com.telerikacademy.web.virtualwallet.models.dtos.UserToWalletDto;
+import com.telerikacademy.web.virtualwallet.models.dtos.*;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.services.contracts.*;
@@ -17,7 +14,6 @@ import com.telerikacademy.web.virtualwallet.utils.TransferMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,25 +35,28 @@ public class JoinWalletMvcController {
 
     private final UserService userService;
 
+    private final CurrencyService currencyService;
+
+    private final TransactionService transactionService;
+
     private final AuthenticationHelper authenticationHelper;
 
     private final TransactionMapper transactionMapper;
 
     private final TransferMapper transferMapper;
 
-    private final CardService cardService;
-
-    private final TransactionService transactionService;
 
 
-    public JoinWalletMvcController(WalletService walletService, JoinWalletService joinWalletService, UserService userService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper, TransferMapper transferMapper, CardService cardService, TransactionService transactionService) {
+    public JoinWalletMvcController(WalletService walletService, JoinWalletService joinWalletService
+            ,UserService userService, CurrencyService currencyService, AuthenticationHelper authenticationHelper
+            ,TransactionMapper transactionMapper, TransferMapper transferMapper, TransactionService transactionService) {
         this.walletService = walletService;
         this.joinWalletService = joinWalletService;
         this.userService = userService;
+        this.currencyService = currencyService;
         this.authenticationHelper = authenticationHelper;
         this.transactionMapper = transactionMapper;
         this.transferMapper = transferMapper;
-        this.cardService = cardService;
         this.transactionService = transactionService;
     }
     @ModelAttribute("isAuthenticated")
@@ -82,6 +81,8 @@ public class JoinWalletMvcController {
             model.addAttribute("wallet", wallet);
             model.addAttribute("userId", user.getId());
             model.addAttribute("newUser",new UserToWalletDto());
+            model.addAttribute("currency", new ChangeCurrencyDto());
+            model.addAttribute("allCurrencies", currencyService.getAll());
             return "JoinWalletView";
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
@@ -286,10 +287,36 @@ public class JoinWalletMvcController {
         }
     }
 
+    @GetMapping("/{id}/currency")
+    public String changeCurrency(HttpSession session, @PathVariable int id, Model model,
+                                 @Valid @ModelAttribute("currency") ChangeCurrencyDto currencyDto, BindingResult errors){
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            JoinWallet wallet = joinWalletService.get(id,user);
+            walletService.changeCurrency(wallet.getId(),currencyDto.getCurrencyId());
+            return "redirect:/join wallet/{id}";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", (HttpStatus.UNAUTHORIZED));
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
     @GetMapping("/{id}/fund")
-    public String showWalletFundPage(Model model){
-        model.addAttribute("transfer",new TransferDto());
-        return "FundWalletView";
+    public String showWalletFundPage(HttpSession session, Model model){
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            model.addAttribute("currentUser", user);
+            return "FundWalletView";
+        }catch (AuthenticationException | AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
     }
 
     @GetMapping("/{id}/withdraw")

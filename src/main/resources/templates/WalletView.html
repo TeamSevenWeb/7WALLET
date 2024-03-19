@@ -15,6 +15,18 @@
         <span th:text="${wallet.getHoldingsByRating()}"></span>
         <span th:text="${wallet.getCurrency().getCurrencyCode()}"></span>
         <br/><br/>
+        <form action="#" th:action="@{__${requestURI}__/currency}" th:object="${currency}" method="get">
+            <select class="join-fields" th:field="*{currencyId}">
+                <option th:each="currency1 : ${allCurrencies}"
+                        th:value="${currency1.getId()}"
+                        th:text="${currency1.getCurrencyCode()}">
+                    Currency
+                </option>
+            </select>
+            <br/>
+            <input class="py-3 wallet-button rounded font-aquire" type="submit" value="Change currency"/>
+        </form>
+        <br/>
     </div>
         <a class="center" href="#" th:href="@{/wallet/transactions/new}">
             <div class="py-3 wallet-button rounded font-aquire" >Send</div></a>
