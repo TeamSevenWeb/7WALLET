@@ -2503,3 +2503,24 @@ header{
     font-size: 80px; /* Adjust the font size as needed */
     transition: font-size 0.3s ease; /* Add a smooth transition effect */
 }
+
+.disabled-button{
+    opacity: 0.5; /* Adjust opacity to visually indicate the button is disabled */
+    pointer-events: none; /* Disable pointer events to prevent clicking */
+    cursor: not-allowed; /* Change cursor to indicate button is not clickable */
+}
+
+.loader {
+    border: 8px solid #f3f3f3;
+    border-radius: 40%;
+    border-top: 8px solid #3498db;
+    width: 8px;
+    height: 8px;
+    animation: spin 0.5s linear infinite;
+    display: none; /* Initially hidden */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
-<div th:insert="~{fragments/PageFrame :: head('Transfer')}"></div>
+<div th:insert="~{fragments/PageFrame :: head('Fund from card')}"></div>
 <script th:inline="javascript">
     var userCardsEmpty = [[${currentUser.userCards.isEmpty()}]];
     var username = [[${currentUser.username}]];
@@ -27,8 +27,13 @@
         <label th:text="#{transaction.amount.label}">Content</label>
         <br/>
         <input class="simple-input-style w-5 pd-l" type="number" id="amount" th:text="BGN">
+        <br/>
+        <span id="invalidAmountError" class="error f-size-08 display-none">Invalid amount</span>
         <br/><br/>
-        <button class="py-3-create w-8 rounded font-aquire" type="submit">Fund</button>
+        <button id="withdrawButton" class="py-3-create w-8 rounded font-aquire" type="submit">
+        <span id="loader" class="loader"></span>
+            Fund
+        </button>
     </form>
     <br>
         <div th:if="${currentUser.userCards.isEmpty()}">
@@ -52,7 +57,7 @@
                            type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
                     <span id="expiryDateError" class="error f-size-08 display-none">Invalid date</span><br>
                     <br>
-                    <button class="py-3-create w-8 rounded font-aquire" type="submit">Save card</button>
+                    <button class="py-3-create w-8 rounded font-aquire" type="submit" >Save card</button>
                 </form>
             </div>
             </br>

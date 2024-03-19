@@ -201,27 +201,16 @@ public class WalletMvcController {
     }
 
     @GetMapping("/withdraw")
-    public String showWalletWithdrawPage(Model model){
-        model.addAttribute("transfer",new TransferDto());
-        return "WithdrawFromWalletView";
+    public String showWalletWithdrawPage(HttpSession session, Model model){
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            model.addAttribute("currentUser", user);
+            return "WithdrawFromWalletView";
+        }catch (AuthenticationException | AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
     }
 
-    @PostMapping("/withdraw")
-    public String withdrawFromWallet(@Valid @ModelAttribute("transfer") TransferDto transferDto,BindingResult errors, HttpSession session, Model model) {
-        if (errors.hasErrors()) {
-            return "WithdrawFromWalletView";
-        }
-        try {
-            User user2 = userService.getById(1);
-            Transfer outgoing = transferMapper.outgoingFromDto(user2,transferDto);
-            walletService.transfer(outgoing);
-            return "redirect:/wallet";
-        }  catch (AuthenticationException | AuthorizationException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (TransferFailedException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-    }
 
     @GetMapping("/transactions/verify/{verificationCode}")
     public String verifyTransaction(@PathVariable String verificationCode) {

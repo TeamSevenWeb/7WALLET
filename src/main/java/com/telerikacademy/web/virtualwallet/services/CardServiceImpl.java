@@ -44,7 +44,10 @@ public class CardServiceImpl implements CardService {
     public void create(User holder, Card card) {
         boolean duplicateExists = true;
         try {
-            cardRepository.getByField("number",card.getNumber());
+            Card existingCard = cardRepository.getByField("number",card.getNumber());
+            if(!existingCard.getHolder().equals(holder)){
+                duplicateExists = false;
+            }
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
