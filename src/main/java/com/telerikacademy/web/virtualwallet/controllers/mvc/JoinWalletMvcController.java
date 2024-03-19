@@ -79,7 +79,7 @@ public class JoinWalletMvcController {
             int userWalletsCount = joinWalletService.getAllByUser(user).size() + 1;
             model.addAttribute("userWalletsCount", userWalletsCount);
             model.addAttribute("wallet", wallet);
-            model.addAttribute("userId", user.getId());
+            model.addAttribute("currentUser", user);
             model.addAttribute("newUser",new UserToWalletDto());
             model.addAttribute("currency", new ChangeCurrencyDto());
             model.addAttribute("allCurrencies", currencyService.getAll());
