@@ -1,13 +1,13 @@
 INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (1, 'alex.m', 'ForumSeven', 'Alexander', 'Mechkarov', 'alex.m@abv.bg', '0863333331');
 INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (2, 'georgi.i', 'ForumSeven', 'Georgi', 'Iliev', 'georgi.i@abv.bg', '0863333332');
-INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (3, 'svetlio.d', 'ForumSeven', 'Svetoslav', 'Dimitrov', 'svetlio.d@abv.bg', '0863333333');
-INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (4, 'hansgunter', 'ForumSeven', 'Hans', 'Gunter', 'hans.g@gmx.de', '0863333334');
-INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (5, 'peter1996', 'ForumSeven', 'Peter', 'Smith', 'peter.s@gmail.com', '0863333335');
-INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (6, 'todor.k', 'ForumSeven', 'Todor', 'Krustev', 'tosho.k@abv.bg', '0863333336');
-INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (7, 'vanko02', 'ForumSeven', 'Ivan', 'Ivanov', 'ivan.i@gmail.com', '0863333337');
-INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (8, 'stambata', 'ForumSeven', 'Stanimir', 'Hristov', 'stambata@mail.bg', '0863333338');
-INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (9, 'johnson', 'ForumSeven', 'John', 'Smith', 'johnny@gmail.com', '0863333339');
-INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (10, 'linuxenjoyer93', 'ForumSeven', 'Dragomir', 'Georgiev', 'dragolinux@yahoo.com', '0863333330');
+INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (3, 'svetlio.d', 'WalletSeven!1', 'Svetoslav', 'Dimitrov', 'Sup3rrXDA1@gmail.com', '0863333333');
+INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (4, 'hansgunter', 'WalletSeven!1', 'Hans', 'Gunter', 'hans.g@gmx.de', '0863333334');
+INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (5, 'peter1996', 'WalletSeven!1', 'Peter', 'Smith', 'peter.s@gmail.com', '0863333335');
+INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (6, 'todor.k', 'WalletSeven!1', 'Todor', 'Krustev', 'tosho.k@abv.bg', '0863333336');
+INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (7, 'vanko02', 'WalletSeven!1', 'Ivan', 'Ivanov', 'ivan.i@gmail.com', '0863333337');
+INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (8, 'stambata', 'WalletSeven!1', 'Stanimir', 'Hristov', 'stambata@mail.bg', '0863333338');
+INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (9, 'johnson', 'WalletSeven!1', 'John', 'Smith', 'johnny@gmail.com', '0863333339');
+INSERT INTO virtual_wallet.users (user_id, username, password, first_name, last_name, email, phone_number) VALUES (10, 'linuxenjoyer93', 'WalletSeven!1', 'Dragomir', 'Georgiev', 'dragolinux@yahoo.com', '0863333330');
 
 INSERT INTO virtual_wallet.currencies(currency_id, currency_code, rating) VALUES (1,'BGN',1);
 INSERT INTO virtual_wallet.currencies(currency_id, currency_code, rating) VALUES (2,'EUR',0.51);
