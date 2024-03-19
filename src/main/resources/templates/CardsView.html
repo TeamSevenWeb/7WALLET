@@ -31,11 +31,18 @@
             <br/><br/>
                 <span class="font-aquire" th:text="${card.expirationDate}"></span>
                 <br/><br/>
-                <i th:if="${card.number.startsWith('6')}" class="enlarged-fab fab fa-cc-discover"></i> <!-- Discover -->
+                <i th:if="${card.number.startsWith('6')}" class="enlarged-fab fab fa-cc-discover">
+                </i> <!-- Discover -->
                 <i th:if="${card.number.startsWith('5')}" class="enlarged-fab fab fa-cc-mastercard"></i> <!-- Mastercard -->
                 <i th:if="${card.number.startsWith('4')}" class="enlarged-fab fab fa-cc-visa"></i> <!-- VISA -->
                 <i th:if="${card.number.startsWith('3')}" class="enlarged-fab fab fa-cc-amex"></i> <!-- AMEX -->
                 <i th:unless="${card.number.startsWith('6') or card.number.startsWith('5') or card.number.startsWith('4') or card.number.startsWith('3')}" class="enlarged-fab fab fa-credit-card"></i> <!-- Default icon (Credit Card) -->
+                <br/><br/>
+                <a th:href="@{|${requestURI}/delete/${card.id}|}" href="#"
+                   class="post-delete-button">Delete
+                    <i class="fab fa-free-code-camp"></i>
+                </a>
+                <br/><br/>
             </div>
         </div>
     </div>
