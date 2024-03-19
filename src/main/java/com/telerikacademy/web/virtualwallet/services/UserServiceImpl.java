@@ -22,9 +22,7 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final String MODIFY_USER_ERROR_MESSAGE = "Only admin or account holder can modify a user.";
-    public static final String BLOCK_UNBLOCK_PERMISSIONS_ERR = "Only admins are allowed to block or unblock users.";
-    public static final String GETALL_AUTH_ERR = "Only admins are allowed to view all users.";
+    private static final String MODIFY_USER_ERROR_MESSAGE = "You are not authorized to perform this action";
     public static final String DEFAULT_PROFILE_SRC_PATH = "./src/main/resources/static/images/default_profile.jpg";
     private final UserRepository userRepository;
     private final ProfilePhotoRepository profilePhotoRepository;
@@ -77,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll(UserFilterOptions userFilterOptions,User user) {
         if (!isAdmin(user)){
-            throw new AuthorizationException(GETALL_AUTH_ERR);
+            throw new AuthorizationException(MODIFY_USER_ERROR_MESSAGE);
         }
         return userRepository.getAllUsersFiltered(userFilterOptions);
     }
@@ -119,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void block(int userId, User admin) {
-        checkAdmin(admin,BLOCK_UNBLOCK_PERMISSIONS_ERR);
+        checkAdmin(admin,MODIFY_USER_ERROR_MESSAGE);
         User userToBeBlocked = userRepository.getById(userId);
         userToBeBlocked.getUserRoles().add(roleRepository.getByField("roleType", UserRole.blocked.toString()));
         userRepository.update(userToBeBlocked);
@@ -128,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void unblock(int userId, User admin) {
-        checkAdmin(admin,BLOCK_UNBLOCK_PERMISSIONS_ERR);
+        checkAdmin(admin,MODIFY_USER_ERROR_MESSAGE);
         User userToBeUnBlocked = userRepository.getById(userId);
         userToBeUnBlocked.getUserRoles().remove(roleRepository.getByField("roleType", UserRole.blocked.toString()));
         userRepository.update(userToBeUnBlocked);
