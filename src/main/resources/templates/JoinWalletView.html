@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/PageFrame :: head('Wallet')}"></div>
+<script th:inline="javascript">
+  var username = [[${currentUser.username}]];
+  var password = [[${currentUser.password}]];
+  var walletId = [[${wallet.getId}]];
+</script>
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
 <section style="font-size: 25pt" class="page-section text-center">
@@ -44,7 +49,10 @@
       <div class="py-3 wallet-button rounded font-aquire" >Withdraw from card</div></a>
     <a class="center" href="#" th:href="@{/join wallet/__${wallet.getId()}__/withdraw}">
       <div class="py-3 wallet-button rounded font-aquire" >Withdraw to card</div></a>
-    <div th:if="${userId == wallet.getHolder().getId()}">
+    <div class="center">
+    <div class="py-3 wallet-button rounded font-aquire" onclick="showFlyout()" >Change Wallet Name
+      <i class="fa fa-gear fa-spin"></i></div></div>
+    <div th:if="${currentUser.getId() == wallet.getHolder().getId()}">
       <br/>
       <form class="outline" action="#" th:action="@{__${requestURI}__/add-user}" th:object="${newUser}" method="get">
         <input class="join-fields" type="text" th:field="*{user}" placeholder="Username, phone number or email">
@@ -65,12 +73,31 @@
       </form>
       <br/>
     </div>
-    <div th:unless="${userId == wallet.getHolder().getId()}">
+    <div th:unless="${currentUser.getId() == wallet.getHolder().getId()}">
       <a class="center" href="#" th:href="@{__${requestURI}__/remove}">
         <div class="py-3 wallet-button rounded font-aquire" >Remove From Wallet</div></a>
     </div>
   </div>
 </section>
-</body>
+<div class="modal-overlay" id="walletModalOverlay"></div>
+<div class="modal" id="walletFlyout" style="display: none;">
+  <div class="modal-header">
+    <span type="button" class="close" data-dismiss="modal">&times;</span>
+    <span class="modal-title font-aquire">Enter Wallet New Name</span>
+  </div>
+  <div class="modal-content">
+    <br/>
+    <br/>
+    <form id="walletForm">
+      <input class="simple-input-style w-20" type="text" id="name" placeholder="Wallet New Name" required><br>
+      <br>
 
+      <button class="py-3 wallet-button rounded font-aquire" type="submit">Update wallet</button>
+
+    </form>
+  </div>
+  </br>
+</div>
+</body>
+<script src="../../static/js/updateJoinWallet.js" th:src="@{/js/updateJoinWallet.js}"></script>
 </html>

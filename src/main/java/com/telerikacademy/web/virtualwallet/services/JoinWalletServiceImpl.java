@@ -58,7 +58,7 @@ public class JoinWalletServiceImpl implements JoinWalletService {
 
     @Override
     public void update(JoinWallet wallet,User user, int id) {
-        checkAllUsersPermission(user,wallet);
+        checkIsOwner(user,wallet);
         checkIsDuplicated(wallet,user,id);
         joinWalletRepository.update(wallet);
     }
