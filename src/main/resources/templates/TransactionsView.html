@@ -21,7 +21,7 @@
                 <input class="simple-input-style w-8" type="text" th:field="*{sender}" placeholder="Sender username"/>
                 <input class="simple-input-style w-8" th:field="*{date}" placeholder="Date EX: 2024-03-13"/>
                 <select class="simple-input-style w-8" th:field="*{direction}">
-                    <option value="">Sort Order</option>
+                    <option value="">Direction</option>
                     <option value="INGOING">INGOING</option>
                     <option value="OUTGOING">OUTGOING</option>
                 </select>
@@ -55,8 +55,7 @@
         <div class="table-row" th:each="transaction : ${transactions}">
             <!-- Transaction details-->
             <div class="cell">
-                <a href="#" th:href="@{/users/transactions/__${transaction.id}__}">
-                    <span class="cell-linebreak" th:text="${transaction.id}"></span></a>
+                    <span style="color: red; font-weight: bold" class="cell-linebreak" th:text="${transaction.id}"></span></a>
                 <br>
             </div>
             <div class="cell">

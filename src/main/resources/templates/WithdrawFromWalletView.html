@@ -1,38 +1,73 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<div th:insert="~{fragments/PageFrame :: head('Transfer')}"></div>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Transfer to card')}"></div>
+<script th:inline="javascript">
+    var userCardsEmpty = [[${currentUser.userCards.isEmpty()}]];
+    var username = [[${currentUser.username}]];
+    var password = [[${currentUser.password}]];
+</script>
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
 <section class="page-section text-center font-aquire">
-    <h2 class="font-aquire pd-b-1" th:text="#{transaction.page.title.card}">Transaction</h2>
-    <form action="#" th:action="@{__${requestURI}__}" th:object="${transfer}" method="post">
-        <div th:unless="${userCards.isEmpty()}">
-            <label th:text="#{transfer.card.present.label}">Content</label>
-            <br/>
-            <select class="simple-input-style w-20" th:field="*{cardId}">
-                <option th:each="card2 : ${userCards}"
-                        th:value="${card2.getId()}"
+    <h2 class="font-aquire pd-b-1" th:text="#{transaction.page.title.wallet}">Transfer</h2>
+    <div style="font-size: 13pt" class="wallet-block">
+
+        <form id="transferForm">
+            <div th:unless="${currentUser.userCards.isEmpty()}">
+                <label th:text="#{transfer.card.present.label}">Content</label>
+                <br/>
+                <label for="cardId"></label><select class="simple-input-style w-10" id="cardId">
+                <option th:each="card2 : ${currentUser.userCards}"
+                        th:value="${card2.id}"
                         th:text="${'**** **** **** '+card2.number.subSequence(12,16)}">
-                    BeerStyleOne
                 </option>
             </select>
+                <br/>
+            </div>
+            <label th:text="#{transfer.amount.withdraw.label}">Content</label>
             <br/>
-        </div>
-        <div th:unless="${!userCards.isEmpty()}">
+            <input class="simple-input-style w-5 pd-l" type="number" id="amount" th:text="BGN">
+            <br/>
+            <span id="invalidAmountError" class="error f-size-08 display-none">Invalid amount</span>
+            <br/><br/>
+            <button id="withdrawButton" class="py-3-create w-10 rounded font-aquire" type="submit">
+                <span id="loader" class="loader"></span>
+                Withdraw
+            </button>
+        </form>
+        <br>
+        <div th:if="${currentUser.userCards.isEmpty()}">
             <label th:text="#{transfer.card.not.present.label}">Content</label>
         </div>
-        <label class="error" th:errors="*{cardId}">Receiver error placeholder</label>
         <br/><br/>
-        <label th:text="#{transaction.amount.label}">Content</label>
-        <br/>
-        <input class="simple-input-style" type="number" th:field="*{amount}" th:text="BGN">
-        <br/>
-        <label class="error" th:errors="*{amount}">Amount error placeholder</label>
-        <br/><br/>
-        <input class="py-3-create w-8 rounded font-aquire" type="submit" value="Send"/>
-    </form>
-    <br>
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal" id="cardFlyout" style="display: none;">
+            <div class="modal-header">
+                <span type="button" class="close" data-dismiss="modal">&times;</span>
+                <span class="modal-title font-aquire">Enter Card Details</span>
+            </div>
+            <div class="modal-content">
+                <br/>
+                <br/>
+                <form id="cardForm">
+                    <input class="simple-input-style w-10" oninput="removeSpaces()" type="text" id="number" placeholder="Card Number" required><br>
+                    <input class="simple-input-style w-10" type="text" id="holder" placeholder="Cardholder Name" required><br>
+                    <input class="simple-input-style w-10" oninput="formatCVV()" type="text" id="cvv" placeholder="Cvv Number" required><br>
+                    <input class="simple-input-style w-10" oninput="formatExpiryDate()" onblur="validateExpiryDate()"
+                           type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required><br>
+                    <span id="expiryDateError" class="error f-size-08 display-none">Invalid date</span><br>
+                    <br>
+                    <button class="py-3-create w-8 rounded font-aquire" type="submit">Save card</button>
+                </form>
+            </div>
+            <br/>
+        </div>
+
+        <button class="py-3-create w-8 rounded font-aquire" id="openFlyout">Add Card</button>
+    </div>
 </section>
 <div th:replace="~{/fragments/PageFrame :: scripts}"></div>
 </body>
+<script src="../../static/js/walletWithdraw.js" th:src="@{/js/walletWithdraw.js}"></script>
+<script src="../../static/js/card.js" th:src="@{/js/card.js}"></script>
 </html>

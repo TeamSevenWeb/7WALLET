@@ -1,5 +1,3 @@
-
-// Add an event listener to the button
 function handleKeypress(event) {
     if (event.keyCode === 13) { // Check if the pressed key is Enter
         event.preventDefault(); // Prevent default behavior (form submission)
@@ -20,15 +18,13 @@ function toggleButtonState() {
     }
 }
 
+
 function verifyAmount() {
     const amountInput = document.getElementById('amount');
     var invalidAmountError = document.getElementById("invalidAmountError");
-    const loader = document.getElementById('loader');
 
     if (parseFloat(amountInput.value) <= 0 || (!/^[1-9]\d*$/.test(amountInput.value.trim())
-        && amountInput.value!=="")) {
-
-        loader.style.display = 'none';
+    && amountInput.value!=="")) {
         invalidAmountError.style.display = 'inline';
     } else {
         invalidAmountError.style.display = 'none';
@@ -48,39 +44,40 @@ document.getElementById('transferForm').addEventListener('submit', function(even
     event.preventDefault(); // Prevent default button click behavior
 
     // Simulate transfer (replace with actual transfer logic)
-    const transferAmount = document.getElementById('amount').value;
+    const transferAmount = document.getElementById('amount').value.trim();
+
     const cardId = document.getElementById('cardId').value;
     const loader = document.getElementById('loader');
     loader.style.display = 'inline-block';
 
-    // Simulate API request to perform transfer
-    fetch('/api/wallet/fund', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authentication' : username+" "+password
-        },
-        body: JSON.stringify( {
-            cardId : cardId,
-            amount : transferAmount
-        })
-    }).then(response => {
-        if (response.ok) {
-            loader.style.display = 'none';
-            // Show success flyout
-            alert('Transfer successful!');
+        // Simulate API request to perform transfer
+        fetch('/api/wallet/withdraw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authentication': username + " " + password
+            },
+            body: JSON.stringify({
+                cardId: cardId,
+                amount: transferAmount
+            })
+        }).then(response => {
+            if (response.ok) {
+                loader.style.display = 'none';
+                // Show success flyout
+                alert('Transfer successful!');
 
-            // showSuccessFlyout();
-            // Hide success flyout after a certain time (optional)
+                // showSuccessFlyout();
+                // Hide success flyout after a certain time (optional)
 
-            // setTimeout(hideSuccessFlyout, 5000); // Hide after 5 seconds
-        } else {
+                // setTimeout(hideSuccessFlyout, 5000); // Hide after 5 seconds
+            } else {
+                loader.style.display = 'none';
+                alert('Transfer failed. Please try again.');
+            }
+        }).catch(error => {
             loader.style.display = 'none';
-            alert('Transfer failed. Please try again.');
-        }
-    }).catch(error => {
-        loader.style.display = 'none';
-        console.error('Error:', error);
-        alert('An unexpected error occurred. Please try again later.');
-    });
+            console.error('Error:', error);
+            alert('An unexpected error occurred. Please try again later.');
+        });
 });
