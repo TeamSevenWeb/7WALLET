@@ -102,14 +102,14 @@ public class UserMvcController {
 
     @GetMapping("/{username}")
     public String showUserPage(@PathVariable String username, Model model, HttpSession session) {
-        User user = authenticationHelper.tryGetCurrentUser(session);
+        User currentUser = authenticationHelper.tryGetCurrentUser(session);
         User viewedUser = userService.getByUsername(username);
-        boolean isBlocked = userService.isBlocked(user);
+        boolean isBlocked = userService.isBlocked(viewedUser);
         List<JoinWallet> userJoinWallets = joinWalletService.getAllByUser(viewedUser);
         model.addAttribute("isBlocked", isBlocked);
         model.addAttribute("viewedUser", viewedUser);
         model.addAttribute("userJoinWallets",userJoinWallets);
-        model.addAttribute("userId", user.getId());
+        model.addAttribute("currentUser", currentUser);
         return "UserView";
     }
 

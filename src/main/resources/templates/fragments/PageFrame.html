@@ -33,7 +33,7 @@
                 <li th:if="${isAuthenticated && session.isAdmin}" class="nav-item mx-0 mx-lg-1">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#" th:href="@{/users}"
                        th:text="#{navigation.all-users}">Browse all Users</a></li>
-                <li th:if="${isAuthenticated && session.isAdmin}" class="nav-item mx-0 mx-lg-1">
+                <li th:if="${isAuthenticated}" class="nav-item mx-0 mx-lg-1">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#" th:href="@{/currencies}"
                        th:text="#{currencies}">Currencies</a></li>
                 <li th:if="${isAuthenticated}" class="nav-item mx-0 mx-lg-1">
