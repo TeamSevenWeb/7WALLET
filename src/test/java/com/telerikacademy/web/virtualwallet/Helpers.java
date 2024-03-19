@@ -64,6 +64,37 @@ public class Helpers {
         return mockRole;
     }
 
+    public static Role createMockBlockedRole(){
+        var mockRole = new Role();
+        mockRole.setRoleId(1);
+        mockRole.setRoleType("blocked");
+        return mockRole;
+    }
+
+    public static Role createMockRegularRole(){
+        var mockRole = new Role();
+        mockRole.setRoleId(1);
+        mockRole.setRoleType("regular");
+        return mockRole;
+    }
+
+    public static TransactionVerificationCodes createMockTransactionVerificationCodes(){
+        var mockTransactionVerificationCode = new TransactionVerificationCodes();
+        mockTransactionVerificationCode.setTransactionVerificationCodeId(1);
+        mockTransactionVerificationCode.setVerificationCode("testcode");
+        mockTransactionVerificationCode.setSenderWallet(new Wallet());
+        mockTransactionVerificationCode.setReceiverWallet(new Wallet());
+        mockTransactionVerificationCode.setTransaction(createMockTransaction());
+        return mockTransactionVerificationCode;
+    }
+    public static VerificationCodes createMockVerificationCodes(){
+        var mockVerificationCode = new VerificationCodes();
+        mockVerificationCode.setVerificationCode("testcode");
+        mockVerificationCode.setVerificationCodeId(1);
+        mockVerificationCode.setUser(createMockUser());
+        return mockVerificationCode;
+    }
+
     public static ProfilePhoto createMockProfilePhoto() {
         var profilePhoto = new ProfilePhoto();
         profilePhoto.setUser(createMockUser());
