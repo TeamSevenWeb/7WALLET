@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/PageFrame :: head('Currencies')}"></div>
+<script th:inline="javascript">
+    var username = [[${currentUser.username}]];
+    var password = [[${currentUser.password}]];
+</script>
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
 
@@ -11,7 +15,7 @@
     <div class="center" style="font-size: 20pt">
     <div class="table1 center">
         <div class="table-head">
-            <div class="table-header-cell outline">Id</div>
+            <div class="table-header-cell outline">№</div>
             <div class="table-header-cell outline">Currency code</div>
             <div class="table-header-cell outline" >Rating to BGN</div>
         </div>
@@ -29,8 +33,56 @@
         </div>
     </div>
     </div>
+    <div class="modal-overlay" id="currencyModalOverlay"></div>
+    <div class="modal" id="currencyFlyout" style="display: none;">
+        <div class="modal-header">
+            <span type="button" class="close" data-dismiss="modal">&times;</span>
+            <span class="modal-title font-aquire">Enter Currency Details</span>
+        </div>
+        <div class="modal-content">
+            <br/>
+            <br/>
+            <form id="currencyForm">
+                <input class="simple-input-style w-20" type="text" id="currencyCode" placeholder="Currency Code" required><br>
+                <br>
+                <input class="simple-input-style w-20" type="text" id="rating" placeholder="Currency Rating" required><br>
+                <br>
+                <button class="py-3 wallet-button rounded font-aquire" type="submit">Create currency</button>
+            </form>
+        </div>
+        </br>
+    </div>
+    <div th:if="${session.isAdmin}" class="center">
+        <div  class="user-button font-aquire"  onclick="showFlyout()" >Create new currency</div>
+    </div>
+
+    <div class="modal-overlay" id="currencyUpdateModalOverlay"></div>
+    <div class="modal" id="currencyUpdateFlyout" style="display: none;">
+        <div class="modal-header">
+            <span type="button" class="close" data-dismiss="modal">&times;</span>
+            <span class="modal-title font-aquire">Enter Currency Details</span>
+        </div>
+        <div class="modal-content">
+            <br/>
+            <br/>
+            <form id="currencyUpdateForm">
+                <input class="simple-input-style w-20" type="text" id="currencyId" placeholder="Currency Id" required><br>
+                <br>
+                <input class="simple-input-style w-20" type="text" id="currencyUpdateCode" placeholder="Currency Code" required><br>
+                <br>
+                <input class="simple-input-style w-20" type="text" id="ratingUpdate" placeholder="Currency Rating" required><br>
+                <br>
+                <button class="py-3 wallet-button rounded font-aquire" type="submit">Update currency</button>
+            </form>
+        </div>
+        </br>
+    </div>
+    <div th:if="${session.isAdmin}" class="center">
+        <div  class="user-button font-aquire"  onclick="showUpdateFlyout()" >Update existing currency</div>
+    </div>
 </section>
 <div th:replace="~{/fragments/PageFrame :: scripts}"></div>
 </body>
-
+<script src="../../static/js/currency.js" th:src="@{/js/currency.js}"></script>
+<script src="../../static/js/updateCurrency.js" th:src="@{/js/updateCurrency.js}"></script>
 </html>

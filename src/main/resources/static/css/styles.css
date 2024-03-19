@@ -1286,6 +1286,10 @@ header{
     box-shadow: 0 5px #f0f0f0;
     transform: translateY(2px);
 }
+
+.hoover:hover{
+    outline: purple 2px solid;
+}
 .pd-10{
     padding-top: 10rem;
 }
