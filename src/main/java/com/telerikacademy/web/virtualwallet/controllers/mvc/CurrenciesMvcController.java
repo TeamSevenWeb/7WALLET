@@ -47,10 +47,11 @@ public class CurrenciesMvcController {
     }
 
     @GetMapping
-    public String showAllUsers(Model model, HttpSession session) {
+    public String showAllCurrencies(Model model, HttpSession session) {
         try {
             User  user = authenticationHelper.tryGetCurrentUser(session);
             List<Currency> currencies = currencyService.getAll();
+            model.addAttribute("currentUser",user);
             model.addAttribute("currencies", currencies);
             return "CurrenciesView";
         } catch (AuthenticationException e) {

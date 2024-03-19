@@ -28,8 +28,8 @@
       </form>
       <br/>
       <label style="font-weight: bold" th:text="#{users}">Users</label>
-      <br/>
-      <span style="font-size: 12pt" th:text="${wallet.getHolder().getUsername()}"></span>
+      <br/><br/>
+      <div style="font-size: 12pt" th:text="${wallet.getHolder().getUsername()}"></div>
       <div th:each="user : ${wallet.getUsers()}">
             <span style="font-size: 12pt" th:text="${user.getUsername()}"></span>
         <br/>
