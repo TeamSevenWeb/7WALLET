@@ -59,4 +59,15 @@ public class CardMvcController {
             return "redirect:/auth/login";
         }
     }
+
+    @GetMapping("/delete/{id}")
+    public String deleteCard(@PathVariable int id,HttpSession session) {
+        try {
+            User holder = authenticationHelper.tryGetCurrentUser(session);
+            cardService.delete(holder,id);
+            return "redirect:/users/cards";
+        }catch (AuthenticationException | AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+    }
 }

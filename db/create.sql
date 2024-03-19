@@ -147,7 +147,7 @@ create table virtual_wallet.transfers
     direction   int        not null,
     date        date       not null,
     constraint transfers_card_fk2
-        foreign key (card) references virtual_wallet.cards (card_id),
+        foreign key (card) references virtual_wallet.cards (card_id) ON DELETE CASCADE,
     constraint transfers_direction_fk3
         foreign key (direction) references virtual_wallet.transfer_directions (direction_id),
     constraint transfers_wallet_fk
