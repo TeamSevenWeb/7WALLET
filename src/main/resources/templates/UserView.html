@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/PageFrame :: head('User')}"></div>
+<script th:inline="javascript">
+    var username = [[${currentUser.username}]];
+    var password = [[${currentUser.password}]];
+</script>
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
 <div class="user-block">
@@ -44,7 +48,7 @@
             <br/>
         </div>
     </div>
-    <div th:if="${userId == viewedUser.getId()}" class="user-rightside">
+    <div th:if="${currentUser.getId() == viewedUser.getId()}" class="user-rightside">
         <h2 class="font-aquire pd-b-1" style="font-size: 40pt" th:text="#{wallets}">Wallets</h2>
        <div  class="user-wall">
            <div style="font-size: 20pt" class="wallet-block">
@@ -73,8 +77,8 @@
                </div>
            </div>
 
-           <div class="modal-overlay" id="modalOverlay"></div>
-           <div class="modal" id="cardFlyout" style="display: none;">
+           <div class="modal-overlay" id="walletModalOverlay"></div>
+           <div class="modal" id="walletFlyout" style="display: none;">
                <div class="modal-header">
                    <span type="button" class="close" data-dismiss="modal">&times;</span>
                    <span class="modal-title font-aquire">Enter Wallet Name</span>
@@ -101,5 +105,5 @@
 <div th:replace="~{fragments/PageFrame :: scripts}"></div>
 
 </body>
-
+<script src="../../static/js/joinWallet.js" th:src="@{/js/joinWallet.js}"></script>
 </html>

@@ -119,7 +119,8 @@ public class JoinWalletMvcController {
 
     @PostMapping("/{id}/transactions/new")
     public String createTransaction(@Valid @ModelAttribute("transaction") TransactionDto transactionDto
-            , BindingResult errors, HttpSession session, Model model, RedirectAttributes redirectAttributes, @PathVariable int id) {
+            , BindingResult errors, HttpSession session, Model model
+            , RedirectAttributes redirectAttributes, @PathVariable int id) {
         if (errors.hasErrors()) {
             return "NewTransactionView";
         }
@@ -171,11 +172,10 @@ public class JoinWalletMvcController {
             , BindingResult errors, HttpSession session, Model model, RedirectAttributes redirectAttributes,
                                               @PathVariable int id) {
         if (errors.hasErrors()) {
-            return "TransactionToOtherWalletView";
+            return "redirect:/join wallet/{id}/transfer/new";
         }
-        User user = null;
         try {
-            user = authenticationHelper.tryGetCurrentUser(session);
+            User  user = authenticationHelper.tryGetCurrentUser(session);
             Transaction transaction = transactionMapper.fromDtoToJoin(user, transactionDto);
             JoinWallet wallet = joinWalletService.get(id,user);
             Wallet walletToReceive = findRightWallet(transactionDto.getWalletId(), user);
@@ -189,6 +189,7 @@ public class JoinWalletMvcController {
             return "ErrorView";
         } catch (FundsSupplyException e) {
             errors.rejectValue("amount", "insufficient.funds", e.getMessage());
+            User  user = authenticationHelper.tryGetCurrentUser(session);
             List<Wallet> walletList = getWallets(id, user);
             model.addAttribute("wallets", walletList);
             return "TransactionToOtherWalletView";
@@ -214,11 +215,11 @@ public class JoinWalletMvcController {
     }
 
     private List<Wallet> getWallets(int id, User user) {
-        JoinWallet wallet = joinWalletService.get(id, user);
         List<Wallet> walletList = new ArrayList<>();
         walletList.add(user.getWallet());
         List<JoinWallet> wallets = joinWalletService.getAllByUser(user);
-        wallets.remove(wallet);
+        JoinWallet usedWallet = joinWalletService.get(id, user);
+        wallets.remove(usedWallet);
         walletList.addAll(wallets);
         return walletList;
     }
@@ -245,7 +246,10 @@ public class JoinWalletMvcController {
 
     @GetMapping("/{id}/remove-user")
     public String removeUserFromWallet(HttpSession session, @PathVariable int id, Model model
-            ,@Valid @ModelAttribute("newUser") UserToWalletDto userToWalletDto){
+            ,@Valid @ModelAttribute("newUser") UserToWalletDto userToWalletDto,BindingResult errors){
+        if (errors.hasErrors()) {
+            return "redirect:/join wallet/{id}";
+        }
         try {
             User owner = authenticationHelper.tryGetCurrentUser(session);
             joinWalletService.removeOtherUser(id,userToWalletDto.getUser(),owner);
