@@ -5,10 +5,11 @@
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
 <section class="page-section text-center font-aquire">
 <h2 class="font-aquire pd-b-1" th:text="#{transaction.page.title}">Transaction</h2>
-<form action="#" th:action="@{__${requestURI}__}" th:object="${transaction}" method="post">
+    <p class="font-aquire pd-b-1 font-recommendation" th:text="#{transaction.info.label}">Transaction</p>
+    <form action="#" th:action="@{__${requestURI}__}" th:object="${transaction}" method="post">
     <label th:text="#{transaction.receiver.label}">Content</label>
     <br/>
-    <input class="textarea-style w-10" type="text" th:field="*{receiver}" placeholder="Username, phone number or email">
+    <input class="textarea-style w-20" type="text" th:field="*{receiver}" placeholder="Username, phone number or email">
     <br/>
     <label class="error" th:errors="*{receiver}">Receiver error placeholder</label>
     <br/><br/>

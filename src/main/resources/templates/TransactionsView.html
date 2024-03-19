@@ -38,6 +38,10 @@
             </div>
             <br/><br/>
             <input class="py-3-create rounded font-aquire" type="submit" value="Search"/>
+            <button class="py-3-create rounded font-aquire">
+                <a style="color: #3498db" href="#" th:href="@{/wallet/transactions/new}"
+                   th:text="#{transaction.new.label}">New transaction</a>
+            </button>
             <br/>
         </form>
     </div>

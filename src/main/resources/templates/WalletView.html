@@ -29,11 +29,11 @@
         <br/>
     </div>
         <a class="center" href="#" th:href="@{/wallet/transactions/new}">
-            <div class="py-3 wallet-button rounded font-aquire" >Send</div></a>
+            <div class="py-3 wallet-button rounded font-aquire" >Send funds to friends</div></a>
         <a th:if="${userWalletsCount > 1}" class="center" href="#" th:href="@{/wallet/transfer/new}">
-            <div class="py-3 wallet-button rounded font-aquire" >Transfer to other wallet</div></a>
+            <div class="py-3 wallet-button rounded font-aquire" >Move funds</div></a>
         <a class="center" href="#" th:href="@{/wallet/fund}">
-            <div class="py-3 wallet-button rounded font-aquire" >Withdraw from card</div></a>
+            <div class="py-3 wallet-button rounded font-aquire" >Fund from card</div></a>
         <a class="center" href="#" th:href="@{/wallet/withdraw}">
             <div class="py-3 wallet-button rounded font-aquire" >Withdraw to card</div></a>
     </div>
