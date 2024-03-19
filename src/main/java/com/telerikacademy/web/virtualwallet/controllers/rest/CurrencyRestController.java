@@ -78,6 +78,7 @@ public class CurrencyRestController {
             ,@PathVariable int id){
         try {
             User user = authenticationHelper.tryGetUser(authentication);
+            Currency existing = currencyService.getById(id);
             Currency currency = currencyMapper.fromDto(id,currencyDto);
             currencyService.update(currency,user);
         }  catch (AuthenticationException | AuthorizationException e){

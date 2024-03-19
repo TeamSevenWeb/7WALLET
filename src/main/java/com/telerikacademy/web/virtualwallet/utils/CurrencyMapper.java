@@ -24,7 +24,7 @@ public class CurrencyMapper {
 
     public Currency fromDto(CurrencyDto currencyDto){
         Currency currency = new Currency();
-        currency.setCurrencyCode(currencyDto.getCurrencyCode());
+        currency.setCurrencyCode(currencyDto.getCurrencyCode().toUpperCase());
         currency.setRating(currencyDto.getRating());
         return currency;
     }
