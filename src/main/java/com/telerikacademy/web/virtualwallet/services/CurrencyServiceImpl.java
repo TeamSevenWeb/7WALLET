@@ -11,6 +11,7 @@ import com.telerikacademy.web.virtualwallet.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class CurrencyServiceImpl implements CurrencyService {
@@ -30,9 +31,8 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public List<Currency> getAll(User user) {
-        checkAdmin(user);
-        return currencyRepository.getAll();
+    public List<Currency> getAll() {
+        return new ArrayList<>(currencyRepository.getAll());
     }
     @Override
     public void create(Currency currency,User user) {
