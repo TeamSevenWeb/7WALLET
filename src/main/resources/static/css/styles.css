@@ -269,7 +269,7 @@ header{
 .nav-link {
     display: block;
     padding: 0.5rem 1rem;
-    color: #bc1a45;
+    color: #1abc9c;
     text-decoration: none;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
@@ -279,7 +279,7 @@ header{
     }
 }
 .nav-link:hover, .nav-link:focus {
-    color: #96153c;
+    color: #15967d;
 }
 .nav-link.disabled {
     color: #6c757d;
@@ -326,7 +326,7 @@ header{
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
     color: #fff;
-    background-color: #bc1a4b;
+    background-color: #1abc9c;
 }
 
 .nav-fill > .nav-link,
@@ -1025,9 +1025,6 @@ header{
     overflow-wrap: break-word; /* Use overflow-wrap instead of line-break */
 }
 
-.hr{
-    background-color: red;
-}
 
 /* main nav*/
 #mainNav {
@@ -1046,13 +1043,13 @@ header{
     color: #fff;
 }
 #mainNav .navbar-nav li.nav-item a.nav-link:hover {
-    color: #bc1a53;
+    color: #1abc9c;
 }
 #mainNav .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus {
     color: #fff;
 }
 #mainNav .navbar-nav li.nav-item a.nav-link.active {
-    color: #d5361a;
+    color: #1abc9c;
 }
 #mainNav .navbar-toggler {
     font-size: 80%;
@@ -1072,11 +1069,11 @@ header{
     }
     #mainNav .navbar-nav > li.nav-item > a.nav-link.active {
         color: #fff;
-        background: #fd0041;
+        background: #1abc9c;
     }
     #mainNav .navbar-nav > li.nav-item > a.nav-link.active:active, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:focus, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover {
         color: #fff;
-        background: #fd0041;
+        background: #1abc9c;
     }
 
     #mainNav.navbar-shrink {
@@ -1263,12 +1260,12 @@ header{
     font-size: large;
 }
 .py-3:hover{
-    background-color: rgba(128, 0, 0, 0.3);
+    background-color: rgba(128, 0, 128, 0.87);
     color: white;
 }
 
 .py-3:active {
-    background-color: rgba(128, 0, 0, 0.3);
+    background-color: rgba(128, 0, 128, 0.42);
     box-shadow: 0 5px #f0f0f0;
     transform: translateY(2px);
 }
@@ -1900,7 +1897,7 @@ header{
 
 .wallet-block{
     text-align: center;
-    border: 2px solid #fd0041;
+    border: 2px solid purple;
     border-radius: 12px;
     background-color: #131415;
     padding-left: 20pt;
@@ -1911,16 +1908,14 @@ header{
 
 /*probAaaa*/
 .user-info{
-    outline: 2px solid #ffffff;
+    outline: 2px solid purple;
     row-gap: normal;
     font-size: larger;
     border-radius: 6px;
 }
 
 .outline{
-    padding-top: 5px;
-    padding-bottom: 5px;
-    outline: 2px solid #800040;
+    outline: 2px solid purple;
     row-gap: normal;
     border-radius: 6px;
 }
@@ -1978,32 +1973,22 @@ header{
 }
 
 .user-button{
-    color: #fd0041;
+    color: purple;
     font-size: 16px;
     padding: 10px 24px;
     border-radius: 12px;
-    border: 2px solid #fd0041;
-    transition-duration: 0.4s;
-
-}
-
-.users-button{
-    color: #fd0041;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 12px;
-    border: 2px solid #fd0041;
+    border: 2px solid #800080FF;
     transition-duration: 0.4s;
 
 }
 
 .user-button:hover{
-    background-color: rgb(225, 74, 74);
+    background-color: rgba(128, 0, 128, 0.87);
     color: white;
 }
 
 .user-button:active {
-    background-color: rgb(223, 73, 73);
+    background-color: rgba(128, 0, 128, 0.42);
     box-shadow: 0 5px #f0f0f0;
     transform: translateY(4px);
 }
@@ -2013,13 +1998,13 @@ header{
     height: 100% ;
     text-align: center;
     grid-template-columns: 30% auto;
-    border: 2px solid #ffffff;
+    border: 2px solid purple;
     border-radius: 12px;
     background-color: #131415;
     padding-bottom: 10em;
 }
 .user-leftside {
-    border-right: 2px solid #ffffff;
+    border-right: 2px solid purple;
 }
 .user-rightside{
     align-content: center;
@@ -2037,7 +2022,7 @@ header{
     width: 200px;
     height: 200px;
     border-radius: 100px;
-    border: 2px solid #d94646;
+    border: 2px solid purple;
 
 }
 
@@ -2046,7 +2031,7 @@ header{
     width: 60px;
     height: 60px;
     border-radius: 100px;
-    border: 2px solid #d74545;
+    border: 2px solid purple;
 
 }
 
@@ -2054,14 +2039,14 @@ header{
     display: grid;
     grid-template-columns: 45% 10% 45%;
     padding: 10px;
-    border-left: 2px solid #d54444;
+    border-left: 2px solid purple;
 }
 
 .methods-body-content{
     display: grid;
     grid-template-columns: 45% 10% 45%;
     padding: 10px;
-    border-bottom: 2px solid #d34343;
+    border-bottom: 2px solid purple;
 }
 
 .count-body{
@@ -2076,7 +2061,7 @@ header{
 .count-box{
     font-size: 30pt;
     border: 2px solid gray;
-    background-color: #d14242;
+    background-color: rebeccapurple;
     padding: 20px;
 
 }
@@ -2088,10 +2073,10 @@ header{
 }
 
 .recent-post{
-    border: 2px solid #fd0041;
+    border: 2px solid purple;
 }
 .posts-label{
-    border-bottom: 2px solid #fd0041;
+    border-bottom: 2px solid white;
     padding: 2px;
 }
 .page-section-top{

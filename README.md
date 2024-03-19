@@ -23,16 +23,6 @@ In order to use the application, you need to configure the included SQL files wi
 4. #### If the dependencies do not get installed automatically, you can use:
 ``cd 7WALLET ./gradlew build`` or ``gradlew.bat build``
 
-# Usage
-***
-###  After installing the project, you can start the application using the following command in your terminal:
-
-```bash
-./gradlew bootRun
-```
-
-#### 7Wallet uses basic authentication for its RESTful controllers via headers with the following format:
-Authentication: {username + " " + password}
 
 # Features
 ***
@@ -46,3 +36,13 @@ Authentication: {username + " " + password}
 8. Users can add money to their wallets from their bank cards.
 9. Users can perform transactions between one wallet and another (with email verification for big transactions)
 
+# Usage
+***
+###  After installing the project, you can start the application using the following command in your terminal:
+
+```bash
+./gradlew bootRun
+```
+
+#### 7Wallet uses basic authentication for its RESTful controllers via headers with the following format:
+Authentication: {username + " " + password}
