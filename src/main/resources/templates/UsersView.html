@@ -50,11 +50,11 @@
                 <br>
             </div>
             <div class="cell">
-                <a class="cell-linebreak"
+                <a class="cell-linebreak users-button"
                    href="#"
                    th:if="${session.isAdmin && !usertable.isBlocked()}"
                    th:href="@{/users/__${usertable.getUsername()}__/block}">Block</a>
-                <a class="cell-linebreak"
+                <a class="cell-linebreak users-button"
                    th:if="${session.isAdmin && usertable.isBlocked()}"
                    href="#"
                    th:href="@{/users/__${usertable.getUsername()}__/unblock}">Unblock</a>
