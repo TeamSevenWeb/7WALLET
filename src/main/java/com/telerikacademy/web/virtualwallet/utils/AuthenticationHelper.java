@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationHelper {
     private static final String AUTHENTICATION_HEADER_NAME = "Authentication";
-    private static final String INVALID_AUTHENTICATION_ERROR = "Invalid authentication.";
+    private static final String INVALID_AUTHENTICATION_ERROR = "Invalid username or password.";
     private final HttpHeaders headers = new HttpHeaders();
 
     private final UserService userService;

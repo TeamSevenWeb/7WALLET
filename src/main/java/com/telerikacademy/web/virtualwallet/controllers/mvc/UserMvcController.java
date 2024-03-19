@@ -1,9 +1,6 @@
 package com.telerikacademy.web.virtualwallet.controllers.mvc;
 
-import com.telerikacademy.web.virtualwallet.exceptions.AuthenticationException;
-import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.virtualwallet.exceptions.InvalidFileException;
-import com.telerikacademy.web.virtualwallet.exceptions.TransactionsNotFoundException;
+import com.telerikacademy.web.virtualwallet.exceptions.*;
 import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
 import com.telerikacademy.web.virtualwallet.filters.UserFilterOptions;
 import com.telerikacademy.web.virtualwallet.filters.dtos.TransactionFilterDto;
@@ -30,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,6 +36,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserMvcController {
 
+    public static final String AUTHORIZATION_ERR = "You are not authorized to perform this action.";
     private final ProfilePhotoMapper profilePhotoMapper;
     private final CloudinaryHelper cloudinaryHelper;
 
@@ -93,51 +92,97 @@ public class UserMvcController {
     @GetMapping
     public String showAllUsers(Model model
             , HttpSession session
-            , @ModelAttribute("userFilterOptionsDto") UserFilterOptionsDto filterDto) {
-        User user = authenticationHelper.tryGetCurrentUser(session);
-        UserFilterOptions userFilterOptions = userFilterOptionsMapper.fromDto(filterDto);
-        model.addAttribute("allUsers", userService.getAll(userFilterOptions, user));
-        return "UsersView";
+            , @ModelAttribute("userFilterOptionsDto") UserFilterOptionsDto filterDto
+            , RedirectAttributes redirectAttributes) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            UserFilterOptions userFilterOptions = userFilterOptionsMapper.fromDto(filterDto);
+            model.addAttribute("allUsers", userService.getAll(userFilterOptions, user));
+            return "UsersView";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+        catch (AuthorizationException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/{username}")
     public String showUserPage(@PathVariable String username, Model model, HttpSession session) {
-        User currentUser = authenticationHelper.tryGetCurrentUser(session);
-        User viewedUser = userService.getByUsername(username);
-        boolean isBlocked = userService.isBlocked(viewedUser);
-        List<JoinWallet> userJoinWallets = joinWalletService.getAllByUser(viewedUser);
-        model.addAttribute("isBlocked", isBlocked);
-        model.addAttribute("viewedUser", viewedUser);
-        model.addAttribute("userJoinWallets",userJoinWallets);
-        model.addAttribute("currentUser", currentUser);
-        return "UserView";
+        try {
+            User currentUser = authenticationHelper.tryGetCurrentUser(session);
+            User viewedUser = userService.getByUsername(username);
+            boolean isBlocked = userService.isBlocked(viewedUser);
+            List<JoinWallet> userJoinWallets = joinWalletService.getAllByUser(viewedUser);
+            model.addAttribute("isBlocked", isBlocked);
+            model.addAttribute("viewedUser", viewedUser);
+            model.addAttribute("userJoinWallets",userJoinWallets);
+            model.addAttribute("currentUser", currentUser);
+            return "UserView";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
     }
 
     @GetMapping("/{username}/update")
-    public String showUpdatePage(@PathVariable String username, Model model, HttpSession session) {
-        User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
-        User userToBeUpdated = userService.getByUsername(username);
-        UserUpdateDto userDto = userUpdateMapper.toDto(userToBeUpdated);
-        model.addAttribute("userUpdateDto", userDto);
-        return "UserUpdateView";
+    public String showUpdatePage(@PathVariable String username, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+            User userToBeUpdated = userService.getByUsername(username);
+            if (!loggedInUser.equals(userToBeUpdated)){
+                throw new AuthorizationException(AUTHORIZATION_ERR);
+            }
+            UserUpdateDto userDto = userUpdateMapper.toDto(userToBeUpdated);
+            model.addAttribute("userUpdateDto", userDto);
+            return "UserUpdateView";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+        catch (AuthorizationException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/{username}/changeProfilePhoto")
-    public String showChangeProfilePhoto(@PathVariable String username, Model model, HttpSession session) {
-        User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
-        User userToBeUpdated = userService.getByUsername(username);
-        UserProfilePhotoDto userProfilePhotoDto = new UserProfilePhotoDto();
-        model.addAttribute("userProfilePhotoDto", userProfilePhotoDto);
-        return "UserProfilePhotoUpdateView";
+    public String showChangeProfilePhoto(@PathVariable String username, Model model, HttpSession session,RedirectAttributes redirectAttributes) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+            User userToBeUpdated = userService.getByUsername(username);
+            if (!loggedInUser.equals(userToBeUpdated)){
+                throw new AuthorizationException(AUTHORIZATION_ERR);
+            }
+            UserProfilePhotoDto userProfilePhotoDto = new UserProfilePhotoDto();
+            model.addAttribute("userProfilePhotoDto", userProfilePhotoDto);
+            return "UserProfilePhotoUpdateView";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+        catch (AuthorizationException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/{username}/changePassword")
-    public String showChangePassword(@PathVariable String username, Model model, HttpSession session) {
-        User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
-        User userToBeUpdated = userService.getByUsername(username);
-        UserPasswordDto userPasswordDto = new UserPasswordDto();
-        model.addAttribute("userPasswordDto", userPasswordDto);
-        return "UserPasswordUpdateView";
+    public String showChangePassword(@PathVariable String username, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+            User userToBeUpdated = userService.getByUsername(username);
+            if (!loggedInUser.equals(userToBeUpdated)){
+                throw new AuthorizationException(AUTHORIZATION_ERR);
+            }
+            UserPasswordDto userPasswordDto = new UserPasswordDto();
+            model.addAttribute("userPasswordDto", userPasswordDto);
+            return "UserPasswordUpdateView";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+        catch (AuthorizationException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
     }
 
     @PostMapping("/{username}/update")
@@ -225,22 +270,40 @@ public class UserMvcController {
     @GetMapping("/{username}/block")
     public String block(@PathVariable String username
             , HttpSession session
+            ,RedirectAttributes redirectAttributes
 
     ) {
-        User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
-        User viewedUser = userService.getByUsername(username);
-        userService.block(viewedUser.getId(),loggedInUser);
-        return "redirect:/users";
+        try {
+            User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+            User viewedUser = userService.getByUsername(username);
+            userService.block(viewedUser.getId(),loggedInUser);
+            return "redirect:/users";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+        catch (AuthorizationException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/{username}/unblock")
     public String unblock(@PathVariable String username
             , HttpSession session
+            , RedirectAttributes redirectAttributes
 
     ) {
-        User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
-        User viewedUser = userService.getByUsername(username);
-        userService.unblock(viewedUser.getId(),loggedInUser);
-        return "redirect:/users";
+        try {
+            User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+            User viewedUser = userService.getByUsername(username);
+            userService.unblock(viewedUser.getId(),loggedInUser);
+            return "redirect:/users";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+        catch (AuthorizationException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
     }
 }
