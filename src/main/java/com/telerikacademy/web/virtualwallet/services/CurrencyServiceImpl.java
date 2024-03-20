@@ -34,6 +34,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     public List<Currency> getAll() {
         return new ArrayList<>(currencyRepository.getAll());
     }
+
     @Override
     public void create(Currency currency,User user) {
         checkIsDuplicated(currency);
