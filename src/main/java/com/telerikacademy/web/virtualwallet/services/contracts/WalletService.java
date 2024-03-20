@@ -21,8 +21,6 @@ public interface WalletService {
 
     void update(Wallet wallet);
 
-    void delete(int id);
-
     void addFunds(int walletId, double funds);
 
     void subtractFunds(int walletId, double funds);

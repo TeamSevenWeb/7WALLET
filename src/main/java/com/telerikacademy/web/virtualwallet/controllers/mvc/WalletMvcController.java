@@ -5,7 +5,6 @@ import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.dtos.ChangeCurrencyDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionDto;
 import com.telerikacademy.web.virtualwallet.models.dtos.TransactionToJoinDto;
-import com.telerikacademy.web.virtualwallet.models.dtos.TransferDto;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.services.contracts.*;
