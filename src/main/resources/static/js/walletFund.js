@@ -44,6 +44,7 @@ amountInput.addEventListener('input', toggleButtonState);
 amountInput.addEventListener('keypress', handleKeypress);
 // Initial validation
 toggleButtonState();
+
 document.getElementById('transferForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent default button click behavior
 
@@ -52,6 +53,8 @@ document.getElementById('transferForm').addEventListener('submit', function(even
     const cardId = document.getElementById('cardId').value;
     const loader = document.getElementById('loader');
     loader.style.display = 'inline-block';
+
+    alert('Are you sure you want to transfer this amount?');
 
     // Simulate API request to perform transfer
     fetch('/api/wallet/fund', {

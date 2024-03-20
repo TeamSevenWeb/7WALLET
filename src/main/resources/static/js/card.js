@@ -66,7 +66,7 @@ function validateExpiryDate() {
     // Verify that the month is valid (between 1 and 12) and the year is not in the past
     var isValid = month >= 1 && month <= 12 && !(year < currentYear || (year === currentYear && month < currentMonth));
 
-    if (isValid) {
+    if (isValid || expiryDateInput.value==="") {
         expiryDateError.style.display = 'none'; // Hide error message if date is valid
     } else if (!isValid) {
         // Show error message only if the field has been interacted with
@@ -74,7 +74,6 @@ function validateExpiryDate() {
         expiryDateInput.value = "";
     }
 }
-
 
 /*Flyout for cards*/
 var modalOverlay = document.getElementById("modalOverlay");

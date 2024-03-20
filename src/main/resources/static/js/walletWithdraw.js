@@ -50,7 +50,10 @@ document.getElementById('transferForm').addEventListener('submit', function(even
     const loader = document.getElementById('loader');
     loader.style.display = 'inline-block';
 
-        // Simulate API request to perform transfer
+    alert('Are you sure you want to withdraw this amount?');
+
+
+    // Simulate API request to perform transfer
         fetch('/api/wallet/withdraw', {
             method: 'POST',
             headers: {
