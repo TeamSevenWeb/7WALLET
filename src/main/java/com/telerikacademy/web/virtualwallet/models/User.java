@@ -162,11 +162,12 @@ public class User {
     }
 
     public Wallet getWallet() {
-        return getWallets().stream().toList().get(0);
+        return getWallets().stream().sorted(Comparator.comparing(Wallet::getId)).toList().get(0);
     }
 
     public void setWallet(Wallet wallet) {
-        List<Wallet> newWalletsList = new ArrayList<>(getWallets());
+        List<Wallet> newWalletsList = new ArrayList<>(getWallets().stream()
+                .sorted(Comparator.comparing(Wallet::getId)).toList());
         newWalletsList.set(0,wallet);
         Set<Wallet> newWalletsSet = new HashSet<>(newWalletsList);
         setWallets(newWalletsSet);

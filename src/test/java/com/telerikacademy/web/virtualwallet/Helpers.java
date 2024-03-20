@@ -3,7 +3,6 @@ package com.telerikacademy.web.virtualwallet;
 import com.telerikacademy.web.virtualwallet.models.*;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
-import com.telerikacademy.web.virtualwallet.utils.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -139,7 +138,7 @@ public class Helpers {
         return wallet;
     }
 
-    public static JoinWallet createJoinWallet(){
+    public static JoinWallet createMockJoinWallet(){
         var joinWallet = new JoinWallet();
         joinWallet.setId(1);
         joinWallet.setName("TestJoinWallet");
