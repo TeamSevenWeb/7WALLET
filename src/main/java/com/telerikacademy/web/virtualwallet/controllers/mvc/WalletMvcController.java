@@ -32,8 +32,6 @@ public class WalletMvcController {
 
     private final JoinWalletService joinWalletService;
 
-    private final UserService userService;
-
     private final CurrencyService currencyService;
 
     private final TransactionService transactionService;
@@ -44,19 +42,15 @@ public class WalletMvcController {
 
     private final TransactionMapper transactionMapper;
 
-    private final TransferMapper transferMapper;
-
-    public WalletMvcController(WalletService walletService, JoinWalletService joinWalletService, UserService userService
-            , CurrencyService currencyService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper
-            , TransferMapper transferMapper, TransactionService transactionService
-            , VerificationService verificationService) {
+    public WalletMvcController(WalletService walletService, JoinWalletService joinWalletService
+            ,CurrencyService currencyService, AuthenticationHelper authenticationHelper
+            ,TransactionMapper transactionMapper, TransactionService transactionService
+            ,VerificationService verificationService) {
         this.walletService = walletService;
         this.joinWalletService = joinWalletService;
-        this.userService = userService;
         this.currencyService = currencyService;
         this.authenticationHelper = authenticationHelper;
         this.transactionMapper = transactionMapper;
-        this.transferMapper = transferMapper;
         this.transactionService = transactionService;
         this.verificationService = verificationService;
     }
