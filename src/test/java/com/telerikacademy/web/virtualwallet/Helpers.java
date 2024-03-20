@@ -1,11 +1,13 @@
 package com.telerikacademy.web.virtualwallet;
 
 import com.telerikacademy.web.virtualwallet.models.*;
+import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.utils.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Helpers {
 
@@ -115,5 +117,42 @@ public class Helpers {
         transaction.setExpirationDate(LocalDateTime.now().plusDays(2));
 
         return transaction;
+    }
+
+    public static Currency createMockCurrency(){
+        var currency = new Currency();
+        currency.setId(1);
+        currency.setCurrencyCode("BGN");
+        currency.setRating(1.1);
+
+        return currency;
+    }
+
+    public static Wallet createMockWallet(){
+        var wallet = new Wallet();
+        wallet.setId(1);
+        wallet.setName("TestWallet");
+        wallet.setHolder(createMockUser());
+        wallet.setHoldings(1);
+        wallet.setCurrency(createMockCurrency());
+
+        return wallet;
+    }
+
+    public static JoinWallet createJoinWallet(){
+        var joinWallet = new JoinWallet();
+        joinWallet.setId(1);
+        joinWallet.setName("TestJoinWallet");
+        joinWallet.setHolder(createMockUser());
+        joinWallet.setHoldings(1);
+        joinWallet.setCurrency(createMockCurrency());
+        User user = createMockUser();
+        User user1 = createMockUser2();
+        Set<User> users = new HashSet<>();
+        users.add(user);
+        users.add(user1);
+        joinWallet.setUsers(users);
+
+        return joinWallet;
     }
 }
