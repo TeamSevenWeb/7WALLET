@@ -3,20 +3,15 @@
 <div th:insert="~{fragments/PageFrame :: head('All users')}"></div>
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
-<section class="page-section">
-    <header class="navigate">
-        <!-- Masthead Heading-->
-        <h1 class="text-uppercase mb-0 font-aquire" th:if="${allUsers.isEmpty()}" th:text="#{user.title.empty}">No
-            Users</h1>
-        <h1 class="text-uppercase mb-0 font-aquire" th:unless="${allUsers.isEmpty()}" th:text="#{user.title.all}">All
-            Users</h1>
-    </header>
-</section>
-<!-- Section 2-->
 <section class="py-5">
+
     <div class="navigate">
+
         <form action="#" th:action="@{/users}" method="get" th:object="${userFilterOptionsDto}">
             <h3 class="font-aquire" th:text="#{user.filter.label}">Filter Options</h3>
+            <br/>
+            <div class="centered-error font-aquire" th:if="${filterError}" th:text="${filterError}">No records with filter</div>
+
             <br/><br/>
             <div>
                 <input class="simple-input-style" type="text" placeholder="Username" th:field="*{username}"/>
@@ -62,6 +57,7 @@
             </div>
         </div>
     </div>
+
 </section>
 <div th:replace="~{fragments/PageFrame :: scripts}"></div>
 </body>

@@ -106,6 +106,11 @@ public class UserMvcController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/";
         }
+        catch (EntityNotFoundException e){
+            model.addAttribute("filterError", e.getMessage());
+
+            return "UsersView";
+        }
     }
 
     @GetMapping("/{username}")
