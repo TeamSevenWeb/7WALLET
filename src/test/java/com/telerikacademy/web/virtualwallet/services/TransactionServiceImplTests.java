@@ -1,6 +1,7 @@
 package com.telerikacademy.web.virtualwallet.services;
 
 import com.telerikacademy.web.virtualwallet.exceptions.FundsSupplyException;
+import com.telerikacademy.web.virtualwallet.filters.TransactionFilterOptions;
 import com.telerikacademy.web.virtualwallet.models.Transaction;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.TransactionRepository;
@@ -12,8 +13,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.telerikacademy.web.virtualwallet.Helpers.*;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 public class TransactionServiceImplTests {
@@ -41,6 +51,36 @@ public class TransactionServiceImplTests {
 
         //Assert
         Assertions.assertEquals(mockTransaction, result);
+    }
+
+    @Test
+    void getAll_Should_ReturnAllTransactions(){
+        //Arrange
+        Transaction mockTransaction = createMockTransaction();
+
+        TransactionFilterOptions filterOptions = new TransactionFilterOptions(
+                "","","","","",""
+        );
+        Pageable pageable = PageRequest.of(0, 10);
+
+       // Creating a list containing your mock transaction
+        List<Transaction> transactions = Collections.singletonList(mockTransaction);
+
+      // Creating a page containing your mock transaction
+        Page<Transaction> pageWithTransaction = new PageImpl<>(transactions, pageable, transactions.size());
+
+        // Mocking the repository method to return the page with your mock transaction
+        Mockito.when(transactionRepository.filterAndSort(
+                        eq(mockTransaction.getSender()), eq(filterOptions), eq(pageable)))
+                .thenReturn(pageWithTransaction);
+        //Act
+        Page<Transaction> result = mockTransactionService.getAll(
+                mockTransaction.getSender(), filterOptions, pageable);
+
+        //Assert
+        Assertions.assertEquals(pageWithTransaction, result);
+        Assertions.assertEquals(1, result.getTotalElements());
+        Assertions.assertEquals(result.get().findFirst().get().getId(), mockTransaction.getId());
     }
 
     @Test
