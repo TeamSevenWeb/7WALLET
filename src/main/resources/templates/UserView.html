@@ -43,7 +43,8 @@
             <h3 class="center" th:text="${viewedUser.lastName}"></h3>
             <hr>
             <h3 class="center" th:text="${viewedUser.email}"></h3>
-            <br/>
+            <hr>
+            <h3 class="center" th:text="${viewedUser.getPhoneNumber()}"></h3>
         </div>
     </div>
     <div th:if="${currentUser.getId() == viewedUser.getId()}" class="user-rightside">
