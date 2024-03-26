@@ -145,11 +145,7 @@ public class Helpers {
         joinWallet.setHolder(createMockUser());
         joinWallet.setHoldings(1);
         joinWallet.setCurrency(createMockCurrency());
-        User user = createMockUser();
-        User user1 = createMockUser2();
         Set<User> users = new HashSet<>();
-        users.add(user);
-        users.add(user1);
         joinWallet.setUsers(users);
 
         return joinWallet;

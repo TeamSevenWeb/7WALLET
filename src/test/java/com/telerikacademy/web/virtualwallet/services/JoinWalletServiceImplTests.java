@@ -1,5 +1,6 @@
 package com.telerikacademy.web.virtualwallet.services;
 
+import com.telerikacademy.web.virtualwallet.exceptions.AuthorizationException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityDuplicateException;
 import com.telerikacademy.web.virtualwallet.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.virtualwallet.models.Currency;
@@ -7,6 +8,7 @@ import com.telerikacademy.web.virtualwallet.models.User;
 import com.telerikacademy.web.virtualwallet.models.wallets.JoinWallet;
 import com.telerikacademy.web.virtualwallet.models.wallets.Wallet;
 import com.telerikacademy.web.virtualwallet.repositories.contracts.JoinWalletRepository;
+import com.telerikacademy.web.virtualwallet.repositories.contracts.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +31,9 @@ public class JoinWalletServiceImplTests {
 
     @Mock
     JoinWalletRepository joinWalletRepository;
+
+    @Mock
+    UserRepository userRepository;
 
     @Test
     void get_Should_ReturnWallet_When_UserIsOwner(){
@@ -55,6 +60,12 @@ public class JoinWalletServiceImplTests {
         JoinWallet joinWallet = createMockJoinWallet();
 
         User user = createMockUser2();
+
+        Set<User> users = new HashSet<>();
+
+        users.add(user);
+
+        joinWallet.setUsers(users);
 
         Mockito.when(joinWalletRepository.getById(Mockito.anyInt()))
                 .thenReturn(joinWallet);
@@ -197,5 +208,113 @@ public class JoinWalletServiceImplTests {
 
        //Assert
         Assertions.assertEquals(walletUsers,2);
+    }
+    @Test
+    void addUser_Should_AddNewUserWhenUserWhoAddIsOwner() {
+        //Arrange
+        JoinWallet joinWallet = createMockJoinWallet();
+
+        User owner = createMockUser();
+
+        User newUser = createMockUser2();
+
+        Mockito.when(joinWalletRepository.getById(Mockito.anyInt()))
+                        .thenReturn(joinWallet);
+
+        Mockito.when(userRepository.searchByAnyMatch(Mockito.anyString()))
+                .thenReturn(newUser);
+
+        //Act
+        mockJoinWalletService.addUser(1,newUser.getUsername(),owner);
+
+        //Assert
+        Assertions.assertEquals(joinWallet.getUsers().size(),1);
+    }
+
+    @Test
+    void addUser_Should_Throw_WhenUserWhoAddIsNotOwner() {
+        //Arrange
+        JoinWallet joinWallet = createMockJoinWallet();
+
+        User randomUser = createMockUser2();
+
+        User newUser = createMockUser2();
+
+
+        Mockito.when(joinWalletRepository.getById(Mockito.anyInt()))
+                .thenReturn(joinWallet);
+
+        //Act,Assert
+        Assertions.assertThrows(AuthorizationException.class,
+                ()-> mockJoinWalletService.addUser(1,newUser.getUsername(),randomUser));
+    }
+
+    @Test
+    void removeUser_Should_RemoveUserWhenUserWhoRemoveIsOwner() {
+        //Arrange
+        JoinWallet joinWallet = createMockJoinWallet();
+
+        User owner = createMockUser();
+
+        User userToRemove = createMockUser2();
+
+        Set <User> walletUsers = new HashSet<>();
+
+        walletUsers.add(userToRemove);
+
+        joinWallet.setUsers(walletUsers);
+
+        Mockito.when(joinWalletRepository.getById(Mockito.anyInt()))
+                .thenReturn(joinWallet);
+
+        Mockito.when(userRepository.searchByAnyMatch(Mockito.anyString()))
+                .thenReturn(userToRemove);
+
+        //Act
+        mockJoinWalletService.removeOtherUser(1,userToRemove.getUsername(),owner);
+
+        //Assert
+        Assertions.assertEquals(joinWallet.getUsers().size(),0);
+    }
+
+    @Test
+    void removeUser_Should_Throw_WhenUserWhoRemoveIsNotOwner() {
+        //Arrange
+        JoinWallet joinWallet = createMockJoinWallet();
+
+        User randomUser = createMockUser2();
+
+        User userToRemove = createMockUser2();
+
+
+        Mockito.when(joinWalletRepository.getById(Mockito.anyInt()))
+                .thenReturn(joinWallet);
+
+        //Act,Assert
+        Assertions.assertThrows(AuthorizationException.class,
+                ()-> mockJoinWalletService.addUser(1,userToRemove.getUsername(),randomUser));
+    }
+
+    @Test
+    void removeWallet_Should_RemoveUserFromWalletUsers(){
+        //Arrange
+        JoinWallet joinWallet = createMockJoinWallet();
+
+        User userToRemove = createMockUser2();
+
+        Set <User> walletUsers = new HashSet<>();
+
+        walletUsers.add(userToRemove);
+
+        joinWallet.setUsers(walletUsers);
+
+        Mockito.when(joinWalletRepository.getById(Mockito.anyInt()))
+                .thenReturn(joinWallet);
+
+        //Act
+        mockJoinWalletService.removeWallet(1,userToRemove);
+
+        //Assert
+        Assertions.assertEquals(joinWallet.getUsers().size(),0);
     }
 }
