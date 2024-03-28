@@ -1,6 +1,7 @@
 # 7Wallet
 
 ### An interactive web application that supports transfers between bank card  and a virtual wallet. The app supports transactions between different users, similarly to PayPal, Skrill etc.. 
+### Currently 7Wallet is partially deployed to http://wallet7-env.eba-qmrmiaij.us-east-1.elasticbeanstalk.com and on the todo list is database integration through AWS and potentially a custom domain.
 
 ![img.png](img.png)
 
